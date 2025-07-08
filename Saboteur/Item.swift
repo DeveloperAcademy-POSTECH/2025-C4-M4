@@ -2,9 +2,8 @@
 //  Item.swift
 //  Saboteur
 //
-//  Created by kirby on 7/8/25.
+//  Created by kirby on 7/9/25.
 //
-
 import Foundation
 import SwiftData
 
