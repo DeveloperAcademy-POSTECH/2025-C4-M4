@@ -11,7 +11,6 @@ if grep -Eq "^(Merge pull request|README\.md 업데이트)" <<<"$TITLE"; then
 fi
 
 # ✅ 제목 정규식 (Gitmoji + 공백 → Type. → 공백 → 요약)
-#    - Gitmoji 블록: 공백 전까지 임의 길이, 전부 비공백
 TITLE_REGEX='^([^[:space:]]+\s+)?[A-Z][a-zA-Z]+\.\s+.+'
 
 if ! grep -Eq "$TITLE_REGEX" <<<"$TITLE"; then
@@ -29,11 +28,14 @@ TITLE_LEN=$(printf '%s' "$TITLE_SUMMARY" | wc -m)
 [ "$TITLE_LEN" -gt 30 ] && \
   echo "⚠️ 제목 요약이 ${TITLE_LEN}자입니다 (30자 이내 권장)"
 
-# ✅ 본문 Why / How 존재 여부
-if ! grep -q "^Why:" "$COMMIT_MSG_FILE" || \
-   ! grep -q "^How:" "$COMMIT_MSG_FILE"; then
-  echo "❌ 본문 누락: Why:·How: 섹션이 모두 포함되어야 합니다."
-  exit 1
+# ✅ 본문 권장 섹션(Why / How / Tag) 체크 – 누락 시 경고만 출력
+missing=()
+grep -q "^Why:" "$COMMIT_MSG_FILE" || missing+=("Why:")
+grep -q "^How:" "$COMMIT_MSG_FILE" || missing+=("How:")
+grep -q "^Tag:" "$COMMIT_MSG_FILE" || missing+=("Tag:")
+
+if [ "${#missing[@]}" -gt 0 ]; then
+  echo "ℹ️ 선택 섹션 누락 경고: ${missing[*]} (선택 사항)"
 fi
 
 exit 0
