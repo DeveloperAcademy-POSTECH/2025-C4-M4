@@ -1,6 +1,8 @@
 pre-commit:
   parallel: true
   commands:
+    swiftformat:
+      run: swiftformat .
     check-branch-name:
       run: ./scripts/check-branch.sh
 commit-msg:
