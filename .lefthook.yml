@@ -1,0 +1,10 @@
+pre-commit:
+  parallel: true
+  commands:
+    check-branch-name:
+      run: ./scripts/check-branch.sh
+commit-msg:
+  parallel: false
+  commands:
+    validate-commit:
+      run: bash scripts/check-commit-msg.sh {1} # {1} = 커밋 메시지 파일 경로
