@@ -1,12 +1,9 @@
-//
-//  Item.swift
-//  Saboteur
-//
-//  Created by kirby on 7/9/25.
-//
+
+
 import Foundation
 import SwiftData
 
+/// 예시 모델이므로 추후 삭제
 @Model
 final class Item {
     var timestamp: Date

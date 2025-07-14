@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B55D1C402E24A71E00DECE90 /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = B55D1C3F2E24A71E00DECE90 /* P2PKit */; };
+		B55D1CDB2E25194C00DECE90 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = B55D1CDA2E25194C00DECE90 /* Logging */; };
 		B569A2742E24A2F400548454 /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = B569A2732E24A2F400548454 /* P2PKit */; };
 /* End PBXBuildFile section */
 
@@ -103,6 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B55D1CDB2E25194C00DECE90 /* Logging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,6 +202,7 @@
 			);
 			name = Saboteur;
 			packageProductDependencies = (
+				B55D1CDA2E25194C00DECE90 /* Logging */,
 			);
 			productName = Saboteur;
 			productReference = B525632A2E1E133600CCDEFC /* Saboteur.app */;
@@ -313,6 +316,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				B55D1C3E2E24A71E00DECE90 /* XCLocalSwiftPackageReference "../P2PKit" */,
+				B55D1CD92E25194C00DECE90 /* XCRemoteSwiftPackageReference "swift-log" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B525632B2E1E133600CCDEFC /* Products */;
@@ -637,6 +641,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RK3JJD2BZC;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -665,6 +670,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RK3JJD2BZC;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -846,10 +852,26 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		B55D1CD92E25194C00DECE90 /* XCRemoteSwiftPackageReference "swift-log" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-log";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.6.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		B55D1C3F2E24A71E00DECE90 /* P2PKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = P2PKit;
+		};
+		B55D1CDA2E25194C00DECE90 /* Logging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B55D1CD92E25194C00DECE90 /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = Logging;
 		};
 		B569A2732E24A2F400548454 /* P2PKit */ = {
 			isa = XCSwiftPackageProductDependency;
