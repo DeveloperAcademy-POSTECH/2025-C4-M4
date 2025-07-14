@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B55D1C402E24A71E00DECE90 /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = B55D1C3F2E24A71E00DECE90 /* P2PKit */; };
+		B569A2742E24A2F400548454 /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = B569A2732E24A2F400548454 /* P2PKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		B525633A2E1E133700CCDEFC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -23,13 +28,45 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		B55D1C432E24A7D600DECE90 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		B51614E12E2491D0003D8BBB /* P2PTicTacToe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = P2PTicTacToe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B525632A2E1E133600CCDEFC /* Saboteur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Saboteur.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52563392E1E133700CCDEFC /* SaboteurTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SaboteurTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52563432E1E133700CCDEFC /* SaboteurUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SaboteurUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B55D1C452E24A7D600DECE90 /* GameEngine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GameEngine; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B51615312E249266003D8BBB /* Exceptions for "P2PTicTacToe" folder in "P2PTicTacToe" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B51614E02E2491D0003D8BBB /* P2PTicTacToe */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		B51614E22E2491D0003D8BBB /* P2PTicTacToe */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B51615312E249266003D8BBB /* Exceptions for "P2PTicTacToe" folder in "P2PTicTacToe" target */,
+			);
+			path = P2PTicTacToe;
+			sourceTree = "<group>";
+		};
 		B525632C2E1E133600CCDEFC /* Saboteur */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Saboteur;
@@ -45,9 +82,23 @@
 			path = SaboteurUITests;
 			sourceTree = "<group>";
 		};
+		B55D1C462E24A7D600DECE90 /* GameEngine */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = GameEngine;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		B51614DE2E2491D0003D8BBB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B55D1C402E24A71E00DECE90 /* P2PKit in Frameworks */,
+				B569A2742E24A2F400548454 /* P2PKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B52563272E1E133600CCDEFC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -69,6 +120,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B55D1C422E24A7D600DECE90 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -78,6 +136,8 @@
 				B525632C2E1E133600CCDEFC /* Saboteur */,
 				B525633C2E1E133700CCDEFC /* SaboteurTests */,
 				B52563462E1E133700CCDEFC /* SaboteurUITests */,
+				B51614E22E2491D0003D8BBB /* P2PTicTacToe */,
+				B55D1C462E24A7D600DECE90 /* GameEngine */,
 				B525632B2E1E133600CCDEFC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,6 +148,8 @@
 				B525632A2E1E133600CCDEFC /* Saboteur.app */,
 				B52563392E1E133700CCDEFC /* SaboteurTests.xctest */,
 				B52563432E1E133700CCDEFC /* SaboteurUITests.xctest */,
+				B51614E12E2491D0003D8BBB /* P2PTicTacToe.app */,
+				B55D1C452E24A7D600DECE90 /* GameEngine */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,6 +157,30 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		B51614E02E2491D0003D8BBB /* P2PTicTacToe */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B51614EB2E2491D1003D8BBB /* Build configuration list for PBXNativeTarget "P2PTicTacToe" */;
+			buildPhases = (
+				B51614DD2E2491D0003D8BBB /* Sources */,
+				B51614DE2E2491D0003D8BBB /* Frameworks */,
+				B51614DF2E2491D0003D8BBB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				B51614E22E2491D0003D8BBB /* P2PTicTacToe */,
+			);
+			name = P2PTicTacToe;
+			packageProductDependencies = (
+				B569A2732E24A2F400548454 /* P2PKit */,
+				B55D1C3F2E24A71E00DECE90 /* P2PKit */,
+			);
+			productName = P2PTicTacToe;
+			productReference = B51614E12E2491D0003D8BBB /* P2PTicTacToe.app */;
+			productType = "com.apple.product-type.application";
+		};
 		B52563292E1E133600CCDEFC /* Saboteur */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B525634D2E1E133700CCDEFC /* Build configuration list for PBXNativeTarget "Saboteur" */;
@@ -165,6 +251,28 @@
 			productReference = B52563432E1E133700CCDEFC /* SaboteurUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		B55D1C442E24A7D600DECE90 /* GameEngine */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B55D1C492E24A7D600DECE90 /* Build configuration list for PBXNativeTarget "GameEngine" */;
+			buildPhases = (
+				B55D1C412E24A7D600DECE90 /* Sources */,
+				B55D1C422E24A7D600DECE90 /* Frameworks */,
+				B55D1C432E24A7D600DECE90 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				B55D1C462E24A7D600DECE90 /* GameEngine */,
+			);
+			name = GameEngine;
+			packageProductDependencies = (
+			);
+			productName = GameEngine;
+			productReference = B55D1C452E24A7D600DECE90 /* GameEngine */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -175,6 +283,9 @@
 				LastSwiftUpdateCheck = 1630;
 				LastUpgradeCheck = 1630;
 				TargetAttributes = {
+					B51614E02E2491D0003D8BBB = {
+						CreatedOnToolsVersion = 16.3;
+					};
 					B52563292E1E133600CCDEFC = {
 						CreatedOnToolsVersion = 16.3;
 					};
@@ -185,6 +296,9 @@
 					B52563422E1E133700CCDEFC = {
 						CreatedOnToolsVersion = 16.3;
 						TestTargetID = B52563292E1E133600CCDEFC;
+					};
+					B55D1C442E24A7D600DECE90 = {
+						CreatedOnToolsVersion = 16.3;
 					};
 				};
 			};
@@ -197,6 +311,9 @@
 			);
 			mainGroup = B52563212E1E133600CCDEFC;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				B55D1C3E2E24A71E00DECE90 /* XCLocalSwiftPackageReference "../P2PKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B525632B2E1E133600CCDEFC /* Products */;
 			projectDirPath = "";
@@ -205,11 +322,20 @@
 				B52563292E1E133600CCDEFC /* Saboteur */,
 				B52563382E1E133700CCDEFC /* SaboteurTests */,
 				B52563422E1E133700CCDEFC /* SaboteurUITests */,
+				B51614E02E2491D0003D8BBB /* P2PTicTacToe */,
+				B55D1C442E24A7D600DECE90 /* GameEngine */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		B51614DF2E2491D0003D8BBB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B52563282E1E133600CCDEFC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -274,6 +400,13 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		B51614DD2E2491D0003D8BBB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B52563262E1E133600CCDEFC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -289,6 +422,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B525633F2E1E133700CCDEFC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B55D1C412E24A7D600DECE90 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -311,6 +451,66 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		B51614E92E2491D1003D8BBB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RK3JJD2BZC;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = P2PTicTacToe/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.2025C4M4.P2PTicTacToe;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B51614EA2E2491D1003D8BBB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RK3JJD2BZC;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = P2PTicTacToe/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.2025C4M4.P2PTicTacToe;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		B525634B2E1E133700CCDEFC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -554,9 +754,44 @@
 			};
 			name = Release;
 		};
+		B55D1C4A2E24A7D600DECE90 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RK3JJD2BZC;
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.4;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		B55D1C4B2E24A7D600DECE90 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RK3JJD2BZC;
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.4;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B51614EB2E2491D1003D8BBB /* Build configuration list for PBXNativeTarget "P2PTicTacToe" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B51614E92E2491D1003D8BBB /* Debug */,
+				B51614EA2E2491D1003D8BBB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B52563252E1E133600CCDEFC /* Build configuration list for PBXProject "Saboteur" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -593,7 +828,34 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		B55D1C492E24A7D600DECE90 /* Build configuration list for PBXNativeTarget "GameEngine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B55D1C4A2E24A7D600DECE90 /* Debug */,
+				B55D1C4B2E24A7D600DECE90 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		B55D1C3E2E24A71E00DECE90 /* XCLocalSwiftPackageReference "../P2PKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../P2PKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B55D1C3F2E24A71E00DECE90 /* P2PKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = P2PKit;
+		};
+		B569A2732E24A2F400548454 /* P2PKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = P2PKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B52563222E1E133600CCDEFC /* Project object */;
 }
