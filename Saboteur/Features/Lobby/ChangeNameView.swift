@@ -11,9 +11,11 @@ struct ChangeNameView: View {
     @State private var selectedCountry: String
     @State private var nickname: String
     var onNameChanged: () -> Void
-    @Environment(\.dismiss) private var dismiss
 
-    init(onNameChanged: @escaping () -> Void) {
+    @Binding var isPresented: Bool
+
+    init(isPresented: Binding<Bool>, onNameChanged: @escaping () -> Void) {
+        _isPresented = isPresented
         self.onNameChanged = onNameChanged
 
         let fullName = P2PNetwork.myPeer.displayName
@@ -30,6 +32,16 @@ struct ChangeNameView: View {
 
     var body: some View {
         VStack(spacing: 20) {
+            HStack {
+                Spacer()
+
+                Button {
+                    isPresented = false
+                } label: {
+                    Image(systemName: "x.circle")
+                }
+            }
+
             Text("닉네임 변경")
                 .font(.title2)
 
@@ -39,7 +51,8 @@ struct ChangeNameView: View {
                     Text($0)
                 }
             }
-            .pickerStyle(.menu)
+            .pickerStyle(.wheel)
+            .frame(height: 100)
 
             // 닉네임 입력
             TextField("닉네임 입력", text: $nickname)
@@ -50,10 +63,16 @@ struct ChangeNameView: View {
                 let newDisplayName = "\(selectedCountry) \(nickname)"
                 P2PNetwork.resetSession(displayName: newDisplayName)
                 onNameChanged()
-                dismiss()
             }
             .disabled(nickname.trimmingCharacters(in: .whitespaces).isEmpty)
         }
         .padding()
+    }
+}
+
+#Preview {
+    @State var showModal = true
+    return ChangeNameView(isPresented: $showModal) {
+        print("닉네임 변경 완료")
     }
 }

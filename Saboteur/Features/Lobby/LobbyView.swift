@@ -47,10 +47,11 @@ struct LobbyView: View {
                     Color.black.opacity(0.4)
                         .ignoresSafeArea()
 
-                    ChangeNameView {
+                    ChangeNameView(isPresented: $showNameModal) {
                         displayName = P2PNetwork.myPeer.displayName
                         showNameModal = false
                     }
+                    .padding()
                     .frame(maxWidth: 300)
                     .background(Color.white)
                     .cornerRadius(16)
@@ -83,16 +84,4 @@ struct LobbyView: View {
         P2PNetwork.resetSession()
         router.currentScreen = .connect
     }
-}
-
-import MultipeerConnectivity
-
-#Preview {
-    do {
-        let testPeerID = MCPeerID(displayName: "🇰🇷 JudyJ")
-        Peer.resetMyPeer(with: testPeerID)
-    }
-
-    return LobbyView()
-        .environmentObject(AppRouter())
 }

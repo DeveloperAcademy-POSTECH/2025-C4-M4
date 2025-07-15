@@ -244,7 +244,7 @@ extension P2PSession: MCSessionDelegate {
 // MARK: - Browser Delegate
 
 extension P2PSession: MCNearbyServiceBrowserDelegate {
-    public func browser(_: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String: String]?) {
+    func browser(_: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String: String]?) {
         if let discoveryId = info?["discoveryId"], discoveryId != myDiscoveryInfo.discoveryId {
             prettyPrint("Found Peer: [\(peerID)], with id: [\(discoveryId)]")
 
@@ -276,7 +276,7 @@ extension P2PSession: MCNearbyServiceBrowserDelegate {
         }
     }
 
-    public func browser(_: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
+    func browser(_: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
         prettyPrint("Lost peer: [\(peerID.displayName)]")
 
         peersLock.lock()

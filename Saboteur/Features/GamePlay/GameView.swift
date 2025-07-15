@@ -16,7 +16,7 @@ struct GameView: View {
         if gameState == .endGame {
             GameResultView(result: .winner(winner.value))
         } else {
-            VStack {
+            VStack(spacing: 30) {
                 Text("🕹️ 게임 화면 여기다 구현~")
                     .font(.title)
                     .padding()

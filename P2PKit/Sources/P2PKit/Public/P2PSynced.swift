@@ -51,7 +51,7 @@ public class P2PSynced<T: Codable> {
         }
     }
 
-    public var onReceiveSync: ((T) -> Void)? = nil
+    public var onReceiveSync: ((T) -> Void)?
 
     // MARK: Options
 
