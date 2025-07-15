@@ -6,3 +6,15 @@
 //
 
 import Foundation
+import SwiftUI
+
+enum AppScreen {
+    case choosePlayer
+    case connect
+
+    case none
+}
+
+class AppRouter: ObservableObject {
+    @Published var currentScreen: AppScreen = .choosePlayer
+}
