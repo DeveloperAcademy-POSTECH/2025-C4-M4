@@ -49,25 +49,7 @@
 		B55D1C452E24A7D600DECE90 /* GameEngine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GameEngine; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		B51615312E249266003D8BBB /* Exceptions for "P2PTicTacToe" folder in "P2PTicTacToe" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = B51614E02E2491D0003D8BBB /* P2PTicTacToe */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		B51614E22E2491D0003D8BBB /* P2PTicTacToe */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				B51615312E249266003D8BBB /* Exceptions for "P2PTicTacToe" folder in "P2PTicTacToe" target */,
-			);
-			path = P2PTicTacToe;
-			sourceTree = "<group>";
-		};
 		B525632C2E1E133600CCDEFC /* Saboteur */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Saboteur;
@@ -138,7 +120,6 @@
 				B525632C2E1E133600CCDEFC /* Saboteur */,
 				B525633C2E1E133700CCDEFC /* SaboteurTests */,
 				B52563462E1E133700CCDEFC /* SaboteurUITests */,
-				B51614E22E2491D0003D8BBB /* P2PTicTacToe */,
 				B55D1C462E24A7D600DECE90 /* GameEngine */,
 				B525632B2E1E133600CCDEFC /* Products */,
 			);
@@ -170,9 +151,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				B51614E22E2491D0003D8BBB /* P2PTicTacToe */,
 			);
 			name = P2PTicTacToe;
 			packageProductDependencies = (
