@@ -7,7 +7,12 @@
 		<key>GameEngine.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>3</integer>
+			<integer>0</integer>
+		</dict>
+		<key>P2PKit.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
 		</dict>
 		<key>P2PTicTacToe.xcscheme_^#shared#^_</key>
 		<dict>
@@ -17,7 +22,7 @@
 		<key>Saboteur.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>1</integer>
 		</dict>
 	</dict>
 </dict>
