@@ -10,7 +10,7 @@ struct GameView: View {
     @Binding var gameState: GameState
     @StateObject private var viewModel = GameViewModel()
 
-    @StateObject private var winner = P2PSyncedObservable(name: "TicTacToeWinner", initial: "")
+    @StateObject private var winner = P2PSyncedObservable(name: "GameWinner", initial: "")
 
     var body: some View {
         if gameState == .endGame {
