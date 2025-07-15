@@ -16,8 +16,16 @@ struct GameView: View {
         if gameState == .endGame {
             GameResultView(result: .winner(winner.value))
         } else {
-            GameBoardView().onChange(of: winner.value) {
-                gameState = .endGame
+            ZStack(alignment: .topTrailing) {
+                Button {
+                    winner.value = "플레이어 1"
+                    gameState = .endGame
+                } label: {
+                    Text("게임 종료 화면")
+                }
+                GameBoardView().onChange(of: winner.value) {
+                    gameState = .endGame
+                }
             }
         }
     }
