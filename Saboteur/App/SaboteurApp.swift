@@ -6,11 +6,14 @@
 //
 
 import Logging
+import P2PKit
 import SwiftData
 import SwiftUI
 
 @main
 struct SaboteurApp: App {
+    @StateObject private var router = AppRouter()
+
     // AppDelegate를 SwiftUI에 연결
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
@@ -21,7 +24,33 @@ struct SaboteurApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootCoordinator()
+            RootView()
+                .environmentObject(router)
         }
     }
+}
+
+struct RootView: View {
+    @EnvironmentObject var router: AppRouter
+
+    var body: some View {
+        Group {
+            switch router.currentScreen {
+            case .choosePlayer: LobbyView()
+
+            case .connect: ConnectView()
+
+            case .none: Color.clear
+            }
+        }
+        .task {
+            P2PConstants.networkChannelName = "my-p2p-2p"
+            P2PConstants.loggerEnabled = true
+        }
+    }
+}
+
+#Preview {
+    RootView()
+        .environmentObject(AppRouter())
 }

@@ -7,9 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B55D1C402E24A71E00DECE90 /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = B55D1C3F2E24A71E00DECE90 /* P2PKit */; };
+		8BA19F7D2E25EA75004BF13A /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BA19F7C2E25EA75004BF13A /* P2PKit */; };
 		B55D1CDB2E25194C00DECE90 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = B55D1CDA2E25194C00DECE90 /* Logging */; };
-		B569A2742E24A2F400548454 /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = B569A2732E24A2F400548454 /* P2PKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,7 +41,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		B51614E12E2491D0003D8BBB /* P2PTicTacToe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = P2PTicTacToe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B525632A2E1E133600CCDEFC /* Saboteur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Saboteur.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52563392E1E133700CCDEFC /* SaboteurTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SaboteurTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52563432E1E133700CCDEFC /* SaboteurUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SaboteurUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -50,26 +48,21 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		B51615312E249266003D8BBB /* Exceptions for "P2PTicTacToe" folder in "P2PTicTacToe" target */ = {
+		8BA19F782E25E7F6004BF13A /* Exceptions for "Saboteur" folder in "Saboteur" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = B51614E02E2491D0003D8BBB /* P2PTicTacToe */;
+			target = B52563292E1E133600CCDEFC /* Saboteur */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		B51614E22E2491D0003D8BBB /* P2PTicTacToe */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				B51615312E249266003D8BBB /* Exceptions for "P2PTicTacToe" folder in "P2PTicTacToe" target */,
-			);
-			path = P2PTicTacToe;
-			sourceTree = "<group>";
-		};
 		B525632C2E1E133600CCDEFC /* Saboteur */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				8BA19F782E25E7F6004BF13A /* Exceptions for "Saboteur" folder in "Saboteur" target */,
+			);
 			path = Saboteur;
 			sourceTree = "<group>";
 		};
@@ -91,19 +84,11 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		B51614DE2E2491D0003D8BBB /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B55D1C402E24A71E00DECE90 /* P2PKit in Frameworks */,
-				B569A2742E24A2F400548454 /* P2PKit in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B52563272E1E133600CCDEFC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8BA19F7D2E25EA75004BF13A /* P2PKit in Frameworks */,
 				B55D1CDB2E25194C00DECE90 /* Logging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -138,7 +123,6 @@
 				B525632C2E1E133600CCDEFC /* Saboteur */,
 				B525633C2E1E133700CCDEFC /* SaboteurTests */,
 				B52563462E1E133700CCDEFC /* SaboteurUITests */,
-				B51614E22E2491D0003D8BBB /* P2PTicTacToe */,
 				B55D1C462E24A7D600DECE90 /* GameEngine */,
 				B525632B2E1E133600CCDEFC /* Products */,
 			);
@@ -150,7 +134,6 @@
 				B525632A2E1E133600CCDEFC /* Saboteur.app */,
 				B52563392E1E133700CCDEFC /* SaboteurTests.xctest */,
 				B52563432E1E133700CCDEFC /* SaboteurUITests.xctest */,
-				B51614E12E2491D0003D8BBB /* P2PTicTacToe.app */,
 				B55D1C452E24A7D600DECE90 /* GameEngine */,
 			);
 			name = Products;
@@ -159,30 +142,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B51614E02E2491D0003D8BBB /* P2PTicTacToe */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = B51614EB2E2491D1003D8BBB /* Build configuration list for PBXNativeTarget "P2PTicTacToe" */;
-			buildPhases = (
-				B51614DD2E2491D0003D8BBB /* Sources */,
-				B51614DE2E2491D0003D8BBB /* Frameworks */,
-				B51614DF2E2491D0003D8BBB /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				B51614E22E2491D0003D8BBB /* P2PTicTacToe */,
-			);
-			name = P2PTicTacToe;
-			packageProductDependencies = (
-				B569A2732E24A2F400548454 /* P2PKit */,
-				B55D1C3F2E24A71E00DECE90 /* P2PKit */,
-			);
-			productName = P2PTicTacToe;
-			productReference = B51614E12E2491D0003D8BBB /* P2PTicTacToe.app */;
-			productType = "com.apple.product-type.application";
-		};
 		B52563292E1E133600CCDEFC /* Saboteur */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B525634D2E1E133700CCDEFC /* Build configuration list for PBXNativeTarget "Saboteur" */;
@@ -203,6 +162,7 @@
 			name = Saboteur;
 			packageProductDependencies = (
 				B55D1CDA2E25194C00DECE90 /* Logging */,
+				8BA19F7C2E25EA75004BF13A /* P2PKit */,
 			);
 			productName = Saboteur;
 			productReference = B525632A2E1E133600CCDEFC /* Saboteur.app */;
@@ -286,9 +246,6 @@
 				LastSwiftUpdateCheck = 1630;
 				LastUpgradeCheck = 1630;
 				TargetAttributes = {
-					B51614E02E2491D0003D8BBB = {
-						CreatedOnToolsVersion = 16.3;
-					};
 					B52563292E1E133600CCDEFC = {
 						CreatedOnToolsVersion = 16.3;
 					};
@@ -315,8 +272,8 @@
 			mainGroup = B52563212E1E133600CCDEFC;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				B55D1C3E2E24A71E00DECE90 /* XCLocalSwiftPackageReference "../P2PKit" */,
 				B55D1CD92E25194C00DECE90 /* XCRemoteSwiftPackageReference "swift-log" */,
+				8BA19F7B2E25E9E3004BF13A /* XCLocalSwiftPackageReference "../KitModify/P2PKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B525632B2E1E133600CCDEFC /* Products */;
@@ -326,20 +283,12 @@
 				B52563292E1E133600CCDEFC /* Saboteur */,
 				B52563382E1E133700CCDEFC /* SaboteurTests */,
 				B52563422E1E133700CCDEFC /* SaboteurUITests */,
-				B51614E02E2491D0003D8BBB /* P2PTicTacToe */,
 				B55D1C442E24A7D600DECE90 /* GameEngine */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		B51614DF2E2491D0003D8BBB /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B52563282E1E133600CCDEFC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -404,13 +353,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		B51614DD2E2491D0003D8BBB /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B52563262E1E133600CCDEFC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -455,66 +397,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		B51614E92E2491D1003D8BBB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RK3JJD2BZC;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = P2PTicTacToe/Info.plist;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.2025C4M4.P2PTicTacToe;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		B51614EA2E2491D1003D8BBB /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RK3JJD2BZC;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = P2PTicTacToe/Info.plist;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.2025C4M4.P2PTicTacToe;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		B525634B2E1E133700CCDEFC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -641,15 +523,18 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RK3JJD2BZC;
+				DEVELOPMENT_TEAM = 47UM88R722;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Saboteur/Info.plist;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This application will use local networking to discover nearby devices.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -670,15 +555,18 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RK3JJD2BZC;
+				DEVELOPMENT_TEAM = 47UM88R722;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Saboteur/Info.plist;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This application will use local networking to discover nearby devices.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -789,15 +677,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B51614EB2E2491D1003D8BBB /* Build configuration list for PBXNativeTarget "P2PTicTacToe" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B51614E92E2491D1003D8BBB /* Debug */,
-				B51614EA2E2491D1003D8BBB /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		B52563252E1E133600CCDEFC /* Build configuration list for PBXProject "Saboteur" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -846,9 +725,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		B55D1C3E2E24A71E00DECE90 /* XCLocalSwiftPackageReference "../P2PKit" */ = {
+		8BA19F7B2E25E9E3004BF13A /* XCLocalSwiftPackageReference "../KitModify/P2PKit" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../P2PKit;
+			relativePath = ../KitModify/P2PKit;
 		};
 /* End XCLocalSwiftPackageReference section */
 
@@ -864,7 +743,7 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		B55D1C3F2E24A71E00DECE90 /* P2PKit */ = {
+		8BA19F7C2E25EA75004BF13A /* P2PKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = P2PKit;
 		};
@@ -872,10 +751,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B55D1CD92E25194C00DECE90 /* XCRemoteSwiftPackageReference "swift-log" */;
 			productName = Logging;
-		};
-		B569A2732E24A2F400548454 /* P2PKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = P2PKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
