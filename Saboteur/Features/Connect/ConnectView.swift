@@ -23,8 +23,6 @@ struct ConnectView: View {
         ZStack {
             VStack {
                 VStack {
-                    Text("\(P2PConstants.gamePlayerCount)인 게임")
-
                     Text("채널: \(P2PConstants.networkChannelName)")
                     Button {
                         P2PNetwork.outSession()
