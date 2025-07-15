@@ -10,14 +10,11 @@ struct GameView: View {
     @Binding var gameState: GameState
     @StateObject private var viewModel = GameViewModel()
 
-    @State private var gotoGameResult: Bool = false
-
-//    @StateObject private var winner = P2PSyncedObservable(name: "TicTacToeWinner", initial: "")
+    @StateObject private var winner = P2PSyncedObservable(name: "TicTacToeWinner", initial: "")
 
     var body: some View {
-//        if winner.value != "" {
-        if gotoGameResult == true {
-            GameResultView()
+        if gameState == .endGame {
+            GameResultView(result: .winner(winner.value))
         } else {
             VStack {
                 Text("🕹️ 게임 화면 여기다 구현~")
@@ -27,15 +24,16 @@ struct GameView: View {
                 Text("연결된 사람 수: \(P2PNetwork.connectedPeers.count + 1)")
 
                 Button {
-                    gotoGameResult = true
+                    winner.value = "플레이어 1"
+                    gameState = .endGame
                 } label: {
                     Text("게임 종료 화면")
                 }
             }
+            .onChange(of: winner.value) { _ in
+                gameState = .endGame
+            }
         }
-//        .onChange(of: winner.value) { _ in
-//            gameState = .endGame
-//        }
     }
 }
 

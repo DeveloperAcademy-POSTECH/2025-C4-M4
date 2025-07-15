@@ -9,22 +9,19 @@ import P2PKit
 import SwiftUI
 
 struct GameResultView: View {
-    // let result: GameResult
+    let result: GameResult
     @EnvironmentObject var router: AppRouter
 
     var body: some View {
         VStack {
-//            Text(resultText)
-//                .font(.largeTitle)
-//                .padding()
+            Text(resultText)
+                .font(.largeTitle)
+                .padding()
 
             Button("다시 시작") {
-                //: : 이건 뭘 선택하냐에 따라 바뀌어야 함
-                P2PNetwork.maxConnectedPeers = 1
-                P2PConstants.setGamePlayerCount(2)
-
                 router.currentScreen = .none
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     router.currentScreen = .connect
                 }
             }
@@ -38,12 +35,12 @@ struct GameResultView: View {
         }
     }
 
-//    private var resultText: String {
-//        switch result {
-//        case let .winner(name):
-//            return "\(name) 승리!"
-//        case .draw:
-//            return "무승부"
-//        }
-//    }
+    private var resultText: String {
+        switch result {
+        case let .winner(name):
+            return "\(name) 승리!"
+        case .draw:
+            return "무승부"
+        }
+    }
 }
