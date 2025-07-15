@@ -8,10 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		8BA19F7D2E25EA75004BF13A /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BA19F7C2E25EA75004BF13A /* P2PKit */; };
+		B51719992E2612150034D9AC /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = B51719982E2612150034D9AC /* P2PKit */; };
+		B51F32342E26053300A09119 /* P2PKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B51F322E2E26053300A09119 /* P2PKit.framework */; };
+		B51F32352E26053300A09119 /* P2PKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B51F322E2E26053300A09119 /* P2PKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B55D1CDB2E25194C00DECE90 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = B55D1CDA2E25194C00DECE90 /* Logging */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		B51F32322E26053300A09119 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B52563222E1E133600CCDEFC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B51F322D2E26053300A09119;
+			remoteInfo = P2PKit;
+		};
 		B525633A2E1E133700CCDEFC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B52563222E1E133600CCDEFC /* Project object */;
@@ -29,6 +39,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		B51F32362E26053300A09119 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				B51F32352E26053300A09119 /* P2PKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B55D1C432E24A7D600DECE90 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -41,6 +62,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B51719962E2610020034D9AC /* P2PKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = P2PKit; sourceTree = "<group>"; };
+		B51F322E2E26053300A09119 /* P2PKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = P2PKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B525632A2E1E133600CCDEFC /* Saboteur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Saboteur.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52563392E1E133700CCDEFC /* SaboteurTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SaboteurTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52563432E1E133700CCDEFC /* SaboteurUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SaboteurUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -84,10 +107,19 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		B51F322B2E26053300A09119 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B52563272E1E133600CCDEFC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B51719992E2612150034D9AC /* P2PKit in Frameworks */,
+				B51F32342E26053300A09119 /* P2PKit.framework in Frameworks */,
 				8BA19F7D2E25EA75004BF13A /* P2PKit in Frameworks */,
 				B55D1CDB2E25194C00DECE90 /* Logging in Frameworks */,
 			);
@@ -120,6 +152,7 @@
 		B52563212E1E133600CCDEFC = {
 			isa = PBXGroup;
 			children = (
+				B51719962E2610020034D9AC /* P2PKit */,
 				B525632C2E1E133600CCDEFC /* Saboteur */,
 				B525633C2E1E133700CCDEFC /* SaboteurTests */,
 				B52563462E1E133700CCDEFC /* SaboteurUITests */,
@@ -135,13 +168,44 @@
 				B52563392E1E133700CCDEFC /* SaboteurTests.xctest */,
 				B52563432E1E133700CCDEFC /* SaboteurUITests.xctest */,
 				B55D1C452E24A7D600DECE90 /* GameEngine */,
+				B51F322E2E26053300A09119 /* P2PKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		B51F32292E26053300A09119 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
+		B51F322D2E26053300A09119 /* P2PKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B51F32392E26053300A09119 /* Build configuration list for PBXNativeTarget "P2PKit" */;
+			buildPhases = (
+				B51F32292E26053300A09119 /* Headers */,
+				B51F322A2E26053300A09119 /* Sources */,
+				B51F322B2E26053300A09119 /* Frameworks */,
+				B51F322C2E26053300A09119 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = P2PKit;
+			packageProductDependencies = (
+			);
+			productName = P2PKit;
+			productReference = B51F322E2E26053300A09119 /* P2PKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		B52563292E1E133600CCDEFC /* Saboteur */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B525634D2E1E133700CCDEFC /* Build configuration list for PBXNativeTarget "Saboteur" */;
@@ -151,10 +215,12 @@
 				B52563262E1E133600CCDEFC /* Sources */,
 				B52563272E1E133600CCDEFC /* Frameworks */,
 				B52563282E1E133600CCDEFC /* Resources */,
+				B51F32362E26053300A09119 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B51F32332E26053300A09119 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				B525632C2E1E133600CCDEFC /* Saboteur */,
@@ -163,6 +229,7 @@
 			packageProductDependencies = (
 				B55D1CDA2E25194C00DECE90 /* Logging */,
 				8BA19F7C2E25EA75004BF13A /* P2PKit */,
+				B51719982E2612150034D9AC /* P2PKit */,
 			);
 			productName = Saboteur;
 			productReference = B525632A2E1E133600CCDEFC /* Saboteur.app */;
@@ -246,6 +313,9 @@
 				LastSwiftUpdateCheck = 1630;
 				LastUpgradeCheck = 1630;
 				TargetAttributes = {
+					B51F322D2E26053300A09119 = {
+						CreatedOnToolsVersion = 16.3;
+					};
 					B52563292E1E133600CCDEFC = {
 						CreatedOnToolsVersion = 16.3;
 					};
@@ -273,7 +343,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				B55D1CD92E25194C00DECE90 /* XCRemoteSwiftPackageReference "swift-log" */,
-				8BA19F7B2E25E9E3004BF13A /* XCLocalSwiftPackageReference "../KitModify/P2PKit" */,
+				B51719972E2610870034D9AC /* XCLocalSwiftPackageReference "P2PKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B525632B2E1E133600CCDEFC /* Products */;
@@ -284,11 +354,19 @@
 				B52563382E1E133700CCDEFC /* SaboteurTests */,
 				B52563422E1E133700CCDEFC /* SaboteurUITests */,
 				B55D1C442E24A7D600DECE90 /* GameEngine */,
+				B51F322D2E26053300A09119 /* P2PKit */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		B51F322C2E26053300A09119 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B52563282E1E133600CCDEFC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -353,6 +431,13 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		B51F322A2E26053300A09119 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B52563262E1E133600CCDEFC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -384,6 +469,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		B51F32332E26053300A09119 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B51F322D2E26053300A09119 /* P2PKit */;
+			targetProxy = B51F32322E26053300A09119 /* PBXContainerItemProxy */;
+		};
 		B525633B2E1E133700CCDEFC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B52563292E1E133600CCDEFC /* Saboteur */;
@@ -397,6 +487,96 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		B51F32372E26053300A09119 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RK3JJD2BZC;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.4;
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = com.2025C4M4.P2PKit;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+				XROS_DEPLOYMENT_TARGET = 2.4;
+			};
+			name = Debug;
+		};
+		B51F32382E26053300A09119 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RK3JJD2BZC;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.4;
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = com.2025C4M4.P2PKit;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+				XROS_DEPLOYMENT_TARGET = 2.4;
+			};
+			name = Release;
+		};
 		B525634B2E1E133700CCDEFC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -523,7 +703,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 47UM88R722;
+				DEVELOPMENT_TEAM = RK3JJD2BZC;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -534,7 +714,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -555,7 +735,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 47UM88R722;
+				DEVELOPMENT_TEAM = RK3JJD2BZC;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -566,7 +746,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -677,6 +857,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B51F32392E26053300A09119 /* Build configuration list for PBXNativeTarget "P2PKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B51F32372E26053300A09119 /* Debug */,
+				B51F32382E26053300A09119 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B52563252E1E133600CCDEFC /* Build configuration list for PBXProject "Saboteur" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -725,9 +914,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		8BA19F7B2E25E9E3004BF13A /* XCLocalSwiftPackageReference "../KitModify/P2PKit" */ = {
+		B51719972E2610870034D9AC /* XCLocalSwiftPackageReference "P2PKit" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../KitModify/P2PKit;
+			relativePath = P2PKit;
 		};
 /* End XCLocalSwiftPackageReference section */
 
@@ -744,6 +933,10 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		8BA19F7C2E25EA75004BF13A /* P2PKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = P2PKit;
+		};
+		B51719982E2612150034D9AC /* P2PKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = P2PKit;
 		};
