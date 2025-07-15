@@ -23,8 +23,6 @@ struct ConnectView: View {
         ZStack {
             VStack {
                 VStack {
-                    // FIX -
-//                    Text("\(P2PConstants.gamePlayerCount)인 게임")
                     Text("채널: \(P2PConstants.networkChannelName)")
                     Button {
                         P2PNetwork.outSession()
@@ -36,30 +34,28 @@ struct ConnectView: View {
                     }
                 }
 
+                // 1. 게임 상태가 unstarted면 기본적으로 연결된 사용자와 로딩 화면을 보여주는 ConnectLobbyView을 띄움
                 if state == .unstarted {
                     ConnectLobbyView(connected: connected) {
+                        // 1-1. 그러다가 인원수가 다 차면 5초 카운트다운이 시작됨
                         if connected.peers.count == P2PNetwork.maxConnectedPeers {
                             if let countdown = countdown {
                                 Text("게임이 \(countdown)초 후 시작됩니다")
                                     .font(.title)
                                     .padding()
-                            } else {
-                                Text("연결이 끊어졌습니다")
-                                    .font(.title)
-                                    .padding()
                             }
                         }
                     }
-                } else if state == .pausedGame {
-                    LobbyView()
-//                    LobbyView(connected: connected) {
-//                        bigButton("오류 발생. 다시 돌아가기") {
-//                            P2PNetwork.outSession()
-//                            P2PNetwork.removeAllDelegates()
-//                            router.currentScreen = .choosePlayer
-//                        }
-//                    }
-                        .background(.white)
+                }
+                //: : 2. 게임 플레이 중에 누군가가 나가서 연결된 사람이 없으면 일단 오류 발생 버튼이 뜸.
+                else if state == .pausedGame {
+                    ConnectLobbyView(connected: connected) {
+                        Button("오류 발생. 다시 돌아가기") {
+                            P2PNetwork.outSession()
+                            P2PNetwork.removeAllDelegates()
+                            router.currentScreen = .choosePlayer
+                        }
+                    }
                 } else {
                     GameView(gameState: $state)
                 }
@@ -84,12 +80,6 @@ struct ConnectView: View {
         }
     }
 
-    private func bigButton(_ text: String, action: @escaping () -> Void) -> some View {
-        Button(action: action, label: {
-            Text(text).padding(10).font(.title)
-        })
-    }
-
     private func startCountdown() {
         countdown = 5
         countdownTimer?.invalidate()
@@ -99,7 +89,7 @@ struct ConnectView: View {
             } else {
                 timer.invalidate()
                 countdownTimer = nil
-                if connected.peers.count == 1 {
+                if connected.peers.count == P2PNetwork.maxConnectedPeers {
                     P2PNetwork.makeMeHost()
                     state = .startedGame
                 }

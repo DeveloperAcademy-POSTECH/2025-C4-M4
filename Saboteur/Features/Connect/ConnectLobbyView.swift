@@ -37,8 +37,7 @@ struct ConnectLobbyView<Content: View>: View {
         .foregroundColor(.black)
         .frame(maxWidth: 480)
         .safeAreaPadding()
-        .padding(EdgeInsets(top: 130, leading: 20,
-                            bottom: 100, trailing: 20))
+        .padding(EdgeInsets(top: 130, leading: 20, bottom: 100, trailing: 20))
     }
 
     private func peerSummaryText(_ peer: Peer) -> String {
