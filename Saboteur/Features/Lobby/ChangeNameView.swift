@@ -35,6 +35,11 @@ struct ChangeNameView: View {
             HStack {
                 Spacer()
 
+                Text("프로필")
+                    .font(.title2)
+
+                Spacer()
+
                 Button {
                     isPresented = false
                 } label: {
@@ -42,37 +47,61 @@ struct ChangeNameView: View {
                 }
             }
 
-            Text("닉네임 변경")
-                .font(.title2)
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(alignment: .top, spacing: 20) {
+                    Menu {
+                        Picker("국적 선택", selection: $selectedCountry) {
+                            ForEach(["🇰🇷", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇨🇦", "🇧🇷", "🇦🇺", "🇮🇳", "🇨🇳"], id: \.self) {
+                                Text($0)
+                            }
+                        }
+                    } label: {
+                        HStack {
+                            Text(selectedCountry)
+                            Image(systemName: "chevron.down")
+                        }
+                        .frame(width: 50, height: 60)
+                        .padding(.horizontal) // Match TextField padding
+                        .background(Color.gray.opacity(0.2))
+                        .cornerRadius(10)
+                    }
 
-            // 국기 드롭다운
-            Picker("국적 선택", selection: $selectedCountry) {
-                ForEach(["🇰🇷", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇨🇦", "🇧🇷", "🇦🇺", "🇮🇳", "🇨🇳"], id: \.self) {
-                    Text($0)
+                    VStack(alignment: .leading) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 20)
+                                .foregroundStyle(Color.blue.opacity(0.3))
+
+                            TextField("닉네임 입력", text: $nickname)
+                                .textFieldStyle(.plain)
+                                .padding(.horizontal)
+                                .foregroundStyle(Color.gray)
+                        }
+                        .frame(width: 400, height: 60)
+
+                        Text("*닉네임은 최대 영문 8자까지 입력 가능합니다")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                            .padding(.horizontal)
+                            .padding(.leading, -10)
+                    }
                 }
             }
-            .pickerStyle(.wheel)
-            .frame(height: 100)
+            .padding()
 
-            // 닉네임 입력
-            TextField("닉네임 입력", text: $nickname)
-                .textFieldStyle(.roundedBorder)
-                .padding(.horizontal)
-
-            Button("확인") {
+            Button {
                 let newDisplayName = "\(selectedCountry) \(nickname)"
                 P2PNetwork.resetSession(displayName: newDisplayName)
                 onNameChanged()
+            } label: {
+                Text("적용하기")
             }
             .disabled(nickname.trimmingCharacters(in: .whitespaces).isEmpty)
         }
-        .padding()
     }
 }
 
 #Preview {
-    @State var showModal = true
-    return ChangeNameView(isPresented: $showModal) {
-        print("닉네임 변경 완료")
+    ChangeNameView(isPresented: .constant(true)) {
+        print("닉네임 변경됨")
     }
 }

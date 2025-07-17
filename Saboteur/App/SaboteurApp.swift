@@ -36,10 +36,9 @@ struct RootView: View {
     var body: some View {
         Group {
             switch router.currentScreen {
-            case .choosePlayer: LobbyView()
-
+            case .lobby: LobbyView()
+            case .choosePlayer: ChoosePlayerView()
             case .connect: ConnectView()
-
             case .none: Color.clear
             }
         }
