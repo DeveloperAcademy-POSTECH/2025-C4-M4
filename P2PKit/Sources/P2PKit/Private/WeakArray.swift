@@ -49,8 +49,9 @@ extension WeakArray: Collection {
     var startIndex: Int { _items.startIndex }
     var endIndex: Int { _items.endIndex }
 
+    // 수정: 반환 타입이 T? 옵셔널 , 하지만 강제로 캐스팅으로 T로 반환 
     subscript(_ index: Int) -> T? {
-        _items[index].ref as! T
+        _items[index].ref as? T
     }
 
     func index(after idx: Int) -> Int {
