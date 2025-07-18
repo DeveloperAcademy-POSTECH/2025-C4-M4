@@ -19,10 +19,10 @@ struct ConnectView: View {
     @State private var countdown: Int? = nil
     @State private var countdownTimer: Timer? = nil
 
-    // 프리뷰를 위함
-    init(connected: ConnectedPeers = ConnectedPeers()) {
-        _connected = StateObject(wrappedValue: connected)
-    }
+//    // 프리뷰를 볼때 init 실행해야 함
+//    init(connected: ConnectedPeers = ConnectedPeers()) {
+//        _connected = StateObject(wrappedValue: connected)
+//    }
 
     var body: some View {
         VStack(spacing: 20) {
@@ -77,7 +77,7 @@ struct ConnectView: View {
         }
         .padding()
         .padding(.vertical, 30)
-        //: : 프리뷰 확인 시 주석 필요
+        // 프리뷰 확인 시 onAppear 주석 필요
         .onAppear {
             P2PNetwork.resetSession()
             connected.start()
@@ -113,20 +113,6 @@ struct ConnectView: View {
         }
     }
 }
-
-// #Preview {
-//    let dummyPeers = [
-//        Peer(MCPeerID(displayName: "유저 1"), id: "1"),
-//        Peer(MCPeerID(displayName: "유저 2"), id: "2"),
-//    ]
-//    let dummyHost = Peer(MCPeerID(displayName: "호스트"), id: "0")
-//    P2PNetwork.maxConnectedPeers = 3
-//
-//    let connected = ConnectedPeers.preview(peers: dummyPeers, host: dummyHost)
-//
-//    return ConnectView(connected: connected)
-//        .environmentObject(AppRouter())
-// }
 
 struct ConnectViewPreviewWrapper: View {
     @StateObject var connected = ConnectedPeers.preview(

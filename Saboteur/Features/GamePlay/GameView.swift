@@ -24,9 +24,10 @@ struct GameView: View {
                 } label: {
                     Text("게임 종료 화면")
                 }
-                GameBoardView().onChange(of: winner.value) {
-                    gameState = .endGame
-                }
+                GameBoardView()
+                    .onChange(of: winner.value) {
+                        gameState = .endGame
+                    }
             }
         }
     }
