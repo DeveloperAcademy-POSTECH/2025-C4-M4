@@ -22,27 +22,19 @@ struct GameView: View {
             VStack {
                 Button {
                     let remainingPeers = P2PNetwork.connectedPeers
-
-                    if remainingPeers.isEmpty {
-                        router.currentScreen = .choosePlayer
-                    } else {
-                        if let remaining = remainingPeers.first {
-                            winner.value = remaining.displayName
-                        }
-                        print("🔸 winner.value SET: \(winner.value)")
-                        print("🔸 players.value SET: \(players.value)")
-
-                        // 현재 사용자만 choosePlayer로 이동
-                        router.currentScreen = .choosePlayer
-
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            gameState = .endGame
-                            P2PNetwork.outSession()
-                        }
+                    
+                    if let remaining = remainingPeers.first {
+                        winner.value = remaining.displayName
                     }
+                    router.currentScreen = .choosePlayer
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        gameState = .endGame
+                        P2PNetwork.outSession()
+                    }
+
                 } label: {
                     Text("게임 나가기")
-                        .font(.system(size: 10))
                 }
 
                 GameBoardView(winner: winner)
