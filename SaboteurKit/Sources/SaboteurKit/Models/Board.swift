@@ -5,9 +5,13 @@ import Foundation
 public class Board {
     public var grid: [[BoardCell]] = Array(repeating: Array(repeating: BoardCell(), count: 5), count: 9)
 
+    public var lastGoal: (x: Int, y: Int)?
+
     public init() {
         grid[0][2] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "Ⓢ", isConnect: true, contributor: "") // start
-        grid[8][2] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "ⓖ", isConnect: true, contributor: "") // goal
+        grid[8][0] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "G0", isConnect: true, contributor: "", isGoal: false, isOpened: false) // top
+        grid[8][2] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "G1", isConnect: true, contributor: "", isGoal: false, isOpened: false) // middle
+        grid[8][4] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "G2", isConnect: true, contributor: "", isGoal: false, isOpened: false) // bottom
     }
 
     // 보드 현황을 보여준다
@@ -20,6 +24,11 @@ public class Board {
             print(line)
         }
         print("")
+    }
+
+    public func setGoal(grandom _: Int) {
+        let grandom = Int.random(in: 0 ... 2)
+        grid[8][grandom * 2].isGoal = true
     }
 
     // 카드 설치 가능 여부를 확인한다 - 로직 위주
@@ -104,7 +113,8 @@ public class Board {
             visited[x][y] = true
             // print("🚶‍♂️ 방문: (\(x),\(y)), 심볼: \(grid[x][y].symbol)")
 
-            if x == 8, y == 2 {
+            if x == 8, y == 0 || y == 2 || y == 4, grid[x][y].isOpened == false {
+                lastGoal = (x, y)
                 // print("🎯 목표에 도달했습니다! (\(x),\(y))")
                 return true
             }
@@ -119,7 +129,7 @@ public class Board {
                 let nx = x + dx, ny = y + dy
                 if nx >= 0, nx < grid.count, ny >= 0, ny < grid[0].count {
                     let neigh = grid[nx][ny]
-                    let isGoal = (nx == 8 && ny == 2)
+                    let isGoal = (nx == 8 && (ny == 0 || ny == 2 || ny == 4) && grid[nx][ny].isOpened == false)
                     let canConnect = cell.directions[myDir]
                         && (isGoal || (neigh.isCard && neigh.isConnect))
                         && neigh.directions[neighDir]
