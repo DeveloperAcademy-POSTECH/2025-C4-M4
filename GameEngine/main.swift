@@ -53,6 +53,8 @@ var currentPlayer: Player { players[currentPlayerIndex] }
 
 let board = Board()
 
+var goal = board.setGoal
+
 while true {
     print("게임을 끝내려면 'stop'를 입력하세요. 계속하려면 Enter > ", terminator: "")
     if readLine() == "stop" { break }
@@ -90,10 +92,25 @@ while true {
             if board.placeCard(x: x, y: y, card: selectedCard, player: currentPlayer.name) {
                 print("🪏 \(currentPlayer.name)가 \(selectedCard.symbol)를 (\(x),\(y))에 놓았습니다.\n")
 
-                if board.grid[7][2].isCard || board.grid[8][1].isCard || board.grid[8][3].isCard {
-                    if board.goalCheck() {
-                        print("🎉 \(currentPlayer.name)가 길을 완성했습니다!")
-                        exit(0)
+                if board.grid[7][2].isCard
+                    || board.grid[8][1].isCard
+                    || board.grid[8][3].isCard
+                    || board.grid[7][0].isCard
+                    || board.grid[7][4].isCard
+                {
+                    let pathComplete = board.goalCheck()
+                    if pathComplete {
+                        if let goal = board.lastGoal {
+                            // 보드셀의 isGoal이 true일 때
+                            if board.grid[goal.x][goal.y].isGoal == true {
+                                print("🎉 \(currentPlayer.name)가 길을 완성했습니다!")
+                                exit(0)
+                            } else {
+                                board.grid[goal.x][goal.y].isOpened = true
+                                board.grid[goal.x][goal.y].symbol = "┼"
+                                print("🎲 G\(goal.y / 2)에는 보석이 없습니다.\n")
+                            }
+                        }
                     }
                 }
                 currentPlayerIndex = (currentPlayerIndex + 1) % players.count
