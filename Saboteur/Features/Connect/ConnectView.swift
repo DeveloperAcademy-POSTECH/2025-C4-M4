@@ -26,28 +26,28 @@ struct ConnectView: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            HStack {
-                Button {
-                    P2PNetwork.outSession()
-                    P2PNetwork.removeAllDelegates()
+            // 1. 게임 상태가 unstarted면 기본적으로 연결된 사용자를 보여주는 PlayerProfileView을 띄움
+            if state == .unstarted {
+                HStack {
+                    Button {
+                        P2PNetwork.outSession()
+                        P2PNetwork.removeAllDelegates()
 
-                    router.currentScreen = .choosePlayer
-                } label: {
-                    Image(systemName: "door.left.hand.open")
+                        router.currentScreen = .choosePlayer
+                    } label: {
+                        Image(systemName: "door.left.hand.open")
+                    }
+
+                    Spacer()
+
+                    // Text("\(P2PConstants.networkChannelName)인 대기방")
+                    Text("\(P2PNetwork.maxConnectedPeers + 1)인 대기방")
+
+                    Spacer()
                 }
 
                 Spacer()
 
-                // Text("\(P2PConstants.networkChannelName)인 대기방")
-                Text("\(P2PNetwork.maxConnectedPeers + 1)인 대기방")
-
-                Spacer()
-            }
-
-            Spacer()
-
-            // 1. 게임 상태가 unstarted면 기본적으로 연결된 사용자를 보여주는 PlayerProfileView을 띄움
-            if state == .unstarted {
                 // 프로필 슬롯
                 PlayerProfileView(connected: connected)
 
@@ -63,7 +63,7 @@ struct ConnectView: View {
                 }
             }
 
-            //: : 2. 게임 플레이 중에 누군가가 나가서 연결된 사람이 없으면 일단 오류 발생 버튼이 뜸.
+            //: : 2. pausedGame이 되는 순간은 명시되지 않았음. 예외처리용.
             else if state == .pausedGame {
                 Button("오류 발생. 다시 돌아가기") {
                     P2PNetwork.outSession()
@@ -85,7 +85,7 @@ struct ConnectView: View {
         .onChange(of: connected.peers.count) {
             let connectedCount = connected.peers.count
             if connectedCount == 0, state == .startedGame {
-                state = .pausedGame
+                state = .endGame
             } else if connectedCount == P2PNetwork.maxConnectedPeers, state == .unstarted {
                 startCountdown()
             } else {
