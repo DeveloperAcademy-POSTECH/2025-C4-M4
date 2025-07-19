@@ -22,12 +22,12 @@ struct GameView: View {
             VStack {
                 Button {
                     let remainingPeers = P2PNetwork.connectedPeers
-                    
+
                     if let remaining = remainingPeers.first {
                         winner.value = remaining.displayName
                     }
                     router.currentScreen = .choosePlayer
-                    
+
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         gameState = .endGame
                         P2PNetwork.outSession()
