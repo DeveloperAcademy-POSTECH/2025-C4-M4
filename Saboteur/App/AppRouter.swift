@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 enum AppScreen {
+    case lobby
     case choosePlayer
     case connect
 
@@ -16,5 +17,5 @@ enum AppScreen {
 }
 
 class AppRouter: ObservableObject {
-    @Published var currentScreen: AppScreen = .choosePlayer
+    @Published var currentScreen: AppScreen = .lobby
 }

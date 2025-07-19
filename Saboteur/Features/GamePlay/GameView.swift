@@ -3,7 +3,7 @@ import SwiftUI
 
 enum GameResult {
     case winner(String)
-    case draw
+    case draw // 무승부인 상황이 없으면 삭제. 혹시 몰라 씀.
 }
 
 struct GameView: View {
@@ -11,10 +11,11 @@ struct GameView: View {
     @StateObject private var viewModel = GameViewModel()
 
     @StateObject private var winner = P2PSyncedObservable(name: "GameWinner", initial: "")
+    @StateObject private var players = P2PSyncedObservable(name: "AllPlayers", initial: [String]())
 
     var body: some View {
         if gameState == .endGame {
-            GameResultView(result: .winner(winner.value))
+            GameResultView(result: .winner(winner.value), players: players.value, myName: P2PNetwork.myPeer.displayName)
         } else {
             ZStack(alignment: .topTrailing) {
                 Button {
@@ -23,9 +24,10 @@ struct GameView: View {
                 } label: {
                     Text("게임 종료 화면")
                 }
-                GameBoardView().onChange(of: winner.value) {
-                    gameState = .endGame
-                }
+                GameBoardView()
+                    .onChange(of: winner.value) {
+                        gameState = .endGame
+                    }
             }
         }
     }

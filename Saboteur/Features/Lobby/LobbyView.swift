@@ -13,12 +13,13 @@ struct LobbyView: View {
     @State private var displayName: String = P2PNetwork.myPeer.displayName
 
     @State private var showNameModal: Bool = false
-    @State private var showPlayerModal: Bool = false
 
     var body: some View {
-        VStack {
-            NavigationStack {
-                VStack(spacing: 30) {
+        NavigationStack {
+            VStack {
+                HStack {
+                    Spacer()
+
                     Button {
                         showNameModal = true
                     } label: {
@@ -27,12 +28,20 @@ struct LobbyView: View {
                     .buttonStyle(.plain)
                     .padding()
                     .border(Color.black, width: 2)
+                }
 
-                    Button("게임 시작") {
-                        showPlayerModal = true
-                    }
+                Spacer()
+
+                Text("Treasure Island")
+                    .font(.title)
+
+                Spacer()
+
+                Button("게임 시작") {
+                    router.currentScreen = .choosePlayer
                 }
             }
+            .padding()
         }
         .onAppear {
             displayName = P2PNetwork.myPeer.displayName
@@ -52,7 +61,7 @@ struct LobbyView: View {
                         showNameModal = false
                     }
                     .padding()
-                    .frame(maxWidth: 300)
+                    .frame(width: 550)
                     .background(Color.white)
                     .cornerRadius(16)
                     .shadow(radius: 10)
@@ -60,28 +69,10 @@ struct LobbyView: View {
                 }
             }
         }
-        .overlay {
-            if showPlayerModal {
-                ZStack {
-                    Color.black.opacity(0.4)
-                        .ignoresSafeArea()
-
-                    ChoosePlayerView(showPlayerModal: $showPlayerModal)
-                        .frame(maxWidth: 300)
-                        .background(Color.white)
-                        .cornerRadius(16)
-                        .shadow(radius: 10)
-                        .padding()
-                }
-            }
-        }
     }
+}
 
-    //: : 나중에 적용
-    func startGame(with count: Int) {
-        P2PConstants.setGamePlayerCount(count)
-        P2PNetwork.maxConnectedPeers = count - 1
-        P2PNetwork.resetSession()
-        router.currentScreen = .connect
-    }
+#Preview {
+    LobbyView()
+        .environmentObject(AppRouter())
 }
