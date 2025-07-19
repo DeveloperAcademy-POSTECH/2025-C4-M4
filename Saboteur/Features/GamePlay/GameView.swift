@@ -22,7 +22,7 @@ struct GameView: View {
             VStack {
                 Button {
                     let remainingPeers = P2PNetwork.connectedPeers
-                    
+
                     if remainingPeers.isEmpty {
                         router.currentScreen = .choosePlayer
                     } else {
@@ -31,20 +31,19 @@ struct GameView: View {
                         }
                         print("🔸 winner.value SET: \(winner.value)")
                         print("🔸 players.value SET: \(players.value)")
-                        
+
                         // 현재 사용자만 choosePlayer로 이동
                         router.currentScreen = .choosePlayer
-                        
+
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             gameState = .endGame
                             P2PNetwork.outSession()
                         }
                     }
                 } label: {
-                        Text("게임 나가기")
-                            .font(.system(size: 10))
-                    }
-
+                    Text("게임 나가기")
+                        .font(.system(size: 10))
+                }
 
                 GameBoardView(winner: winner)
                     .onChange(of: winner.value) {
@@ -76,6 +75,7 @@ struct GameBoardView: View {
     private var allPlayers: [Peer] {
         [P2PNetwork.myPeer] + P2PNetwork.connectedPeers // 나 자신 + 연결된 사람
     }
+
     private var myDisplayName: String {
         P2PNetwork.myPeer.displayName // 나 자신 -> '나:'를 붙이기 위함
     }
@@ -188,6 +188,7 @@ final class BoardViewModel: ObservableObject {
     private var players: [Peer] {
         [P2PNetwork.myPeer] + P2PNetwork.connectedPeers // 나 자신 + 연결된 사람
     }
+
     // 현재 턴인 플레이어의 이름
     @Published var currentPlayer = P2PNetwork.currentTurnPlayerName
 
@@ -196,6 +197,7 @@ final class BoardViewModel: ObservableObject {
         let symbol: String
         let player: String
     }
+
     @Published var placedCards = P2PSyncedObservable(name: "PlacedCards", initial: [String: PlacedCard]())
 
     let winner: P2PSyncedObservable<String>
