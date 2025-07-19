@@ -8,6 +8,8 @@ public struct BoardCell: CustomStringConvertible {
     public var symbol: String = "☐"
     public var isConnect: Bool = false
     public var contributor: String = ""
+    public var isGoal: Bool? = false
+    public var isOpened: Bool? = false
 
     public var description: String {
         symbol
