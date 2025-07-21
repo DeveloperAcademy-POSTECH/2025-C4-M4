@@ -98,11 +98,11 @@ struct GameBoardView: View {
                             let x = index % 9
                             let y = index / 9
                             let cell = boardViewModel.board.grid[x][y]
-
+                            
                             let key = "\(x),\(y)"
                             let placed = boardViewModel.placedCards.value[key]
                             let symbolToShow = placed?.symbol ?? boardViewModel.board.grid[x][y].symbol
-
+                            
                             Text(symbolToShow)
                                 .frame(width: 40, height: 40)
                                 .background(boardViewModel.cursor == (x, y) ? Color.yellow : Color.clear)
@@ -113,7 +113,7 @@ struct GameBoardView: View {
                                 }
                         }
                     }
-
+                    
                     HStack {
                         ForEach(Array(cardSet.enumerated()), id: \.offset) { _, card in
                             Button(action: {
@@ -128,18 +128,6 @@ struct GameBoardView: View {
                         }
                     }
                     Text("카드를 클릭하여 위치를 선택하세요")
-//                        // 게임 종료 다이얼로그
-//                        .alert("게임 종료", isPresented: $boardViewModel.showGameEndDialog) {
-//                            Button("다시 시작") {
-//                                boardViewModel.resetGame()
-//                            }
-//                            Button("홈 화면으로") {
-//                                // 예시: 홈 화면 이동 로직 (구현 필요 시 분리 가능)
-//                                boardViewModel.showToast("홈 화면으로 이동합니다 (예시)")
-//                            }
-//                        } message: {
-//                            Text("🎉 \(boardViewModel.currentPlayer.value)가 길을 완성했습니다!")
-//                        }
                 }
                 .padding()
                 .onChange(of: boardViewModel.placedCards.value) { _ in
@@ -171,16 +159,15 @@ struct GameBoardView: View {
 final class BoardViewModel: ObservableObject {
     @Published var showGameEndDialog: Bool = false
     @Published var board = Board()
-    // @Published var players = (1 ... 2).map { Player(name: "P\($0)", nation: "Korean") }
-    // @Published var currentPlayerIndex = 0
     @Published var cursor: (Int, Int) = (0, 0)
     @Published var selectedCard: Card? = nil
     @Published var toastMessage: String? = nil
+    
     // 모든 플레이어 배열
     private var players: [Peer] {
         [P2PNetwork.myPeer] + P2PNetwork.connectedPeers // 나 자신 + 연결된 사람
     }
-
+    
     // 현재 턴인 플레이어의 이름
     @Published var currentPlayer = P2PNetwork.currentTurnPlayerName
 
@@ -189,7 +176,6 @@ final class BoardViewModel: ObservableObject {
         let symbol: String
         let player: String
     }
-
     @Published var placedCards = P2PSyncedObservable(name: "PlacedCards", initial: [String: PlacedCard]())
 
     let winner: P2PSyncedObservable<String>
@@ -206,7 +192,6 @@ final class BoardViewModel: ObservableObject {
         }
     }
 
-    // var currentPlayer: Player { players[currentPlayerIndex] }
     func placeSelectedCard() {
         guard let card = selectedCard else {
             showToast("카드를 먼저 선택해주세요.")
@@ -240,9 +225,6 @@ final class BoardViewModel: ObservableObject {
                 if board.grid[7][2].isCard || board.grid[8][1].isCard || board.grid[8][3].isCard {
                     if board.goalCheck() {
                         showToast("🎉 \(currentPlayer.value)가 길을 완성했습니다!")
-//                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//                            self.showGameEndDialog = true
-//                        }
                         winner.value = currentPlayer.value
                     }
                 }
@@ -252,7 +234,6 @@ final class BoardViewModel: ObservableObject {
     }
 
     func nextTurn() {
-        // currentPlayerIndex = (currentPlayerIndex + 1) % players.count
         let sortedPlayers = players.sorted { $0.displayName < $1.displayName }
         guard let currentIndex = sortedPlayers.firstIndex(where: { $0.displayName == currentPlayer.value }) else { return }
         let nextIndex = (currentIndex + 1) % sortedPlayers.count
@@ -261,7 +242,6 @@ final class BoardViewModel: ObservableObject {
 
     func resetGame() {
         board = Board()
-        // currentPlayerIndex = 0
         cursor = (0, 0)
         selectedCard = nil
         toastMessage = nil
