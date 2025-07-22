@@ -3,10 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>UIAppFonts</key>
-	<array>
-		<string>Maplestory OTF Bold.otf</string>
-		<string>Maplestory OTF Light.otf</string>
-	</array>
+    <array>
+        <string>Maplestory OTF Bold.otf</string>
+        <string>Maplestory OTF Light.otf</string>
+    </array>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>This application will use local networking to discover nearby devices.</string>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_my-p2p-2p._tcp</string>
