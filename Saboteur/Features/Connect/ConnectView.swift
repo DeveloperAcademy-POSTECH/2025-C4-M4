@@ -50,12 +50,12 @@ struct ConnectView: View {
 
                         Spacer()
                     }
-                    
+
                     Spacer()
 
                     // 프로필 슬롯
                     PlayerProfileView(connected: connected)
-                    
+
                     Spacer()
 
                     // 1-1. 그러다가 인원수가 다 차면 5초 카운트다운이 시작됨
@@ -74,7 +74,7 @@ struct ConnectView: View {
                         }
                         .foregroundStyle(Color.Emerald.emerald1)
                     }
-                    
+
                     Spacer()
                 }
 

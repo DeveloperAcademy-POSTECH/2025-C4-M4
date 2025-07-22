@@ -9,7 +9,7 @@ import UIKit
 final class AppDelegate: NSObject, UIApplicationDelegate, BackgroundTaskManagerDelegate {
     // 타임아웃 정책 상수 (필요 시 한 곳에서 쉽게 변경)
     private enum Timeout {
-        static let background: TimeInterval = 180 // 180초 후 세션 종료
+        static let background: TimeInterval = 3 * 60 // 3분 후 세션 종료
     }
 
     /// 앱이 처음 실행될 때 호출됩니다.
