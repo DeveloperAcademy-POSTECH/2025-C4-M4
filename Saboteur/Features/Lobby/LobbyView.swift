@@ -48,6 +48,7 @@ struct LobbyView: View {
                     } label: {
                         ZStack {
                             RoundedRectangle(cornerRadius: 50)
+                                .innerShadow()
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 55)
                                 .foregroundStyle(Color.Emerald.emerald2)

@@ -14,16 +14,33 @@ extension View {
     }
 }
 
+// fill()은 Shape 전용 메서드
+extension Shape {
+    func innerShadow(
+        radius: CGFloat = 1,
+        y: CGFloat = -1
+    ) -> some View {
+        fill(.shadow(.inner(radius: radius, y: y)))
+    }
+}
+
 // 사용 예시
 struct DropShadowExample: View {
     var body: some View {
         ZStack {
             Color.gray
 
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color.red)
-                .frame(width: 200, height: 200)
-                .dropShadow()
+            VStack {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(Color.red)
+                    .frame(width: 100, height: 100)
+                    .dropShadow()
+
+                RoundedRectangle(cornerRadius: 20)
+                    .innerShadow()
+                    .frame(width: 100, height: 100)
+                    .foregroundStyle(.red)
+            }
         }
     }
 }
