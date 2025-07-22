@@ -8,10 +8,10 @@ public class Board {
     public var lastGoal: (x: Int, y: Int)?
 
     public init() {
-        grid[0][2] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "Ⓢ", isConnect: true, contributor: "") // start
-        grid[8][0] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "G0", isConnect: true, contributor: "", isGoal: false, isOpened: false) // top
-        grid[8][2] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "G1", isConnect: true, contributor: "", isGoal: false, isOpened: false) // middle
-        grid[8][4] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "G2", isConnect: true, contributor: "", isGoal: false, isOpened: false) // bottom
+        grid[0][2] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "Ⓢ", imageName: "Board/start", isConnect: true, contributor: "") // start
+        grid[8][0] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "G0", imageName: "Board/goal", isConnect: true, contributor: "", isGoal: false, isOpened: false) // top
+        grid[8][2] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "G1", imageName: "Board/goal", isConnect: true, contributor: "", isGoal: false, isOpened: false) // middle
+        grid[8][4] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "G2", imageName: "Board/goal", isConnect: true, contributor: "", isGoal: false, isOpened: false) // bottom
     }
 
     // 보드 현황을 보여준다
@@ -62,7 +62,7 @@ public class Board {
     public func placeCard(x: Int, y: Int, card: Card, player: String) -> (Bool, String) {
         if !grid[x][y].isCard {
             if isPlacable(x: x, y: y, card: card) {
-                grid[x][y] = BoardCell(isCard: true, directions: card.directions, symbol: card.symbol, isConnect: card.connect, contributor: player)
+                grid[x][y] = BoardCell(isCard: true, directions: card.directions, symbol: card.symbol, imageName: card.imageName, isConnect: card.connect, contributor: player)
                 return (true, "🪏 \(player)가 \(card.symbol)를 (\(x),\(y))에 놓았습니다.")
             } else {
                 return (false, "❌ 해당 위치에 카드를 놓을 수 없습니다.")

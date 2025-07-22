@@ -115,10 +115,11 @@ struct GameBoardView: View {
                             Button(action: {
                                 boardViewModel.selectedCard = card
                             }) {
-                                Text(card.symbol)
+                                Image(card.imageName)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
                                     .frame(width: 30, height: 30)
-                                    .background(boardViewModel.selectedCard?.symbol == card.symbol ? Color.blue : Color.gray)
-                                    .foregroundColor(.white)
+                                    .background(boardViewModel.selectedCard?.imageName == card.imageName ? Color.blue : Color.gray)
                                     .cornerRadius(4)
                             }
                         }
@@ -159,9 +160,11 @@ struct GameBoardView: View {
         let onTap: () -> Void
 
         var body: some View {
-            Text(cell.symbol)
+            Image(cell.imageName)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
                 .frame(width: 40, height: 40)
-                .background(isCursor ? Color.yellow : Color.clear)
+                .background(boardViewModel.cursor == (x, y) ? Color.yellow : Color.clear)
                 .border(Color.black)
                 .onTapGesture {
                     onTap()

@@ -6,6 +6,7 @@ public struct BoardCell: CustomStringConvertible, Decodable, Encodable, Equatabl
     public var isCard: Bool = false
     public var directions: [Bool] = [true, true, true, true]
     public var symbol: String = "☐"
+    public var imageName: String = "Board/empty"
     public var isConnect: Bool = false
     public var contributor: String = ""
     public var isGoal: Bool? = false
