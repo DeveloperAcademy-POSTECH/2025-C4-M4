@@ -26,7 +26,7 @@ struct ConnectView: View {
 
     var body: some View {
         ZStack {
-            Image("BackgroundImage")
+            Image(.background)
                 .resizable()
                 .ignoresSafeArea()
 
