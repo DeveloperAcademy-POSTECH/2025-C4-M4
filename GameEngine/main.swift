@@ -1,4 +1,3 @@
-
 import Foundation
 import SaboteurKit
 
@@ -37,7 +36,18 @@ while true {
     }
 }
 
-let players = (1 ... numberOfPlayers).map { Player(name: "P\($0)", nation: "Korean") }
+var players = (1 ... numberOfPlayers).map { Player(name: "P\($0)", nation: "Korean") }
+
+var deck = Deck()
+
+// 초기 손패 배분
+for i in players.indices {
+    for _ in 0..<players[i].maxCount {
+        _ = players[i].drawCard(from: &deck)
+    }
+    players[i].display()
+}
+
 var currentPlayerIndex = 0
 var currentPlayer: Player { players[currentPlayerIndex] }
 
@@ -73,15 +83,18 @@ while true {
 
         // #5. 카드 설치를 수행한다
         if selectedCard.symbol == "💣" {
-            if board.dropBoom(x: x, y: y) {
-                print("💣 \(currentPlayer.name)가 (\(x),\(y)) 길 카드를 제거했습니다!\n")
+            let (success, message) = board.dropBoom(x: x, y: y)
+            print(message)
+            if success {
                 currentPlayerIndex = (currentPlayerIndex + 1) % players.count
                 break
-            } else { continue }
+            } else {
+                continue
+            }
         } else {
-            if board.placeCard(x: x, y: y, card: selectedCard, player: currentPlayer.name) {
-                print("🪏 \(currentPlayer.name)가 \(selectedCard.symbol)를 (\(x),\(y))에 놓았습니다.\n")
-
+            let (success, message) = board.placeCard(x: x, y: y, card: selectedCard, player: currentPlayer.name)
+            print(message)
+            if success {
                 if board.grid[7][2].isCard
                     || board.grid[8][1].isCard
                     || board.grid[8][3].isCard
@@ -91,7 +104,6 @@ while true {
                     let pathComplete = board.goalCheck()
                     if pathComplete {
                         if let goal = board.lastGoal {
-                            // 보드셀의 isGoal이 true일 때
                             if board.grid[goal.x][goal.y].isGoal == true {
                                 print("🎉 \(currentPlayer.name)가 길을 완성했습니다!")
                                 exit(0)
