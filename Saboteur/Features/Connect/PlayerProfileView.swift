@@ -13,24 +13,31 @@ struct PlayerProfileView: View {
     @StateObject var connected: ConnectedPeers
 
     var body: some View {
+        // Create a shuffled list of 4 unique styles
+        let shuffledStyles = Array(PlayerProfileComponentView.stylePresets.shuffled().prefix(4))
         HStack {
             HStack {
                 // 본인 프로필
+                let selectedStyle = shuffledStyles[0]
                 VStack {
-                    PlayerProfileComponentView(text: peerSummaryText(P2PNetwork.myPeer))
+                    PlayerProfileComponentView(text: peerSummaryText(P2PNetwork.myPeer), style: selectedStyle, showBackground: true)
                 }
 
                 Spacer()
-                    .frame(width: 30)
+                    .frame(width: 32)
 
                 // 다른 유저 프로필 슬롯
-                HStack(spacing: 10) {
+                HStack(spacing: 8) {
+                    // Only up to 3 peers, as we have 4 unique styles (first for self)
                     ForEach(0 ..< P2PNetwork.maxConnectedPeers, id: \.self) { index in
-                        if index < connected.peers.count {
+                        if index < connected.peers.count, index < 3 {
                             let peer = connected.peers[index]
-                            PlayerProfileComponentView(text: peerSummaryText(peer))
+                            let style = shuffledStyles[index + 1]
+                            PlayerProfileComponentView(text: peerSummaryText(peer), style: style, showBackground: false)
                         } else {
-                            EmptyProfileComponentView()
+                            Image("Empty_Profile")
+                                .resizable()
+                                .frame(width: 170, height: 215)
                         }
                     }
                 }
@@ -46,53 +53,44 @@ struct PlayerProfileView: View {
 }
 
 struct PlayerProfileComponentView: View {
+    static let stylePresets: [(image: ImageResource, color: Color, fill: Color)] = [
+        (.blackAirplane, Color.Grayscale.gray2, Color(hex: "575450")),
+        (.blueAirplane, Color.Secondary.blue3, Color(hex: "4AB1BE")),
+        (.greenAirplane, Color.Etc.mint, Color.Etc.mintdeep),
+        (.pinkAirplane, Color.Etc.red, Color.Etc.reddeep),
+        (.yellowAirplane, Color.Etc.orange, Color.Etc.orangedeep),
+    ]
+
     let text: String
+    let style: (image: ImageResource, color: Color, fill: Color)
+    let showBackground: Bool
 
     var body: some View {
         ZStack {
+            RoundedRectangle(cornerRadius: 20)
+                .fill(showBackground ? style.fill : Color.Ivory.ivory1)
+                .shadow(color: Color.black.opacity(0.25), radius: 2, x: 0, y: 2)
+
             VStack(spacing: 20) {
-                Circle()
-                    .frame(width: 120, height: 120)
+                Image(style.image)
+                    .resizable()
+                    .frame(width: 122, height: 122)
 
                 ZStack {
                     RoundedRectangle(cornerRadius: 20)
-                        .frame(width: 130, height: 30)
-                        .foregroundStyle(Color.clear)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color.black, lineWidth: 1)
-                        )
+                        .frame(width: 122, height: 30)
+                        .foregroundStyle(showBackground ? Color.Grayscale.whiteBg.opacity(0.3) : style.color)
 
                     Text(text)
-                        .frame(width: 115)
+                        .foregroundStyle(showBackground ? Color.white : Color.Grayscale.black)
+                        .frame(width: 105)
                         .minimumScaleFactor(0.5)
                         .lineLimit(1)
                 }
             }
             .padding()
-            .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(Color.black, lineWidth: 1)
-            )
         }
-    }
-}
-
-struct EmptyProfileComponentView: View {
-    var body: some View {
-        VStack(spacing: 20) {
-            Circle()
-                .stroke(Color.gray, style: StrokeStyle(lineWidth: 1, dash: [5]))
-                .frame(width: 120, height: 120)
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color.gray.opacity(0.1))
-                .frame(width: 130, height: 30)
-        }
-        .padding()
-        .overlay(
-            RoundedRectangle(cornerRadius: 20)
-                .stroke(Color.gray, lineWidth: 1)
-        )
+        .frame(width: 170, height: 215)
     }
 }
 
