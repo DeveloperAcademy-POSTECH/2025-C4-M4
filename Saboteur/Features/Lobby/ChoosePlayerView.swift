@@ -56,6 +56,7 @@ struct ChoosePlayerView: View {
                     .foregroundStyle(selectedPlayerCount != nil ? Color.black : Color.gray)
             }
             .buttonStyle(.plain)
+            .disabled(selectedPlayerCount == nil)
         }
         .padding()
     }

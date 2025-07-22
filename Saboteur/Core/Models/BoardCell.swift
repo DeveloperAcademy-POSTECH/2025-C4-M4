@@ -1,8 +1,6 @@
-
-
 import Foundation
 
-struct BoardCell: CustomStringConvertible {
+struct BoardCell: CustomStringConvertible, Decodable, Encodable, Equatable {
     var isCard: Bool = false
     var directions: [Bool] = [true, true, true, true]
     var symbol: String = "☐"
