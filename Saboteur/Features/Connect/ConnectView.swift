@@ -20,9 +20,9 @@ struct ConnectView: View {
     @State private var countdownTimer: Timer? = nil
 
     // 프리뷰를 볼때 init 실행해야 함
-    init(connected: ConnectedPeers = ConnectedPeers()) {
-        _connected = StateObject(wrappedValue: connected)
-    }
+//    init(connected: ConnectedPeers = ConnectedPeers()) {
+//        _connected = StateObject(wrappedValue: connected)
+//    }
 
     var body: some View {
         ZStack {
@@ -33,23 +33,41 @@ struct ConnectView: View {
             VStack {
                 // 1. 게임 상태가 unstarted면 기본적으로 연결된 사용자를 보여주는 PlayerProfileView을 띄움
                 if state == .unstarted {
-                    HStack {
-                        Button {
-                            P2PNetwork.outSession()
-                            P2PNetwork.removeAllDelegates()
+                    ZStack(alignment: .bottom) {
+                        HStack {
+                            Button {
+                                P2PNetwork.outSession()
+                                P2PNetwork.removeAllDelegates()
 
-                            router.currentScreen = .choosePlayer
-                        } label: {
-                            Image(.backButton)
+                                router.currentScreen = .choosePlayer
+                            } label: {
+                                Image(.backButton)
+                            }
+
+                            Spacer()
                         }
 
-                        Spacer()
+                        HStack {
+                            Spacer()
 
-                        Text("\(P2PNetwork.maxConnectedPeers + 1)인 대기방")
-                            .foregroundStyle(Color.Emerald.emerald2)
+                            StrokedText(
+                                text: "4인 대기방",
+                                strokeWidth: 9,
+                                strokeColor: .white,
+                                foregroundColor: UIColor(Color.Emerald.emerald2),
+                                font: UIFont(name: "MaplestoryOTFBold", size: 33)!,
+                                numberOfLines: 1,
+                                kerning: 0,
+                                // lineHeight: 10,
+                                textAlignment: .center
+                            )
+                            .dropShadow()
+                            .frame(height: 50)
 
-                        Spacer()
+                            Spacer()
+                        }
                     }
+                    .frame(height: 65)
 
                     Spacer()
 
@@ -62,17 +80,19 @@ struct ConnectView: View {
                     if connected.peers.count == P2PNetwork.maxConnectedPeers {
                         if let countdown = countdown {
                             Text("게임이 \(countdown)초 후 시작됩니다")
-                                .font(.title)
+                                .foregroundStyle(Color.Emerald.emerald1)
+                                .body2Font()
                                 .padding()
                         }
                     } else {
                         HStack {
-                            Text("다른 플레이어를 기다리는 중입니다")
+                            Text("플레이어를 기다리는 중입니다")
                             ProgressView()
                                 .tint(Color.Emerald.emerald1)
                             Text("(\(connected.peers.count)/\(P2PNetwork.maxConnectedPeers))")
                         }
                         .foregroundStyle(Color.Emerald.emerald1)
+                        .body2Font()
                     }
 
                     Spacer()
@@ -80,10 +100,14 @@ struct ConnectView: View {
 
                 //: : 2. pausedGame이 되는 순간은 명시되지 않았음. 예외처리용.
                 else if state == .pausedGame {
-                    Button("오류 발생. 다시 돌아가기") {
+                    Button {
                         P2PNetwork.outSession()
                         P2PNetwork.removeAllDelegates()
                         router.currentScreen = .choosePlayer
+                    } label: {
+                        Text("오류 발생. 다시 돌아가기")
+                            .foregroundStyle(Color.Emerald.emerald1)
+                            .body2Font()
                     }
 
                 } else {
@@ -92,10 +116,10 @@ struct ConnectView: View {
             }
         }
         // 프리뷰 확인 시 onAppear 주석 필요
-//        .onAppear {
-//            P2PNetwork.resetSession()
-//            connected.start()
-//        }
+        .onAppear {
+            P2PNetwork.resetSession()
+            connected.start()
+        }
         .onChange(of: connected.peers.count) {
             let connectedCount = connected.peers.count
             if connectedCount == 0, state == .startedGame {
@@ -131,7 +155,7 @@ struct ConnectView: View {
 struct ConnectViewPreviewWrapper: View {
     @StateObject var connected = ConnectedPeers.preview(
         peers: [
-            Peer(MCPeerID(displayName: "유저 1"), id: "1"),
+            Peer(MCPeerID(displayName: "🇰🇷 WWWWWWWW"), id: "1"),
         ],
         host: Peer(MCPeerID(displayName: "호스트"), id: "0")
     )
