@@ -27,24 +27,24 @@ public struct Card: Sendable {
 
 public let cardSet: [Card] = [
     // 연결 가능한 길 카드
-    Card(directions: [true, true, true, false], connect: true, symbol: "┴"),      // t
-    Card(directions: [true, true, false, true], connect: true, symbol: "│"),      // tb
-    Card(directions: [true, false, true, true], connect: true, symbol: "└"),      // tr
-    Card(directions: [true, true, true, false], connect: true, symbol: "┘"),      // tl
-    Card(directions: [false, true, false, true], connect: true, symbol: "─"),     // rl
-    Card(directions: [true, false, true, true], connect: true, symbol: "├"),      // trb
-    Card(directions: [true, true, true, false], connect: true, symbol: "┤"),      // trl
-    Card(directions: [true, true, true, true], connect: true, symbol: "┼"),       // trbl
+    Card(directions: [true, false, false, true], connect: true, symbol: "┘"), // tl
+    Card(directions: [true, true, false, false], connect: true, symbol: "└"), // tr
+    Card(directions: [true, false, true, true], connect: true, symbol: "│"), // tb
+    Card(directions: [false, true, false, true], connect: true, symbol: "─"), // rl
+    Card(directions: [true, true, true, false], connect: true, symbol: "├"), // trb
+    Card(directions: [true, true, false, true], connect: true, symbol: "ㅗ"), // trl
+    Card(directions: [true, true, true, true], connect: true, symbol: "┼"), // trbl
 
     // 방해 카드
-    Card(directions: [false, false, false, false], connect: false, symbol: "⨯"),  // lBlock
-    Card(directions: [true, true, false, true], connect: false, symbol: "╵"),     // tbBlock
-    Card(directions: [true, false, true, false], connect: false, symbol: "╰"),    // trBlock
-    Card(directions: [true, true, false, false], connect: false, symbol: "╯"),    // tlBlock
-    Card(directions: [false, true, false, true], connect: false, symbol: "╴"),    // rlBlock
-    Card(directions: [true, false, true, true], connect: false, symbol: "┡"),     // trbBlock
-    Card(directions: [true, true, true, false], connect: false, symbol: "┩"),     // trlBlock
-    Card(directions: [true, true, true, true], connect: false, symbol: "╳"),      // trblBlock
+    Card(directions: [true, false, false, false], connect: false, symbol: "▴"), // tBlock
+    Card(directions: [false, false, false, true], connect: false, symbol: "◀︎"), // lBlock
+    Card(directions: [true, false, false, true], connect: false, symbol: "▴◀︎"), // tlBlock
+    Card(directions: [true, true, false, false], connect: false, symbol: "╰"), // trBlock
+    Card(directions: [true, false, true, true], connect: false, symbol: "▴▾"), // tbBlock
+    Card(directions: [false, true, false, true], connect: false, symbol: "◀︎‣"), // rlBlock
+    Card(directions: [true, true, true, false], connect: false, symbol: "▴‣▾"), // trbBlock
+    Card(directions: [true, true, false, true], connect: false, symbol: "▴‣◀︎"), // trlBlock
+    Card(directions: [true, true, true, true], connect: false, symbol: "╳"), // trblBlock
 
     // 폭탄 카드
     Card(directions: [false, false, false, false], connect: false, symbol: "💣"), // bomb
