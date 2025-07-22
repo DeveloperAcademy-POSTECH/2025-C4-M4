@@ -36,7 +36,18 @@ while true {
     }
 }
 
-let players = (1 ... numberOfPlayers).map { Player(name: "P\($0)", nation: "Korean") }
+var players = (1 ... numberOfPlayers).map { Player(name: "P\($0)", nation: "Korean") }
+
+var deck = Deck()
+
+// 초기 손패 배분
+for i in players.indices {
+    for _ in 0..<players[i].maxCount {
+        _ = players[i].drawCard(from: &deck)
+    }
+    players[i].display()
+}
+
 var currentPlayerIndex = 0
 var currentPlayer: Player { players[currentPlayerIndex] }
 

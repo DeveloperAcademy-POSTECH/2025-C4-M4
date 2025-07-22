@@ -14,9 +14,19 @@ public struct Deck {
         cards.shuffle()
     }
 
+    private mutating func refill() {
+        cards.removeAll()
+        for (index, count) in cardDistribution.enumerated() {
+            for _ in 0..<count {
+                cards.append(cardSet[index])
+            }
+        }
+        cards.shuffle()
+    }
+
     public mutating func draw() -> Card? {
         if cards.isEmpty {
-            return nil
+            refill()
         }
         return cards.removeLast()
     }
