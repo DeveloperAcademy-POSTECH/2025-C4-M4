@@ -42,7 +42,7 @@ var deck = Deck()
 
 // 초기 손패 배분
 for i in players.indices {
-    for _ in 0..<players[i].maxCount {
+    for _ in 0 ..< players[i].maxCount {
         _ = players[i].drawCard(from: &deck)
     }
     players[i].display()
