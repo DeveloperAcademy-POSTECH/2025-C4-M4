@@ -36,15 +36,15 @@ public let cardSet: [Card] = [
     Card(directions: [true, true, true, true], connect: true, symbol: "┼", imageName: "Card/trbl"), // trbl
 
     // 방해 카드
-    Card(directions: [true, false, false, false], connect: false, symbol: "▴", imageName: "Card/tBlock"), // tBlock
-    Card(directions: [false, false, false, true], connect: false, symbol: "◀︎", imageName: "Card/lBlock"), // lBlock
-    Card(directions: [true, false, false, true], connect: false, symbol: "▴◀︎", imageName: "Card/tlBlock"), // tlBlock
-    Card(directions: [true, true, false, false], connect: false, symbol: "╰", imageName: "Card/trBlock"), // trBlock
-    Card(directions: [true, false, true, true], connect: false, symbol: "▴▾", imageName: "Card/tbBlock"), // tbBlock
-    Card(directions: [false, true, false, true], connect: false, symbol: "◀︎‣", imageName: "Card/rlBlock"), // rlBlock
-    Card(directions: [true, true, true, false], connect: false, symbol: "▴‣▾", imageName: "Card/trbBlock"), // trbBlock
-    Card(directions: [true, true, false, true], connect: false, symbol: "▴‣◀︎", imageName: "Card/trlBlock"), // trlBlock
-    Card(directions: [true, true, true, true], connect: false, symbol: "╳", imageName: "Card/trblBlock"), // trblBlock
+    Card(directions: [true, false, false, false], connect: false, symbol: "▴", imageName: "Card/t_block"), // t_block
+    Card(directions: [false, false, false, true], connect: false, symbol: "◀︎", imageName: "Card/l_block"), // l_block
+    Card(directions: [true, false, false, true], connect: false, symbol: "▴◀︎", imageName: "Card/tl_block"), // tl_block
+    Card(directions: [true, true, false, false], connect: false, symbol: "╰", imageName: "Card/tr_block"), // tr_block
+    Card(directions: [true, false, true, true], connect: false, symbol: "▴▾", imageName: "Card/tb_block"), // tb_block
+    Card(directions: [false, true, false, true], connect: false, symbol: "◀︎‣", imageName: "Card/rl_block"), // rl_block
+    Card(directions: [true, true, true, false], connect: false, symbol: "▴‣▾", imageName: "Card/trb_block"), // trb_block
+    Card(directions: [true, true, false, true], connect: false, symbol: "▴‣◀︎", imageName: "Card/trl_block"), // trl_block
+    Card(directions: [true, true, true, true], connect: false, symbol: "╳", imageName: "Card/trbl_block"), // trbl_block
 
     // 폭탄 카드
     Card(directions: [false, false, false, false], connect: false, symbol: "💣", imageName: "Card/bomb"), // bomb
