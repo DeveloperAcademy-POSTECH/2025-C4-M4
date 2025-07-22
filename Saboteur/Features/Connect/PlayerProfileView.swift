@@ -33,7 +33,7 @@ struct PlayerProfileView: View {
                             let style = shuffledStyles[index + 1]
                             PlayerProfileComponentView(text: peerSummaryText(peer), style: style, showBackground: false)
                         } else {
-                            Image("Empty_Profile")
+                            Image(.emptyProfile)
                                 .resizable()
                                 .frame(width: 170, height: 215)
                         }
