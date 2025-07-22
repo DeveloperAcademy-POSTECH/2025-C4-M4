@@ -59,33 +59,29 @@ public class Board {
     }
 
     // 카드를 설치한다 - 기본적인 isCard나 시작, 도착 지점 여부 확인도 이루어진다
-    public func placeCard(x: Int, y: Int, card: Card, player: String) -> Bool {
+    public func placeCard(x: Int, y: Int, card: Card, player: String) -> (Bool, String) {
         if !grid[x][y].isCard {
             if isPlacable(x: x, y: y, card: card) {
                 grid[x][y] = BoardCell(isCard: true, directions: card.directions, symbol: card.symbol, isConnect: card.connect, contributor: player)
-                return true
+                return (true, "🪏 \(player)가 \(card.symbol)를 (\(x),\(y))에 놓았습니다.")
             } else {
-                print("❌ 해당 위치에 카드를 놓을 수 없습니다.\n")
-                return false
+                return (false, "❌ 해당 위치에 카드를 놓을 수 없습니다.")
             }
         } else {
-            print("❌ 이미 카드가 있거나 시작/도착 지점입니다.\n")
-            return false
+            return (false, "❌ 이미 카드가 있거나 시작/도착 지점입니다.")
         }
     }
 
     // 폭탄 카드를 설치한다
-    public func dropBoom(x: Int, y: Int) -> Bool {
+    public func dropBoom(x: Int, y: Int) -> (Bool, String) {
         if (x == 0 && y == 2) || (x == 8 && y == 2) {
-            print("❌ 시작/도착 지점은 폭파할 수 없습니다.\n")
-            return false
+            return (false, "❌ 시작/도착 지점은 폭파할 수 없습니다.")
         }
         if grid[x][y].isCard {
             grid[x][y] = BoardCell()
-            return true
+            return (true, "💣 길 카드가 제거되었습니다!")
         } else {
-            print("❌ 해당 지점에 카드가 없습니다.\n")
-            return false
+            return (false, "❌ 해당 지점에 카드가 없습니다.")
         }
     }
 
