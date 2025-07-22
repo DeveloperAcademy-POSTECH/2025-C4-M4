@@ -1,4 +1,5 @@
 import P2PKit
+import SaboteurKit
 import SwiftUI
 
 enum GameResult {
@@ -97,23 +98,18 @@ struct GameBoardView: View {
                         ForEach(0 ..< 9 * 5, id: \.self) { index in
                             let x = index % 9
                             let y = index / 9
-                            let cell = boardViewModel.board.grid[x][y]
-                            
                             let key = "\(x),\(y)"
                             let placed = boardViewModel.placedCards.value[key]
-                            let symbolToShow = placed?.symbol ?? boardViewModel.board.grid[x][y].symbol
-                            
-                            Text(symbolToShow)
-                                .frame(width: 40, height: 40)
-                                .background(boardViewModel.cursor == (x, y) ? Color.yellow : Color.clear)
-                                .border(Color.black)
-                                .onTapGesture {
-                                    boardViewModel.cursor = (x, y)
-                                    boardViewModel.placeSelectedCard()
-                                }
+                            let fallback = boardViewModel.board.grid[x][y]
+                            let boardCell = placed ?? fallback
+
+                            GridCellView(x: x, y: y, cell: boardCell, isCursor: boardViewModel.cursor == (x, y)) {
+                                boardViewModel.cursor = (x, y)
+                                boardViewModel.placeSelectedCard()
+                            }
                         }
                     }
-                    
+
                     HStack {
                         ForEach(Array(cardSet.enumerated()), id: \.offset) { _, card in
                             Button(action: {
@@ -130,11 +126,11 @@ struct GameBoardView: View {
                     Text("카드를 클릭하여 위치를 선택하세요")
                 }
                 .padding()
-                .onChange(of: boardViewModel.placedCards.value) { _ in
-                    boardViewModel.cursor = boardViewModel.cursor
-                }
                 .onReceive(boardViewModel.currentPlayer.objectWillChange) { _ in
                     boardViewModel.cursor = boardViewModel.cursor
+                }
+                .onChange(of: boardViewModel.placedCards.value) { _ in
+                    boardViewModel.syncBoardWithPlacedCards()
                 }
             }
 
@@ -154,6 +150,24 @@ struct GameBoardView: View {
             }
         }
     }
+
+    struct GridCellView: View {
+        let x: Int
+        let y: Int
+        let cell: BoardCell
+        let isCursor: Bool
+        let onTap: () -> Void
+
+        var body: some View {
+            Text(cell.symbol)
+                .frame(width: 40, height: 40)
+                .background(isCursor ? Color.yellow : Color.clear)
+                .border(Color.black)
+                .onTapGesture {
+                    onTap()
+                }
+        }
+    }
 }
 
 final class BoardViewModel: ObservableObject {
@@ -162,21 +176,17 @@ final class BoardViewModel: ObservableObject {
     @Published var cursor: (Int, Int) = (0, 0)
     @Published var selectedCard: Card? = nil
     @Published var toastMessage: String? = nil
-    
+
     // 모든 플레이어 배열
     private var players: [Peer] {
         [P2PNetwork.myPeer] + P2PNetwork.connectedPeers // 나 자신 + 연결된 사람
     }
-    
+
     // 현재 턴인 플레이어의 이름
     @Published var currentPlayer = P2PNetwork.currentTurnPlayerName
 
     // 어느 플레이어가 어떤 카드를 어디에 놓았는지 공유
-    struct PlacedCard: Codable, Equatable {
-        let symbol: String
-        let player: String
-    }
-    @Published var placedCards = P2PSyncedObservable(name: "PlacedCards", initial: [String: PlacedCard]())
+    @Published var placedCards = P2PSyncedObservable(name: "PlacedCards", initial: [String: BoardCell]())
 
     let winner: P2PSyncedObservable<String>
     init(winner: P2PSyncedObservable<String>) {
@@ -208,8 +218,16 @@ final class BoardViewModel: ObservableObject {
             let (success, message) = board.dropBoom(x: x, y: y)
             if success {
                 let key = "\(x),\(y)"
-                let newMove = PlacedCard(symbol: card.symbol, player: currentPlayer.value)
+                let newMove = BoardCell(
+                    isCard: false,
+                    directions: card.directions,
+                    symbol: card.symbol,
+                    isConnect: card.connect,
+                    contributor: currentPlayer.value
+                )
                 placedCards.value[key] = newMove
+
+                board.grid[x][y] = newMove
 
                 nextTurn()
             }
@@ -217,10 +235,19 @@ final class BoardViewModel: ObservableObject {
         } else {
             let (success, message) = board.placeCard(x: x, y: y, card: card, player: currentPlayer.value)
             showToast(message)
+
             if success {
                 let key = "\(x),\(y)"
-                let newMove = PlacedCard(symbol: card.symbol, player: currentPlayer.value)
+                let newMove = BoardCell(
+                    isCard: true,
+                    directions: card.directions,
+                    symbol: card.symbol,
+                    isConnect: card.connect,
+                    contributor: currentPlayer.value
+                )
                 placedCards.value[key] = newMove
+
+                board.grid[x][y] = newMove
 
                 if board.grid[7][2].isCard || board.grid[8][1].isCard || board.grid[8][3].isCard {
                     if board.goalCheck() {
@@ -228,6 +255,7 @@ final class BoardViewModel: ObservableObject {
                         winner.value = currentPlayer.value
                     }
                 }
+
                 nextTurn()
             }
         }
@@ -246,5 +274,15 @@ final class BoardViewModel: ObservableObject {
         selectedCard = nil
         toastMessage = nil
         showGameEndDialog = false
+    }
+
+    func syncBoardWithPlacedCards() {
+        for (key, cell) in placedCards.value {
+            let coords = key.split(separator: ",").compactMap { Int($0) }
+            if coords.count == 2 {
+                let (x, y) = (coords[0], coords[1])
+                board.grid[x][y] = cell
+            }
+        }
     }
 }
