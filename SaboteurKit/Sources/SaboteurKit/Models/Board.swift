@@ -6,6 +6,9 @@ public class Board {
     public var grid: [[BoardCell]] = Array(repeating: Array(repeating: BoardCell(), count: 5), count: 9)
 
     public var lastGoal: (x: Int, y: Int)?
+    
+    public var lastGrid0: (x:Int, y:Int, d:Int)?
+    public var lastGrid1: (x:Int, y:Int, d:Int)?
 
     public init() {
         grid[0][2] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "Ⓢ", imageName: "Board/start", isConnect: true, contributor: "") // start
@@ -26,9 +29,10 @@ public class Board {
         print("")
     }
 
-    public func setGoal(grandom _: Int) {
+    public func setGoal() -> Int {
         let grandom = Int.random(in: 0 ... 2)
         grid[8][grandom * 2].isGoal = true
+        return grandom
     }
 
     // 카드 설치 가능 여부를 확인한다 - 로직 위주
@@ -43,13 +47,18 @@ public class Board {
             let ny = y + dy
             guard nx >= 0, nx < 9, ny >= 0, ny < 5 else { continue } // neighbor 카드의 존재 여부 체크
             let neighbor = grid[nx][ny]
-            if neighbor.isCard {
+            
+            let isGoalCoord = (nx == 8 && (ny == 0 || ny == 2 || ny == 4))
+            if isGoalCoord ? (neighbor.isOpened == true) : neighbor.isCard {
                 if card.directions[myDir], neighbor.directions[neighborDir] {
                     trueConnectedCount += 1
-                    if nx == 8, ny == 2 {
+                    if (nx == 8 && (ny == 0 || ny == 2 || ny == 4)) && (neighbor.isOpened == false) {
                         trueConnectedCount -= 1
                     }
                 } else if card.directions[myDir] != neighbor.directions[neighborDir] {
+                    lastGrid0 = (x, y, myDir)
+                    lastGrid1 = (nx, ny, neighborDir)
+                    
                     return false // 연결이 안 맞는 방향이 하나라도 있으면 false
                 }
             }
@@ -65,7 +74,11 @@ public class Board {
                 grid[x][y] = BoardCell(isCard: true, directions: card.directions, symbol: card.symbol, imageName: card.imageName, isConnect: card.connect, contributor: player)
                 return (true, "🪏 \(player)가 \(card.symbol)를 (\(x),\(y))에 놓았습니다.")
             } else {
-                return (false, "❌ 해당 위치에 카드를 놓을 수 없습니다.")
+                if let g0 = lastGrid0, let g1 = lastGrid1 {
+                    return (false, "❌ 해당 위치에 카드를 놓을 수 없습니다.\n 해당위치 = \(g0.x),\(g0.y), \(g1.x),\(g1.y)")
+                } else {
+                    return (false, "❌ 해당 위치에 카드를 놓을 수 없습니다.")
+                }
             }
         } else {
             return (false, "❌ 이미 카드가 있거나 시작/도착 지점입니다.")
@@ -74,7 +87,7 @@ public class Board {
 
     // 폭탄 카드를 설치한다
     public func dropBoom(x: Int, y: Int) -> (Bool, String) {
-        if (x == 0 && y == 2) || (x == 8 && y == 2) {
+        if (x == 0 && y == 2) || (x == 8 && (y == 0 || y == 2 || y == 4)) {
             return (false, "❌ 시작/도착 지점은 폭파할 수 없습니다.")
         }
         if grid[x][y].isCard {
