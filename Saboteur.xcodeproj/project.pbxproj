@@ -11,6 +11,7 @@
 		8BCB27562E2DE2220085688D /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCB27552E2DE2220085688D /* P2PKit */; };
 		8BCB27A32E2E6D890085688D /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCB27A22E2E6D890085688D /* SaboteurKit */; };
 		8BCB29B52E2FCF260085688D /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCB29B42E2FCF260085688D /* SaboteurKit */; };
+		8BCCDEE12E31136F00906D64 /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCCDEE02E31136F00906D64 /* SaboteurKit */; };
 		B51719992E2612150034D9AC /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = B51719982E2612150034D9AC /* P2PKit */; };
 		B5171AA72E2890F30034D9AC /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = B5171AA62E2890F30034D9AC /* SaboteurKit */; };
 		B5171AF72E2893AA0034D9AC /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = B5171AF62E2893AA0034D9AC /* SaboteurKit */; };
@@ -124,6 +125,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8BCCDEE12E31136F00906D64 /* SaboteurKit in Frameworks */,
 				8BCB27562E2DE2220085688D /* P2PKit in Frameworks */,
 				B51719992E2612150034D9AC /* P2PKit in Frameworks */,
 				B51F32342E26053300A09119 /* P2PKit.framework in Frameworks */,
@@ -245,6 +247,7 @@
 				8BCB27552E2DE2220085688D /* P2PKit */,
 				8BCB27A22E2E6D890085688D /* SaboteurKit */,
 				8BCB29B42E2FCF260085688D /* SaboteurKit */,
+				8BCCDEE02E31136F00906D64 /* SaboteurKit */,
 			);
 			productName = Saboteur;
 			productReference = B525632A2E1E133600CCDEFC /* Saboteur.app */;
@@ -361,7 +364,7 @@
 			packageReferences = (
 				B55D1CD92E25194C00DECE90 /* XCRemoteSwiftPackageReference "swift-log" */,
 				8BCB27542E2DE2170085688D /* XCLocalSwiftPackageReference "P2PKit" */,
-				8BCB29B32E2FCF260085688D /* XCLocalSwiftPackageReference "SaboteurKit" */,
+				8BCCDEDF2E31136F00906D64 /* XCLocalSwiftPackageReference "SaboteurKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B525632B2E1E133600CCDEFC /* Products */;
@@ -940,7 +943,7 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = P2PKit;
 		};
-		8BCB29B32E2FCF260085688D /* XCLocalSwiftPackageReference "SaboteurKit" */ = {
+		8BCCDEDF2E31136F00906D64 /* XCLocalSwiftPackageReference "SaboteurKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = SaboteurKit;
 		};
@@ -971,6 +974,10 @@
 			productName = SaboteurKit;
 		};
 		8BCB29B42E2FCF260085688D /* SaboteurKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SaboteurKit;
+		};
+		8BCCDEE02E31136F00906D64 /* SaboteurKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SaboteurKit;
 		};
