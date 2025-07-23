@@ -131,7 +131,7 @@ struct ChangeNameView: View {
                 Spacer()
                 Button {
                     let newDisplayName = "\(selectedCountry) \(nickname)"
-                    P2PNetwork.resetSession(displayName: newDisplayName)
+                    P2PNetwork.outSession(displayName: newDisplayName)
                     onNameChanged()
                 } label: {
                     FooterButton(title: "적용하기", isDisabled: nickname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
