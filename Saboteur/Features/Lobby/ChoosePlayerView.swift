@@ -68,7 +68,7 @@ struct ChoosePlayerView: View {
                         action: {
                             P2PNetwork.maxConnectedPeers = 1
                             P2PConstants.setGamePlayerCount(2)
-                            selectedPlayerCount = selectedPlayerCount == 2 ? nil : 2
+                            selectedPlayerCount = 2
                         },
                         selectedImage: .twoPlayerSelect,
                         unselectedImage: .twoPlayerUnselect,
@@ -78,7 +78,7 @@ struct ChoosePlayerView: View {
                     ChoosePlayerButton(action: {
                                            P2PNetwork.maxConnectedPeers = 2
                                            P2PConstants.setGamePlayerCount(3)
-                                           selectedPlayerCount = selectedPlayerCount == 3 ? nil : 3
+                                           selectedPlayerCount = 3
                                        },
                                        selectedImage: .threePlayerSelect,
                                        unselectedImage: .threePlayerUnselect,
@@ -87,7 +87,7 @@ struct ChoosePlayerView: View {
                     ChoosePlayerButton(action: {
                         P2PNetwork.maxConnectedPeers = 3
                         P2PConstants.setGamePlayerCount(4)
-                        selectedPlayerCount = selectedPlayerCount == 4 ? nil : 4
+                        selectedPlayerCount = 4
                     }, selectedImage: .fourPlayerSelect,
                     unselectedImage: .fourPlayerUnselect, isSelected: selectedPlayerCount == 4)
                 }
