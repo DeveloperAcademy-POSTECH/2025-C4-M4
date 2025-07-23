@@ -51,6 +51,7 @@ struct ConnectView: View {
 
                             Spacer()
                         }
+                        .customPadding(.header)
 
                         HStack {
                             Spacer()

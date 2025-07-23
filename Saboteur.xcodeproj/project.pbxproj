@@ -8,11 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		8BA19F7D2E25EA75004BF13A /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BA19F7C2E25EA75004BF13A /* P2PKit */; };
-		8BCB27562E2DE2220085688D /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCB27552E2DE2220085688D /* P2PKit */; };
-		8BCB27A32E2E6D890085688D /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCB27A22E2E6D890085688D /* SaboteurKit */; };
-		8BCB29B52E2FCF260085688D /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCB29B42E2FCF260085688D /* SaboteurKit */; };
-		8BCCDEE12E31136F00906D64 /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCCDEE02E31136F00906D64 /* SaboteurKit */; };
+		8BCB293E2E2FC6630085688D /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCB293D2E2FC6630085688D /* SaboteurKit */; };
+		8BCB2B482E2FD9D10085688D /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCB2B472E2FD9D10085688D /* SaboteurKit */; };
 		B51719992E2612150034D9AC /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = B51719982E2612150034D9AC /* P2PKit */; };
+		B5171AA52E2890DA0034D9AC /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = B5171AA42E2890DA0034D9AC /* SaboteurKit */; };
 		B5171AA72E2890F30034D9AC /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = B5171AA62E2890F30034D9AC /* SaboteurKit */; };
 		B5171AF72E2893AA0034D9AC /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = B5171AF62E2893AA0034D9AC /* SaboteurKit */; };
 		B51F32342E26053300A09119 /* P2PKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B51F322E2E26053300A09119 /* P2PKit.framework */; };
@@ -21,6 +20,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		B5171A982E288C110034D9AC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B52563222E1E133600CCDEFC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B5171A912E288C110034D9AC;
+			remoteInfo = SaboteurKit;
+		};
 		B51F32322E26053300A09119 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B52563222E1E133600CCDEFC /* Project object */;
@@ -74,6 +80,7 @@
 		B52563392E1E133700CCDEFC /* SaboteurTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SaboteurTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52563432E1E133700CCDEFC /* SaboteurUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SaboteurUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B55D1C452E24A7D600DECE90 /* GameEngine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GameEngine; sourceTree = BUILT_PRODUCTS_DIR; };
+		B582F66B2E2894A400A9FEC8 /* SaboteurKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SaboteurKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B582F6B62E2894A400A9FEC8 /* SaboteurKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SaboteurKit; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -114,6 +121,14 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		B5171A8F2E288C110034D9AC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B5171AA52E2890DA0034D9AC /* SaboteurKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B51F322B2E26053300A09119 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -130,9 +145,9 @@
 				B51719992E2612150034D9AC /* P2PKit in Frameworks */,
 				B51F32342E26053300A09119 /* P2PKit.framework in Frameworks */,
 				8BA19F7D2E25EA75004BF13A /* P2PKit in Frameworks */,
-				8BCB29B52E2FCF260085688D /* SaboteurKit in Frameworks */,
-				8BCB27A32E2E6D890085688D /* SaboteurKit in Frameworks */,
 				B55D1CDB2E25194C00DECE90 /* Logging in Frameworks */,
+				8BCB2B482E2FD9D10085688D /* SaboteurKit in Frameworks */,
+				8BCB293E2E2FC6630085688D /* SaboteurKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,6 +198,7 @@
 				B52563432E1E133700CCDEFC /* SaboteurUITests.xctest */,
 				B55D1C452E24A7D600DECE90 /* GameEngine */,
 				B51F322E2E26053300A09119 /* P2PKit.framework */,
+				B582F66B2E2894A400A9FEC8 /* SaboteurKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -190,6 +206,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		B5171A8D2E288C110034D9AC /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B51F32292E26053300A09119 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -200,6 +223,27 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		B5171A912E288C110034D9AC /* SaboteurKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B5171A9C2E288C110034D9AC /* Build configuration list for PBXNativeTarget "SaboteurKit" */;
+			buildPhases = (
+				B5171A8D2E288C110034D9AC /* Headers */,
+				B5171A8E2E288C110034D9AC /* Sources */,
+				B5171A8F2E288C110034D9AC /* Frameworks */,
+				B5171A902E288C110034D9AC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SaboteurKit;
+			packageProductDependencies = (
+				B5171AA42E2890DA0034D9AC /* SaboteurKit */,
+			);
+			productName = SaboteurKit;
+			productReference = B582F66B2E2894A400A9FEC8 /* SaboteurKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		B51F322D2E26053300A09119 /* P2PKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B51F32392E26053300A09119 /* Build configuration list for PBXNativeTarget "P2PKit" */;
@@ -235,6 +279,7 @@
 			);
 			dependencies = (
 				B51F32332E26053300A09119 /* PBXTargetDependency */,
+				B5171A992E288C110034D9AC /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				B525632C2E1E133600CCDEFC /* Saboteur */,
@@ -244,10 +289,8 @@
 				B55D1CDA2E25194C00DECE90 /* Logging */,
 				8BA19F7C2E25EA75004BF13A /* P2PKit */,
 				B51719982E2612150034D9AC /* P2PKit */,
-				8BCB27552E2DE2220085688D /* P2PKit */,
-				8BCB27A22E2E6D890085688D /* SaboteurKit */,
-				8BCB29B42E2FCF260085688D /* SaboteurKit */,
-				8BCCDEE02E31136F00906D64 /* SaboteurKit */,
+				8BCB293D2E2FC6630085688D /* SaboteurKit */,
+				8BCB2B472E2FD9D10085688D /* SaboteurKit */,
 			);
 			productName = Saboteur;
 			productReference = B525632A2E1E133600CCDEFC /* Saboteur.app */;
@@ -333,6 +376,9 @@
 				LastSwiftUpdateCheck = 1630;
 				LastUpgradeCheck = 1630;
 				TargetAttributes = {
+					B5171A912E288C110034D9AC = {
+						CreatedOnToolsVersion = 16.3;
+					};
 					B51F322D2E26053300A09119 = {
 						CreatedOnToolsVersion = 16.3;
 					};
@@ -363,8 +409,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				B55D1CD92E25194C00DECE90 /* XCRemoteSwiftPackageReference "swift-log" */,
-				8BCB27542E2DE2170085688D /* XCLocalSwiftPackageReference "P2PKit" */,
-				8BCCDEDF2E31136F00906D64 /* XCLocalSwiftPackageReference "SaboteurKit" */,
+				B51719972E2610870034D9AC /* XCLocalSwiftPackageReference "P2PKit" */,
+				8BCB2B462E2FD9D10085688D /* XCLocalSwiftPackageReference "SaboteurKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B525632B2E1E133600CCDEFC /* Products */;
@@ -376,11 +422,19 @@
 				B52563422E1E133700CCDEFC /* SaboteurUITests */,
 				B55D1C442E24A7D600DECE90 /* GameEngine */,
 				B51F322D2E26053300A09119 /* P2PKit */,
+				B5171A912E288C110034D9AC /* SaboteurKit */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		B5171A902E288C110034D9AC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B51F322C2E26053300A09119 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -452,6 +506,13 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		B5171A8E2E288C110034D9AC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B51F322A2E26053300A09119 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -490,6 +551,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		B5171A992E288C110034D9AC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B5171A912E288C110034D9AC /* SaboteurKit */;
+			targetProxy = B5171A982E288C110034D9AC /* PBXContainerItemProxy */;
+		};
 		B51F32332E26053300A09119 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B51F322D2E26053300A09119 /* P2PKit */;
@@ -508,6 +574,76 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		B5171A9D2E288C110034D9AC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 47UM88R722;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = com.2025C4M4.SaboteurKit;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		B5171A9E2E288C110034D9AC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 47UM88R722;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = com.2025C4M4.SaboteurKit;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		B51F32372E26053300A09119 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -515,7 +651,7 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 47UM88R722;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -733,8 +869,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationLandscapeLeft;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationLandscapeLeft;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -765,8 +901,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationLandscapeLeft;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationLandscapeLeft;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -857,7 +993,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = UDX6HCHRM3;
+				DEVELOPMENT_TEAM = RK3JJD2BZC;
 				ENABLE_HARDENED_RUNTIME = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.4;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -870,7 +1006,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = UDX6HCHRM3;
+				DEVELOPMENT_TEAM = RK3JJD2BZC;
 				ENABLE_HARDENED_RUNTIME = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.4;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -882,6 +1018,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B5171A9C2E288C110034D9AC /* Build configuration list for PBXNativeTarget "SaboteurKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B5171A9D2E288C110034D9AC /* Debug */,
+				B5171A9E2E288C110034D9AC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B51F32392E26053300A09119 /* Build configuration list for PBXNativeTarget "P2PKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -939,13 +1084,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		8BCB27542E2DE2170085688D /* XCLocalSwiftPackageReference "P2PKit" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = P2PKit;
-		};
-		8BCCDEDF2E31136F00906D64 /* XCLocalSwiftPackageReference "SaboteurKit" */ = {
+		8BCB2B462E2FD9D10085688D /* XCLocalSwiftPackageReference "SaboteurKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = SaboteurKit;
+		};
+		B51719972E2610870034D9AC /* XCLocalSwiftPackageReference "P2PKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = P2PKit;
 		};
 /* End XCLocalSwiftPackageReference section */
 
@@ -965,15 +1110,11 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = P2PKit;
 		};
-		8BCB27552E2DE2220085688D /* P2PKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = P2PKit;
-		};
-		8BCB27A22E2E6D890085688D /* SaboteurKit */ = {
+		8BCB293D2E2FC6630085688D /* SaboteurKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SaboteurKit;
 		};
-		8BCB29B42E2FCF260085688D /* SaboteurKit */ = {
+		8BCB2B472E2FD9D10085688D /* SaboteurKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SaboteurKit;
 		};
@@ -984,6 +1125,10 @@
 		B51719982E2612150034D9AC /* P2PKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = P2PKit;
+		};
+		B5171AA42E2890DA0034D9AC /* SaboteurKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SaboteurKit;
 		};
 		B5171AA62E2890F30034D9AC /* SaboteurKit */ = {
 			isa = XCSwiftPackageProductDependency;

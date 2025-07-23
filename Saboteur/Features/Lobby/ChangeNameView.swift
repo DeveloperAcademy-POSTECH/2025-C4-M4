@@ -31,22 +31,44 @@ struct ChangeNameView: View {
     }
 
     var body: some View {
-        VStack(spacing: 20) {
-            HStack {
-                Spacer()
+        VStack(spacing: 0) {
+            // 상단 헤더
+            ZStack {
+                HStack {
+                    Spacer()
+                    StrokedText(
+                        text: "프로필",
+                        strokeWidth: 9,
+                        strokeColor: .white,
+                        foregroundColor: UIColor(Color.Emerald.emerald2),
+                        font: UIFont(name: "MaplestoryOTFBold", size: 33)!,
+                        numberOfLines: 1,
+                        kerning: 0,
+                        // lineHeight: 10,
+                        textAlignment: .center
+                    )
 
-                Text("프로필")
-                    .font(.title2)
-
-                Spacer()
-
-                Button {
-                    isPresented = false
-                } label: {
-                    Image(systemName: "x.circle")
+                    Spacer()
                 }
-            }
+                .frame(height: 50)
 
+                HStack {
+                    Spacer()
+
+                    Button {
+                        isPresented = false
+                    } label: {
+                        Image(.xButton)
+                    }
+                }
+                .padding(.horizontal, 24)
+            }
+            .padding(.vertical, 16)
+            .background(Color.Emerald.emerald3)
+
+            Spacer()
+
+            // 입력 부분
             VStack(alignment: .leading, spacing: 10) {
                 HStack(alignment: .top, spacing: 20) {
                     Menu {
@@ -55,48 +77,73 @@ struct ChangeNameView: View {
                                 Text($0)
                             }
                         }
+                        .pickerStyle(.segmented)
                     } label: {
-                        HStack {
-                            Text(selectedCountry)
-                            Image(systemName: "chevron.down")
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundStyle(Color.Ivory.ivory1)
+                                .frame(width: 68, height: 60)
+                                .dropShadow()
+
+                            HStack(spacing: 10) {
+                                Text(selectedCountry)
+                                Image(.dropdownButton)
+                            }
                         }
-                        .frame(width: 50, height: 60)
-                        .padding(.horizontal) // Match TextField padding
-                        .background(Color.gray.opacity(0.2))
-                        .cornerRadius(10)
                     }
 
                     VStack(alignment: .leading) {
                         ZStack {
-                            RoundedRectangle(cornerRadius: 20)
-                                .foregroundStyle(Color.blue.opacity(0.3))
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundStyle(Color.Ivory.ivory2)
 
-                            TextField("닉네임 입력", text: $nickname)
+                            TextField("닉네임을 입력해주세요", text: $nickname)
                                 .textFieldStyle(.plain)
                                 .padding(.horizontal)
-                                .foregroundStyle(Color.gray)
+                                .foregroundStyle(Color.emerald2)
+                                // .foregroundStyle(Color.Ivory.ivory3)
+                                .body1Font()
+                                .keyboardType(.asciiCapable)
+                                .onChange(of: nickname) { newValue in
+                                    if newValue.count > 8 {
+                                        nickname = String(newValue.prefix(8))
+                                    }
+                                }
                         }
-                        .frame(width: 400, height: 60)
+                        .frame(height: 60)
 
                         Text("*닉네임은 최대 영문 8자까지 입력 가능합니다")
-                            .font(.caption)
-                            .foregroundColor(.gray)
+                            .label3Font()
+                            .foregroundStyle(Color.Ivory.ivory3)
                             .padding(.horizontal)
                             .padding(.leading, -10)
                     }
                 }
             }
             .padding()
+            .padding(.horizontal, 60)
+            .frame(height: 85)
 
-            Button {
-                let newDisplayName = "\(selectedCountry) \(nickname)"
-                P2PNetwork.resetSession(displayName: newDisplayName)
-                onNameChanged()
-            } label: {
-                Text("적용하기")
+            Spacer()
+
+            // 하단 버튼
+            HStack {
+                Spacer()
+                Button {
+                    let newDisplayName = "\(selectedCountry) \(nickname)"
+                    P2PNetwork.outSession(displayName: newDisplayName)
+                    onNameChanged()
+                } label: {
+                    FooterButton(title: "적용하기", isDisabled: nickname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                        .frame(width: 205)
+                }
+                Spacer()
             }
-            .disabled(nickname.trimmingCharacters(in: .whitespaces).isEmpty)
+            .padding(.vertical, 8)
+            .background(Color.Ivory.ivory2)
         }
+        .padding(0)
+        .frame(width: 572, height: 289)
     }
 }
 
