@@ -25,6 +25,7 @@ struct GameResultView: View {
         VStack {
             Spacer()
                 .frame(height: UIScreen.main.bounds.height * 0.06)
+                .layoutPriority(1)
 
             VStack(spacing: 16) {
                 // 승패 문구
@@ -137,6 +138,7 @@ struct GameResultView: View {
 
             Spacer()
                 .frame(height: UIScreen.main.bounds.height * 0.08)
+                .layoutPriority(1)
         }
         .task {
             P2PNetwork.outSession()

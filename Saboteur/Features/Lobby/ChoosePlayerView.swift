@@ -64,23 +64,32 @@ struct ChoosePlayerView: View {
 
                 // 인원 선택 버튼
                 HStack(spacing: 40) {
-                    ChoosePlayerButton(action: {
-                        P2PNetwork.maxConnectedPeers = 1
-                        P2PConstants.setGamePlayerCount(2)
-                        selectedPlayerCount = selectedPlayerCount == 2 ? nil : 2
-                    }, imageName: .twoPlayer, isSelected: selectedPlayerCount == 2)
+                    ChoosePlayerButton(
+                        action: {
+                            P2PNetwork.maxConnectedPeers = 1
+                            P2PConstants.setGamePlayerCount(2)
+                            selectedPlayerCount = selectedPlayerCount == 2 ? nil : 2
+                        },
+                        selectedImage: .twoPlayerSelect,
+                        unselectedImage: .twoPlayerUnselect,
+                        isSelected: selectedPlayerCount == 2
+                    )
 
                     ChoosePlayerButton(action: {
-                        P2PNetwork.maxConnectedPeers = 2
-                        P2PConstants.setGamePlayerCount(3)
-                        selectedPlayerCount = selectedPlayerCount == 3 ? nil : 3
-                    }, imageName: .threePlayer, isSelected: selectedPlayerCount == 3)
+                                           P2PNetwork.maxConnectedPeers = 2
+                                           P2PConstants.setGamePlayerCount(3)
+                                           selectedPlayerCount = selectedPlayerCount == 3 ? nil : 3
+                                       },
+                                       selectedImage: .threePlayerSelect,
+                                       unselectedImage: .threePlayerUnselect,
+                                       isSelected: selectedPlayerCount == 3)
 
                     ChoosePlayerButton(action: {
                         P2PNetwork.maxConnectedPeers = 3
                         P2PConstants.setGamePlayerCount(4)
                         selectedPlayerCount = selectedPlayerCount == 4 ? nil : 4
-                    }, imageName: .fourPlayer, isSelected: selectedPlayerCount == 4)
+                    }, selectedImage: .fourPlayerSelect,
+                    unselectedImage: .fourPlayerUnselect, isSelected: selectedPlayerCount == 4)
                 }
 
                 Spacer()
@@ -113,8 +122,38 @@ struct ChoosePlayerView: View {
 
 struct ChoosePlayerButton: View {
     let action: () -> Void
-    let imageName: ImageResource
+    let selectedImage: ImageResource?
+    let unselectedImage: ImageResource?
     var isSelected: Bool = false
+
+    // For backward compatibility: if only one image is given, use it for both states
+    init(
+        action: @escaping () -> Void,
+        selectedImage: ImageResource,
+        unselectedImage: ImageResource,
+        isSelected: Bool = false
+    ) {
+        self.action = action
+        self.selectedImage = selectedImage
+        self.unselectedImage = unselectedImage
+        self.isSelected = isSelected
+    }
+
+    // For old usage with only one image
+    init(
+        action: @escaping () -> Void,
+        imageName: ImageResource,
+        isSelected: Bool = false
+    ) {
+        self.action = action
+        selectedImage = imageName
+        unselectedImage = imageName
+        self.isSelected = isSelected
+    }
+
+    var currentImage: ImageResource {
+        isSelected ? (selectedImage ?? .twoPlayerSelect) : (unselectedImage ?? .twoPlayerUnselect)
+    }
 
     var body: some View {
         Button(action: action) {
@@ -124,7 +163,7 @@ struct ChoosePlayerButton: View {
                     .foregroundStyle(isSelected ? Color.Ivory.ivory2 : Color.Ivory.ivory1)
                     .dropShadow()
 
-                Image(imageName)
+                Image(currentImage)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 72)
