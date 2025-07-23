@@ -40,6 +40,13 @@ struct DropShadowExample: View {
                     .innerShadow()
                     .frame(width: 100, height: 100)
                     .foregroundStyle(.red)
+
+                RoundedRectangle(cornerRadius: 20)
+                    .innerShadow()
+                    .frame(width: 100, height: 100)
+                    .foregroundStyle(Color.Ivory.ivory1)
+
+                Image(.resultWinnerBox)
             }
         }
     }

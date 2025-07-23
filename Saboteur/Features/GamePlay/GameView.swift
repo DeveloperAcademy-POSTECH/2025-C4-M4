@@ -4,7 +4,6 @@ import SwiftUI
 
 enum GameResult {
     case winner(String)
-    case draw // 무승부인 상황이 없으면 삭제. 혹시 몰라 씀.
 }
 
 struct GameView: View {
@@ -18,7 +17,12 @@ struct GameView: View {
 
     var body: some View {
         if gameState == .endGame {
-            GameResultView(result: .winner(winner.value), players: players.value, myName: P2PNetwork.myPeer.displayName)
+            ZStack {
+                Color.black.opacity(0.6)
+                    .ignoresSafeArea()
+
+                GameResultView(result: .winner(winner.value), players: players.value, myName: P2PNetwork.myPeer.displayName)
+            }
         } else {
             VStack {
                 Button {
