@@ -33,6 +33,7 @@ struct ConnectView: View {
             VStack {
                 // 1. 게임 상태가 unstarted면 기본적으로 연결된 사용자를 보여주는 PlayerProfileView을 띄움
                 if state == .unstarted {
+                    // 상단 헤더
                     ZStack(alignment: .bottom) {
                         HStack {
                             Button {
@@ -46,12 +47,13 @@ struct ConnectView: View {
 
                             Spacer()
                         }
+                        .customPadding(.header)
 
                         HStack {
                             Spacer()
 
                             StrokedText(
-                                text: "4인 대기방",
+                                text: "\(P2PNetwork.maxConnectedPeers + 1)인 대기방",
                                 strokeWidth: 9,
                                 strokeColor: .white,
                                 foregroundColor: UIColor(Color.Emerald.emerald2),
@@ -67,7 +69,6 @@ struct ConnectView: View {
                             Spacer()
                         }
                     }
-                    .frame(height: 65)
 
                     Spacer()
 
