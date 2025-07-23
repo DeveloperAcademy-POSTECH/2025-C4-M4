@@ -68,12 +68,9 @@ struct LobbyView: View {
                         displayName = P2PNetwork.myPeer.displayName
                         showNameModal = false
                     }
-                    .padding()
-                    .frame(width: 550)
-                    .background(Color.white)
+                    .background(Color.Ivory.ivory1)
                     .cornerRadius(16)
                     .shadow(radius: 10)
-                    .padding()
                 }
             }
         }
