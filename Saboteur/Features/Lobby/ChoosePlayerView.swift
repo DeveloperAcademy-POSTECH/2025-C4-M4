@@ -8,6 +8,12 @@
 import P2PKit
 import SwiftUI
 
+@ViewBuilder
+private func customVerticalSpacer() -> some View {
+    Spacer()
+        .frame(height: 45)
+}
+
 struct ChoosePlayerView: View {
     @EnvironmentObject var router: AppRouter
     @State private var selectedPlayerCount: Int?
@@ -19,6 +25,7 @@ struct ChoosePlayerView: View {
                 .ignoresSafeArea()
 
             VStack {
+                // 상단 헤더
                 ZStack(alignment: .bottom) {
                     HStack {
                         Button {
@@ -26,10 +33,11 @@ struct ChoosePlayerView: View {
                         } label: {
                             Image(.backButton)
                         }
-
                         Spacer()
                     }
+                    .customPadding(.header)
 
+                    // 인원 설정
                     HStack {
                         Spacer()
 
@@ -50,10 +58,11 @@ struct ChoosePlayerView: View {
                         Spacer()
                     }
                 }
-                .frame(height: 65)
 
                 Spacer()
+                // customVerticalSpacer()
 
+                // 인원 선택 버튼
                 HStack(spacing: 40) {
                     ChoosePlayerButton(action: {
                         P2PNetwork.maxConnectedPeers = 1
@@ -75,26 +84,20 @@ struct ChoosePlayerView: View {
                 }
 
                 Spacer()
+                // customVerticalSpacer()
 
+                // 하단 버튼
                 Button(action: { P2PNetwork.resetSession()
                     router.currentScreen = .connect
                 }) {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 50)
-                            .innerShadow()
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 55)
-                            .foregroundStyle(selectedPlayerCount != nil ? Color.Emerald.emerald2 : Color.Grayscale.gray)
-
-                        Text("확인")
-                            .foregroundStyle(Color.Grayscale.whiteBg)
-                            .title2Font()
-                    }
-                    .padding(.horizontal, 250)
+                    FooterButton(title: "확인", isDisabled: selectedPlayerCount == nil)
+                        .customPadding(.footer)
                 }
                 .buttonStyle(.plain)
                 .allowsHitTesting(selectedPlayerCount != nil)
-                // .disabled(selectedPlayerCount == nil)
+
+                Spacer()
+                // .frame(height: UIScreen.main.bounds.height * 0.08)
             }
         }
     }

@@ -30,36 +30,24 @@ struct LobbyView: View {
                         } label: {
                             Image(.profileButton)
                         }
-                        .padding(.trailing, 30)
                     }
+                    .customPadding(.header)
 
-                    Spacer()
+                    VStack(spacing: 40) {
+                        Image(.logo)
+                            .resizable()
+                            .frame(width: UIScreen.main.bounds.width * 0.55, height: UIScreen.main.bounds.height * 0.45)
 
-                    Image(.logo)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 150)
-
-                    Spacer()
-                        .frame(height: 42)
-
-                    Button {
-                        router.currentScreen = .choosePlayer
-                    } label: {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 50)
-                                .innerShadow()
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 55)
-                                .foregroundStyle(Color.Emerald.emerald2)
-
-                            Text("게임 시작")
-                                .foregroundStyle(Color.Grayscale.whiteBg)
-                                .title2Font()
+                        Button {
+                            router.currentScreen = .choosePlayer
+                        } label: {
+                            FooterButton(title: "게임 시작")
+                                .customPadding(.footer)
                         }
                     }
-                    .padding(.horizontal, 250)
-                    .padding(.bottom, 40)
+
+                    Spacer()
+//                        .frame(height: UIScreen.main.bounds.height * 0.08)
                 }
             }
         }
@@ -96,3 +84,15 @@ struct LobbyView: View {
     LobbyView()
         .environmentObject(AppRouter())
 }
+
+// struct LobbyView_Preview: PreviewProvider {
+//    static var devices = ["iPhone 11", "iPhone 16 Pro Max", "iPad Pro 13-inch"]
+//    static var previews: some View {
+//        ForEach(devices, id: \.self) { device in
+//            LobbyView()
+//                .environmentObject(AppRouter())
+//                .previewDevice(PreviewDevice(rawValue: device))
+//                .previewDisplayName(device)
+//        }
+//    }
+// }
