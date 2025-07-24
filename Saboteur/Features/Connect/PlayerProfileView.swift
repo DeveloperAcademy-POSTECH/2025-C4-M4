@@ -45,8 +45,8 @@ struct PlayerProfileView: View {
 
     private func peerSummaryText(_ peer: Peer) -> String {
         // 호스트한테 붙임
-        let isHostString = connected.host?.peerID == peer.peerID ? " 🚀" : ""
-        return peer.displayName + isHostString
+        // let isHostString = connected.host?.peerID == peer.peerID ? " 🚀" : ""
+        peer.displayName
     }
 }
 
