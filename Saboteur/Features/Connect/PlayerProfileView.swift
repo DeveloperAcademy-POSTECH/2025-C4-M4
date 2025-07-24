@@ -11,13 +11,13 @@ import SwiftUI
 
 struct PlayerProfileView: View {
     @StateObject var connected: ConnectedPeers
-    @State private var shuffledStyles: [(image: ImageResource, color: Color, fill: Color)] = Array(PlayerProfileComponentView.stylePresets.shuffled().prefix(4))
+    @State private var shuffledStyles: [(image: ImageResource, color: Color, fill: Color, shadowFill: Color)] = Array(PlayerProfileComponentView.stylePresets.shuffled().prefix(4))
 
     var body: some View {
         HStack {
             HStack {
                 // 본인 프로필
-                let selectedStyle = shuffledStyles[0]
+                let selectedStyle = (shuffledStyles[0].image, shuffledStyles[0].color, shuffledStyles[0].fill, shuffledStyles[0].shadowFill)
                 VStack {
                     PlayerProfileComponentView(text: peerSummaryText(P2PNetwork.myPeer), style: selectedStyle, showBackground: true)
                 }
@@ -30,7 +30,7 @@ struct PlayerProfileView: View {
                     ForEach(0 ..< P2PNetwork.maxConnectedPeers, id: \.self) { index in
                         if index < connected.peers.count, index < 3 {
                             let peer = connected.peers[index]
-                            let style = shuffledStyles[index + 1]
+                            let style = (shuffledStyles[index + 1].image, shuffledStyles[index + 1].color, shuffledStyles[index + 1].fill, shuffledStyles[index + 1].shadowFill)
                             PlayerProfileComponentView(text: peerSummaryText(peer), style: style, showBackground: false)
                         } else {
                             Image(.emptyProfile)
@@ -45,29 +45,29 @@ struct PlayerProfileView: View {
 
     private func peerSummaryText(_ peer: Peer) -> String {
         // 호스트한테 붙임
-        let isHostString = connected.host?.peerID == peer.peerID ? " 🚀" : ""
-        return peer.displayName + isHostString
+        // let isHostString = connected.host?.peerID == peer.peerID ? " 🚀" : ""
+        peer.displayName
     }
 }
 
 struct PlayerProfileComponentView: View {
-    static let stylePresets: [(image: ImageResource, color: Color, fill: Color)] = [
-        (.blackAirplane, Color.Grayscale.gray2, Color(hex: "575450")),
-        (.blueAirplane, Color.Secondary.blue3, Color(hex: "4AB1BE")),
-        (.greenAirplane, Color.Etc.mint, Color.Etc.mintdeep),
-        (.pinkAirplane, Color.Etc.red, Color.Etc.reddeep),
-        (.yellowAirplane, Color.Etc.orange, Color.Etc.orangedeep),
+    static let stylePresets: [(image: ImageResource, color: Color, fill: Color, shadowFill: Color)] = [
+        (.blackAirplane, Color.Grayscale.gray2, Color(hex: "575450"), Color.Etc.grayShadow),
+        (.blueAirplane, Color.Secondary.blue3, Color(hex: "4AB1BE"), Color.Etc.tealShadow),
+        (.greenAirplane, Color.Etc.mint, Color(hex: "3C6C58"), Color.Etc.greenShadow),
+        (.pinkAirplane, Color.Etc.red, Color.Etc.reddeep, Color.Etc.pinkShadow),
+        (.yellowAirplane, Color.Etc.orange, Color.Etc.orangedeep, Color.Etc.yellowShadow),
     ]
 
     let text: String
-    let style: (image: ImageResource, color: Color, fill: Color)
+    let style: (image: ImageResource, color: Color, fill: Color, shadowFill: Color)
     let showBackground: Bool
 
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 20)
                 .fill(showBackground ? style.fill : Color.Ivory.ivory1)
-                .dropShadow()
+                .colordropShadow(color: showBackground ? style.shadowFill : Color.Ivory.ivory2)
 
             VStack(spacing: 20) {
                 Image(style.image)
