@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ChangeNameView: View {
     @State private var selectedCountry: String
+    @State private var shouldCloseMenu: Bool = false
     @State private var nickname: String
     var onNameChanged: () -> Void
 
@@ -31,77 +32,159 @@ struct ChangeNameView: View {
     }
 
     var body: some View {
-        VStack(spacing: 20) {
-            HStack {
-                Spacer()
+        VStack(spacing: 0) {
+            // 상단 헤더
+            ZStack {
+                HStack {
+                    Spacer()
+                    StrokedText(
+                        text: "프로필",
+                        strokeWidth: 9,
+                        strokeColor: .white,
+                        foregroundColor: UIColor(Color.Emerald.emerald2),
+                        font: UIFont(name: "MaplestoryOTFBold", size: 33)!,
+                        numberOfLines: 1,
+                        kerning: 0,
+                        // lineHeight: 10,
+                        textAlignment: .center
+                    )
 
-                Text("프로필")
-                    .font(.title2)
-
-                Spacer()
-
-                Button {
-                    isPresented = false
-                } label: {
-                    Image(systemName: "x.circle")
+                    Spacer()
                 }
-            }
+                .frame(height: 50)
 
+                HStack {
+                    Spacer()
+
+                    Button {
+                        isPresented = false
+                    } label: {
+                        Image(.xButton)
+                    }
+                }
+                .padding(.horizontal, 24)
+            }
+            .padding(.vertical, 16)
+            .background(Color.Emerald.emerald3)
+
+            Spacer()
+
+            // 입력 부분
             VStack(alignment: .leading, spacing: 10) {
-                HStack(alignment: .top, spacing: 20) {
+                HStack(alignment: .top, spacing: 8) {
                     Menu {
                         Picker("국적 선택", selection: $selectedCountry) {
                             ForEach(["🇰🇷", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇨🇦", "🇧🇷", "🇦🇺", "🇮🇳", "🇨🇳"], id: \.self) {
                                 Text($0)
                             }
                         }
-                    } label: {
-                        HStack {
-                            Text(selectedCountry)
-                            Image(systemName: "chevron.down")
+                        .pickerStyle(.segmented)
+                        .onChange(of: selectedCountry) {
+                            shouldCloseMenu.toggle()
                         }
-                        .frame(width: 50, height: 60)
-                        .padding(.horizontal) // Match TextField padding
-                        .background(Color.gray.opacity(0.2))
-                        .cornerRadius(10)
+                    } label: {
+                        HStack(spacing: 10) {
+                            Text(selectedCountry)
+                                .font(.system(size: 40))
+                            Image(.dropdownButton)
+                        }
+                        .foregroundStyle(Color.Ivory.ivory1)
+                        .padding(.horizontal, 12)
+                        .background {
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color.Ivory.ivory1.shadow(.inner(color: Color.Ivory.ivory3, radius: 0, x: 0, y: -4)))
+                                .stroke(Color.Ivory.ivory3, lineWidth: 1)
+                                .frame(width: 92, height: 60)
+                        }
                     }
+                    .frame(height: 60)
+                    .id(shouldCloseMenu)
 
                     VStack(alignment: .leading) {
                         ZStack {
-                            RoundedRectangle(cornerRadius: 20)
-                                .foregroundStyle(Color.blue.opacity(0.3))
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundStyle(Color.Ivory.ivory2)
 
-                            TextField("닉네임 입력", text: $nickname)
+                            TextField("닉네임을 입력해주세요", text: $nickname)
                                 .textFieldStyle(.plain)
                                 .padding(.horizontal)
-                                .foregroundStyle(Color.gray)
+                                .foregroundStyle(Color.Emerald.emerald2)
+                                // .foregroundStyle(Color.Ivory.ivory3)
+                                .body1Font()
+                                .keyboardType(.asciiCapable)
+                                .onChange(of: nickname) { newValue in
+                                    var filtered = newValue.replacingOccurrences(of: " ", with: "")
+                                    if filtered.count > 8 {
+                                        filtered = String(filtered.prefix(8))
+                                    }
+                                    nickname = filtered
+                                }
                         }
-                        .frame(width: 400, height: 60)
+                        .frame(height: 56)
 
                         Text("*닉네임은 최대 영문 8자까지 입력 가능합니다")
-                            .font(.caption)
-                            .foregroundColor(.gray)
+                            .label3Font()
+                            .foregroundStyle(Color.Ivory.ivory3)
                             .padding(.horizontal)
                             .padding(.leading, -10)
                     }
                 }
             }
             .padding()
+            .padding(.horizontal, 60)
+            .frame(height: 85)
 
-            Button {
-                let newDisplayName = "\(selectedCountry) \(nickname)"
-                P2PNetwork.resetSession(displayName: newDisplayName)
-                onNameChanged()
-            } label: {
-                Text("적용하기")
+            Spacer()
+
+            // 하단 버튼
+            HStack {
+                Spacer()
+
+                FooterButton(action: {
+                    let newDisplayName = "\(selectedCountry) \(nickname)"
+                    P2PNetwork.outSession(displayName: newDisplayName)
+                    onNameChanged()
+                }, title: "적용하기", isDisabled: nickname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    .frame(width: 205)
+
+                Spacer()
             }
-            .disabled(nickname.trimmingCharacters(in: .whitespaces).isEmpty)
+            .padding(.vertical, 8)
+            .background(Color.Ivory.ivory2)
         }
+        .padding(0)
+        .frame(width: 572, height: 289)
     }
 }
 
 #Preview {
     ChangeNameView(isPresented: .constant(true)) {
         print("닉네임 변경됨")
+    }
+}
+
+struct InnerShadowViewModifier: ViewModifier {
+    var color: Color
+    var radius: CGFloat
+    var x: CGFloat
+    var y: CGFloat
+
+    func body(content: Content) -> some View {
+        content
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(color, lineWidth: 1)
+                    .blur(radius: radius)
+                    .offset(x: x, y: y)
+                    .mask(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(LinearGradient(
+                                colors: [.black, .clear],
+                                startPoint: .bottom,
+                                endPoint: .bottom
+                            )
+                            )
+                    )
+            )
     }
 }

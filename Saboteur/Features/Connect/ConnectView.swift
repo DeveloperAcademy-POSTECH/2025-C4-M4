@@ -19,68 +19,120 @@ struct ConnectView: View {
     @State private var countdown: Int? = nil
     @State private var countdownTimer: Timer? = nil
 
-//    // 프리뷰를 볼때 init 실행해야 함
+    @State private var idleTime: TimeInterval = 0
+    @State private var idleTimer: Timer? = nil
+    @State private var showExitAlert: Bool = false
+
+    // 프리뷰를 볼때 init 실행해야 함
 //    init(connected: ConnectedPeers = ConnectedPeers()) {
 //        _connected = StateObject(wrappedValue: connected)
 //    }
 
     var body: some View {
-        VStack(spacing: 20) {
-            // 1. 게임 상태가 unstarted면 기본적으로 연결된 사용자를 보여주는 PlayerProfileView을 띄움
-            if state == .unstarted {
-                HStack {
+        ZStack {
+            Image(.background)
+                .resizable()
+                .ignoresSafeArea()
+
+            VStack {
+                // 1. 게임 상태가 unstarted면 기본적으로 연결된 사용자를 보여주는 PlayerProfileView을 띄움
+                if state == .unstarted {
+                    // 상단 헤더
+                    ZStack(alignment: .bottom) {
+                        HStack {
+                            Spacer()
+
+                            StrokedText(
+                                text: "\(P2PNetwork.maxConnectedPeers + 1)인 대기방",
+                                strokeWidth: 9,
+                                strokeColor: .white,
+                                foregroundColor: UIColor(Color.Emerald.emerald2),
+                                font: UIFont(name: "MaplestoryOTFBold", size: 33)!,
+                                numberOfLines: 1,
+                                kerning: 0,
+                                // lineHeight: 10,
+                                textAlignment: .center
+                            )
+                            .blackdropShadow()
+                            .frame(height: 50)
+
+                            Spacer()
+                        }
+
+                        HStack {
+                            Button {
+                                P2PNetwork.outSession()
+                                P2PNetwork.removeAllDelegates()
+
+                                router.currentScreen = .choosePlayer
+                            } label: {
+                                Image(.backButton)
+                            }
+
+                            Spacer()
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .customPadding(.header)
+                    .ignoresSafeArea()
+
+                    Spacer()
+
+                    // 프로필 슬롯
+                    HStack {
+                        Spacer()
+                        PlayerProfileView(connected: connected)
+                        Spacer()
+                    }
+                    .customPadding(.header)
+                    .ignoresSafeArea()
+
+                    Spacer()
+
+                    // 1-1. 그러다가 인원수가 다 차면 5초 카운트다운이 시작됨
+                    if connected.peers.count == P2PNetwork.maxConnectedPeers {
+                        if let countdown = countdown {
+                            Text("게임이 \(countdown)초 후 시작됩니다")
+                                .foregroundStyle(Color.Emerald.emerald1)
+                                .body2Font()
+                                .padding()
+                        }
+                    } else {
+                        HStack {
+                            Text("플레이어를 기다리는 중입니다")
+                            ProgressView()
+                                .tint(Color.Emerald.emerald1)
+                            Text("(\(connected.peers.count)/\(P2PNetwork.maxConnectedPeers))")
+                        }
+                        .foregroundStyle(Color.Emerald.emerald1)
+                        .body2Font()
+                    }
+
+                    Spacer()
+                }
+
+                //: : 2. pausedGame이 되는 순간은 명시되지 않았음. 예외처리용.
+                else if state == .pausedGame {
                     Button {
                         P2PNetwork.outSession()
                         P2PNetwork.removeAllDelegates()
-
                         router.currentScreen = .choosePlayer
                     } label: {
-                        Image(systemName: "door.left.hand.open")
+                        Text("오류 발생. 다시 돌아가기")
+                            .foregroundStyle(Color.Emerald.emerald1)
+                            .body2Font()
                     }
 
-                    Spacer()
-
-                    // Text("\(P2PConstants.networkChannelName)인 대기방")
-                    Text("\(P2PNetwork.maxConnectedPeers + 1)인 대기방")
-
-                    Spacer()
-                }
-
-                Spacer()
-
-                // 프로필 슬롯
-                PlayerProfileView(connected: connected)
-
-                // 1-1. 그러다가 인원수가 다 차면 5초 카운트다운이 시작됨
-                if connected.peers.count == P2PNetwork.maxConnectedPeers {
-                    if let countdown = countdown {
-                        Text("게임이 \(countdown)초 후 시작됩니다")
-                            .font(.title)
-                            .padding()
-                    }
                 } else {
-                    Text("다른 플레이어를 기다리는 중입니다 (\(connected.peers.count)/\(P2PNetwork.maxConnectedPeers))")
+                    GameView(gameState: $state)
                 }
-            }
-
-            //: : 2. pausedGame이 되는 순간은 명시되지 않았음. 예외처리용.
-            else if state == .pausedGame {
-                Button("오류 발생. 다시 돌아가기") {
-                    P2PNetwork.outSession()
-                    P2PNetwork.removeAllDelegates()
-                    router.currentScreen = .choosePlayer
-                }
-
-            } else {
-                GameView(gameState: $state)
             }
         }
-        .padding()
-        .padding(.vertical, 30)
         // 프리뷰 확인 시 onAppear 주석 필요
         .onAppear {
             P2PNetwork.resetSession()
             connected.start()
+            startIdleTimer()
         }
         .onChange(of: connected.peers.count) {
             let connectedCount = connected.peers.count
@@ -92,6 +144,19 @@ struct ConnectView: View {
                 countdown = nil
                 countdownTimer?.invalidate()
                 countdownTimer = nil
+
+                idleTime = 0
+            }
+        }
+        .alert("5분 동안 연결되지 않았습니다. 인원 설정 화면으로 돌아가시겠습니까?", isPresented: $showExitAlert) {
+            Button("네", role: .destructive) {
+                P2PNetwork.outSession()
+                P2PNetwork.removeAllDelegates()
+                router.currentScreen = .choosePlayer
+            }
+            Button("아니오", role: .cancel) {
+                idleTime = 0
+                startIdleTimer()
             }
         }
     }
@@ -112,12 +177,25 @@ struct ConnectView: View {
             }
         }
     }
+
+    // 3분 이상 대기자가 없으면 생기는 timer
+    private func startIdleTimer() {
+        idleTimer?.invalidate()
+        idleTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+            idleTime += 1
+            if idleTime >= 180, state == .unstarted {
+                idleTimer?.invalidate()
+                idleTimer = nil
+                showExitAlert = true
+            }
+        }
+    }
 }
 
 struct ConnectViewPreviewWrapper: View {
     @StateObject var connected = ConnectedPeers.preview(
         peers: [
-            Peer(MCPeerID(displayName: "유저 1"), id: "1"),
+            Peer(MCPeerID(displayName: "🇰🇷 WWWWWWWW"), id: "1"),
         ],
         host: Peer(MCPeerID(displayName: "호스트"), id: "0")
     )

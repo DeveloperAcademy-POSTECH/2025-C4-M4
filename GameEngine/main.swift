@@ -42,7 +42,7 @@ var deck = Deck()
 
 // 초기 손패 배분
 for i in players.indices {
-    for _ in 0..<players[i].maxCount {
+    for _ in 0 ..< players[i].maxCount {
         _ = players[i].drawCard(from: &deck)
     }
     players[i].display()
@@ -53,8 +53,7 @@ var currentPlayer: Player { players[currentPlayerIndex] }
 
 let board = Board()
 
-var goal = board.setGoal()
-print("g\(goal)이 goal의 위치입니다.")
+var goal = board.setGoal
 
 while true {
     print("게임을 끝내려면 'stop'를 입력하세요. 계속하려면 Enter > ", terminator: "")
@@ -69,7 +68,7 @@ while true {
         // #3. 카드를 선택한다
         let card = selectCard()
 
-        guard let selectedCard = card else { continue }
+        guard var selectedCard = card else { continue }
 
         // #4. 카드를 설치할 위치를 선택한다
         print("🎲 카드를 놓을 위치 (x y)를 입력하세요 (예: 3 2) > ", terminator: "")
@@ -128,4 +127,36 @@ while true {
  2. 카드를 선택한다
  3. 카드 위치를 선택한다
  4. 카드 설치를 수행한다
+ */
+
+/*
+ 개인 카드덱 사용 테스트를 위한 코드
+ var playerCount: Int = 2
+
+ var plys = (1 ... playerCount).map { Player(name: "P\($0)", nation: "Korean") }
+
+ var deck0 = Deck()
+
+ // 초기 손패 배분
+ for i in plys.indices {
+     for _ in 0 ..< plys[i].maxCount {
+         _ = plys[i].drawCard(from: &deck0)
+     }
+     plys[i].display()
+ }
+
+ var cpIndex = 0
+ var cp: Player { plys[cpIndex] }
+
+ while true {
+     print("It's \(cp.name)'s turn.\n")
+     plys[cpIndex].display()
+     print("select card to discard > ", terminator: "")
+     if let input = readLine(), let num = Int(input) {
+         plys[cpIndex].discardCard(plys[cpIndex].hand[num])
+             plys[cpIndex].drawCard(from: &deck0)
+                 plys[cpIndex].display()
+                 cpIndex = (cpIndex + 1) % plys.count
+     }
+ }
  */

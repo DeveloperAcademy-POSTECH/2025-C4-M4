@@ -14,34 +14,56 @@ struct LobbyView: View {
 
     @State private var showNameModal: Bool = false
 
+    @State private var startIsSelected: Bool = false
+
     var body: some View {
         NavigationStack {
-            VStack {
-                HStack {
-                    Spacer()
+            ZStack {
+                Image(.lobbyBackground)
+                    .resizable()
+                    .ignoresSafeArea()
 
-                    Button {
-                        showNameModal = true
-                    } label: {
-                        Text(displayName)
+                VStack {
+                    HStack {
+                        Spacer()
+
+                        Button {
+                            showNameModal = true
+                        } label: {
+                            Image(.profileButton)
+                        }
                     }
-                    .buttonStyle(.plain)
-                    .padding()
-                    .border(Color.black, width: 2)
-                }
+                    .customPadding(.header)
+                    .ignoresSafeArea()
 
-                Spacer()
+                    VStack(spacing: 40) {
+                        Image(.logo)
+                            .resizable()
+                            .frame(width: UIScreen.main.bounds.width * 0.55, height: UIScreen.main.bounds.height * 0.45)
 
-                Text("Treasure Island")
-                    .font(.title)
+                        FooterButton(action: {
+                                         router.currentScreen = .choosePlayer
+                                     },
+                                     title: "게임 시작")
+                            .customPadding(.footer)
 
-                Spacer()
+//                        Button {
+//
+//
+//                            startIsSelected = true
+//                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+//                                startIsSelected = false
+//                            }
+//                        } label: {
+//                            FooterButton(title: "게임 시작")
+//
+//                        }
+                    }
 
-                Button("게임 시작") {
-                    router.currentScreen = .choosePlayer
+                    Spacer()
+//                        .frame(height: UIScreen.main.bounds.height * 0.08)
                 }
             }
-            .padding()
         }
         .onAppear {
             displayName = P2PNetwork.myPeer.displayName
@@ -60,12 +82,9 @@ struct LobbyView: View {
                         displayName = P2PNetwork.myPeer.displayName
                         showNameModal = false
                     }
-                    .padding()
-                    .frame(width: 550)
-                    .background(Color.white)
+                    .background(Color.Ivory.ivory1)
                     .cornerRadius(16)
                     .shadow(radius: 10)
-                    .padding()
                 }
             }
         }
@@ -76,3 +95,15 @@ struct LobbyView: View {
     LobbyView()
         .environmentObject(AppRouter())
 }
+
+// struct LobbyView_Preview: PreviewProvider {
+//    static var devices = ["iPhone 11", "iPhone 16 Pro Max", "iPad Pro 13-inch"]
+//    static var previews: some View {
+//        ForEach(devices, id: \.self) { device in
+//            LobbyView()
+//                .environmentObject(AppRouter())
+//                .previewDevice(PreviewDevice(rawValue: device))
+//                .previewDisplayName(device)
+//        }
+//    }
+// }
