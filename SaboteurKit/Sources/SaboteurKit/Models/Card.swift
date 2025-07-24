@@ -6,7 +6,7 @@ public enum PathCardType: CaseIterable, Sendable {
     case bomb
 }
 
-public struct Card: Sendable {
+public struct Card: Sendable, Equatable {
 //    public let type: PathCardType
     public var directions: [Bool]
     public let connect: Bool
