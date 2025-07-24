@@ -172,6 +172,8 @@ struct ConnectView: View {
                 countdownTimer = nil
                 if connected.peers.count == P2PNetwork.maxConnectedPeers {
                     P2PNetwork.makeMeHost()
+                    P2PNetwork.stopAdvertising()
+                    P2PNetwork.stopbrowsing()
                     state = .startedGame
                 }
             }
