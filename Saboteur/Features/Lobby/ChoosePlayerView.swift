@@ -36,6 +36,7 @@ struct ChoosePlayerView: View {
                         Spacer()
                     }
                     .customPadding(.header)
+                    .ignoresSafeArea()
 
                     // 인원 설정
                     HStack {
@@ -52,7 +53,7 @@ struct ChoosePlayerView: View {
                             // lineHeight: 10,
                             textAlignment: .center
                         )
-                        .dropShadow()
+                        .blackdropShadow()
                         .frame(height: 50)
 
                         Spacer()
@@ -93,20 +94,15 @@ struct ChoosePlayerView: View {
                 }
 
                 Spacer()
-                // customVerticalSpacer()
 
-                // 하단 버튼
-                Button(action: { P2PNetwork.resetSession()
+                FooterButton(action: {
+                    P2PNetwork.resetSession()
                     router.currentScreen = .connect
-                }) {
-                    FooterButton(title: "확인", isDisabled: selectedPlayerCount == nil)
-                        .customPadding(.footer)
-                }
-                .buttonStyle(.plain)
-                .allowsHitTesting(selectedPlayerCount != nil)
+                }, title: "확인", isDisabled: selectedPlayerCount == nil)
+                    .allowsHitTesting(selectedPlayerCount != nil)
+                    .customPadding(.footer)
 
                 Spacer()
-                // .frame(height: UIScreen.main.bounds.height * 0.08)
             }
         }
     }
@@ -156,18 +152,24 @@ struct ChoosePlayerButton: View {
     }
 
     var body: some View {
-        Button(action: action) {
-            ZStack {
-                Circle()
-                    .frame(width: 152, height: 152)
-                    .foregroundStyle(isSelected ? Color.Ivory.ivory2 : Color.Ivory.ivory1)
-                    .dropShadow()
+        ZStack {
+            Circle()
+                .frame(width: 152, height: 152)
+                .foregroundStyle(isSelected ? Color.Ivory.ivory2 : Color.Ivory.ivory1)
+                .shadow(color: Color.Ivory.ivory2, radius: 0, x: 0, y: isSelected ? 0 : 5)
 
-                Image(currentImage)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 72)
-            }
+            Image(currentImage)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 72)
+        }
+
+        .buttonStyle(PlainButtonStyle())
+        .simultaneousGesture(DragGesture(minimumDistance: 0))
+        .offset(y: isSelected ? 0 : -2)
+        .animation(.easeOut(duration: 0.005), value: isSelected)
+        .onTapGesture {
+            action()
         }
     }
 }
