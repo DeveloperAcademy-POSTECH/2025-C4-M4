@@ -8,14 +8,10 @@ public enum PathCardType: CaseIterable, Sendable {
 
 public struct Card: Sendable {
 //    public let type: PathCardType
-    public let directions: [Bool]
+    public var directions: [Bool]
     public let connect: Bool
     public let symbol: String
     public let imageName: String
-
-    public var description: String {
-        symbol
-    }
 
     public init(directions: [Bool], connect: Bool, symbol: String, imageName: String) {
         self.directions = directions

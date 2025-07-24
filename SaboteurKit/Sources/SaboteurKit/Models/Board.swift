@@ -19,7 +19,7 @@ public class Board {
         for y in 0 ..< grid[0].count {
             var line = "y=\(y)  "
             for x in 0 ..< grid.count {
-                line += "\(grid[x][y].description) "
+                line += "\(grid[x][y].symbol) "
             }
             print(line)
         }

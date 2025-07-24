@@ -2,7 +2,7 @@
 
 import Foundation
 
-public struct BoardCell: CustomStringConvertible, Decodable, Encodable, Equatable {
+public struct BoardCell: Decodable, Encodable, Equatable {
     public var isCard: Bool = false
     public var directions: [Bool] = [true, true, true, true]
     public var symbol: String = "☐"
@@ -21,9 +21,5 @@ public struct BoardCell: CustomStringConvertible, Decodable, Encodable, Equatabl
         self.contributor = contributor
         self.isGoal = isGoal
         self.isOpened = isOpened
-    }
-
-    public var description: String {
-        symbol
     }
 }
