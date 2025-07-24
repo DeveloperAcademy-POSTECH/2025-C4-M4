@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		8BA19F7D2E25EA75004BF13A /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BA19F7C2E25EA75004BF13A /* P2PKit */; };
+		8BCB293E2E2FC6630085688D /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCB293D2E2FC6630085688D /* SaboteurKit */; };
+		8BCB2B482E2FD9D10085688D /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCB2B472E2FD9D10085688D /* SaboteurKit */; };
 		B51719992E2612150034D9AC /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = B51719982E2612150034D9AC /* P2PKit */; };
 		B5171AA52E2890DA0034D9AC /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = B5171AA42E2890DA0034D9AC /* SaboteurKit */; };
 		B5171AA72E2890F30034D9AC /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = B5171AA62E2890F30034D9AC /* SaboteurKit */; };
@@ -142,6 +144,8 @@
 				B51F32342E26053300A09119 /* P2PKit.framework in Frameworks */,
 				8BA19F7D2E25EA75004BF13A /* P2PKit in Frameworks */,
 				B55D1CDB2E25194C00DECE90 /* Logging in Frameworks */,
+				8BCB2B482E2FD9D10085688D /* SaboteurKit in Frameworks */,
+				8BCB293E2E2FC6630085688D /* SaboteurKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,6 +287,8 @@
 				B55D1CDA2E25194C00DECE90 /* Logging */,
 				8BA19F7C2E25EA75004BF13A /* P2PKit */,
 				B51719982E2612150034D9AC /* P2PKit */,
+				8BCB293D2E2FC6630085688D /* SaboteurKit */,
+				8BCB2B472E2FD9D10085688D /* SaboteurKit */,
 			);
 			productName = Saboteur;
 			productReference = B525632A2E1E133600CCDEFC /* Saboteur.app */;
@@ -402,7 +408,7 @@
 			packageReferences = (
 				B55D1CD92E25194C00DECE90 /* XCRemoteSwiftPackageReference "swift-log" */,
 				B51719972E2610870034D9AC /* XCLocalSwiftPackageReference "P2PKit" */,
-				B582F6B82E2894F300A9FEC8 /* XCLocalSwiftPackageReference "SaboteurKit" */,
+				8BCB2B462E2FD9D10085688D /* XCLocalSwiftPackageReference "SaboteurKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B525632B2E1E133600CCDEFC /* Products */;
@@ -985,7 +991,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = UDX6HCHRM3;
+				DEVELOPMENT_TEAM = RK3JJD2BZC;
 				ENABLE_HARDENED_RUNTIME = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.4;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -998,7 +1004,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = UDX6HCHRM3;
+				DEVELOPMENT_TEAM = RK3JJD2BZC;
 				ENABLE_HARDENED_RUNTIME = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.4;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1076,13 +1082,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
+		8BCB2B462E2FD9D10085688D /* XCLocalSwiftPackageReference "SaboteurKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = SaboteurKit;
+		};
 		B51719972E2610870034D9AC /* XCLocalSwiftPackageReference "P2PKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = P2PKit;
-		};
-		B582F6B82E2894F300A9FEC8 /* XCLocalSwiftPackageReference "SaboteurKit" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = SaboteurKit;
 		};
 /* End XCLocalSwiftPackageReference section */
 
@@ -1101,6 +1107,14 @@
 		8BA19F7C2E25EA75004BF13A /* P2PKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = P2PKit;
+		};
+		8BCB293D2E2FC6630085688D /* SaboteurKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SaboteurKit;
+		};
+		8BCB2B472E2FD9D10085688D /* SaboteurKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SaboteurKit;
 		};
 		B51719982E2612150034D9AC /* P2PKit */ = {
 			isa = XCSwiftPackageProductDependency;
