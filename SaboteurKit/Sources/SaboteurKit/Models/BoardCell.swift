@@ -12,7 +12,7 @@ public struct BoardCell: CustomStringConvertible, Decodable, Encodable, Equatabl
     public var isGoal: Bool? = false
     public var isOpened: Bool? = false
 
-    public init(isCard: Bool = false, directions: [Bool] = [true, true, true, true], symbol: String = "☐", imageName: String = "Board/empty", isConnect: Bool = false, contributor: String = "", isGoal: Bool? = false, isOpened: Bool? = false) {
+    public init(isCard: Bool = false, directions: [Bool] = [true, true, true, true], symbol: String = "☐", imageName: String = "Board/empty", isConnect: Bool = false, contributor: String = "", isGoal _: Bool? = false, isOpened _: Bool? = false) {
         self.isCard = isCard
         self.directions = directions
         self.symbol = symbol
