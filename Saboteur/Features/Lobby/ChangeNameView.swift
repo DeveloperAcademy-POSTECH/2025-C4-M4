@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ChangeNameView: View {
     @State private var selectedCountry: String
+    @State private var shouldCloseMenu: Bool = false
     @State private var nickname: String
     var onNameChanged: () -> Void
 
@@ -70,7 +71,7 @@ struct ChangeNameView: View {
 
             // 입력 부분
             VStack(alignment: .leading, spacing: 10) {
-                HStack(alignment: .top, spacing: 20) {
+                HStack(alignment: .top, spacing: 8) {
                     Menu {
                         Picker("국적 선택", selection: $selectedCountry) {
                             ForEach(["🇰🇷", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇨🇦", "🇧🇷", "🇦🇺", "🇮🇳", "🇨🇳"], id: \.self) {
@@ -78,6 +79,9 @@ struct ChangeNameView: View {
                             }
                         }
                         .pickerStyle(.segmented)
+                        .onChange(of: selectedCountry) {
+                            shouldCloseMenu.toggle()
+                        }
                     } label: {
                         HStack(spacing: 10) {
                             Text(selectedCountry)
@@ -88,21 +92,13 @@ struct ChangeNameView: View {
                         .padding(.horizontal, 12)
                         .background {
                             RoundedRectangle(cornerRadius: 10)
+                                .fill(Color.Ivory.ivory1.shadow(.inner(color: Color.Ivory.ivory3, radius: 0, x: 0, y: -4)))
                                 .stroke(Color.Ivory.ivory3, lineWidth: 1)
-                                .frame(height: 56)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(Color.Ivory.ivory3, lineWidth: 4)
-                                        .blur(radius: 0)
-                                        .mask(
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .offset(y: 4)
-                                                .frame(height: 60)
-                                        )
-                                )
+                                .frame(width: 92, height: 60)
                         }
                     }
-                    .frame(height: 56)
+                    .frame(height: 60)
+                    .id(shouldCloseMenu)
 
                     VStack(alignment: .leading) {
                         ZStack {
@@ -117,9 +113,11 @@ struct ChangeNameView: View {
                                 .body1Font()
                                 .keyboardType(.asciiCapable)
                                 .onChange(of: nickname) { newValue in
-                                    if newValue.count > 8 {
-                                        nickname = String(newValue.prefix(8))
+                                    var filtered = newValue.replacingOccurrences(of: " ", with: "")
+                                    if filtered.count > 8 {
+                                        filtered = String(filtered.prefix(8))
                                     }
+                                    nickname = filtered
                                 }
                         }
                         .frame(height: 56)
@@ -141,14 +139,14 @@ struct ChangeNameView: View {
             // 하단 버튼
             HStack {
                 Spacer()
-                Button {
+
+                FooterButton(action: {
                     let newDisplayName = "\(selectedCountry) \(nickname)"
                     P2PNetwork.outSession(displayName: newDisplayName)
                     onNameChanged()
-                } label: {
-                    FooterButton(title: "적용하기", isDisabled: nickname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                        .frame(width: 205)
-                }
+                }, title: "적용하기", isDisabled: nickname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    .frame(width: 205)
+
                 Spacer()
             }
             .padding(.vertical, 8)

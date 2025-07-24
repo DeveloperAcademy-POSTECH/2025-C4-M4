@@ -14,6 +14,8 @@ struct LobbyView: View {
 
     @State private var showNameModal: Bool = false
 
+    @State private var startIsSelected: Bool = false
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -39,12 +41,23 @@ struct LobbyView: View {
                             .resizable()
                             .frame(width: UIScreen.main.bounds.width * 0.55, height: UIScreen.main.bounds.height * 0.45)
 
-                        Button {
-                            router.currentScreen = .choosePlayer
-                        } label: {
-                            FooterButton(title: "게임 시작")
-                                .customPadding(.footer)
-                        }
+                        FooterButton(action: {
+                                         router.currentScreen = .choosePlayer
+                                     },
+                                     title: "게임 시작")
+                            .customPadding(.footer)
+
+//                        Button {
+//
+//
+//                            startIsSelected = true
+//                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+//                                startIsSelected = false
+//                            }
+//                        } label: {
+//                            FooterButton(title: "게임 시작")
+//
+//                        }
                     }
 
                     Spacer()
