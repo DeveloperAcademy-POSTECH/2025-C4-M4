@@ -5,8 +5,8 @@
 // Created by Baba on 7/17/25.
 //
 
-import Logging
 import UIKit
+import Logging
 
 /// 백그라운드 태스크 타임아웃 알림을 받기 위한 델리게이트 프로토콜입니다.
 protocol BackgroundTaskManagerDelegate: AnyObject {
@@ -19,7 +19,6 @@ final class BackgroundTaskManager {
     static let shared = BackgroundTaskManager()
 
     // MARK: - 로거 인스턴스를 한 번만 생성하여 재사용합니다.
-
     private let logger = Logger(label: "AppLifecycle")
 
     private init() {}
