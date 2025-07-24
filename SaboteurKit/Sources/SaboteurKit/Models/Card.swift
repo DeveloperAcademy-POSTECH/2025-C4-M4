@@ -23,7 +23,7 @@ public struct Card: Sendable, Equatable {
         self.symbol = symbol
         self.imageName = imageName
     }
-    
+
     public mutating func turnCard() {
         let d = directions
         directions = [d[2], d[3], d[0], d[1]]

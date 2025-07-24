@@ -17,7 +17,7 @@ public struct Deck {
     private mutating func refill() {
         cards.removeAll()
         for (index, count) in cardDistribution.enumerated() {
-            for _ in 0..<count {
+            for _ in 0 ..< count {
                 cards.append(cardSet[index])
             }
         }
