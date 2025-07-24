@@ -40,20 +40,6 @@ struct ConnectView: View {
                     // 상단 헤더
                     ZStack(alignment: .bottom) {
                         HStack {
-                            Button {
-                                P2PNetwork.outSession()
-                                P2PNetwork.removeAllDelegates()
-
-                                router.currentScreen = .choosePlayer
-                            } label: {
-                                Image(.backButton)
-                            }
-
-                            Spacer()
-                        }
-                        .customPadding(.header)
-
-                        HStack {
                             Spacer()
 
                             StrokedText(
@@ -67,17 +53,39 @@ struct ConnectView: View {
                                 // lineHeight: 10,
                                 textAlignment: .center
                             )
-                            .dropShadow()
+                            .blackdropShadow()
                             .frame(height: 50)
 
                             Spacer()
                         }
+
+                        HStack {
+                            Button {
+                                P2PNetwork.outSession()
+                                P2PNetwork.removeAllDelegates()
+
+                                router.currentScreen = .choosePlayer
+                            } label: {
+                                Image(.backButton)
+                            }
+
+                            Spacer()
+                        }
                     }
+                    .frame(maxWidth: .infinity)
+                    .customPadding(.header)
+                    .ignoresSafeArea()
 
                     Spacer()
 
                     // 프로필 슬롯
-                    PlayerProfileView(connected: connected)
+                    HStack {
+                        Spacer()
+                        PlayerProfileView(connected: connected)
+                        Spacer()
+                    }
+                    .customPadding(.header)
+                    .ignoresSafeArea()
 
                     Spacer()
 

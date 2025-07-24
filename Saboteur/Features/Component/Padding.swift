@@ -18,7 +18,7 @@ extension View {
         case .header:
             return padding(.horizontal, 64)
         case .footer:
-            return padding(.horizontal, 250)
+            return padding(.horizontal, 280)
         }
     }
 }
@@ -37,7 +37,7 @@ struct CustomPaddingView: View {
                 }
                 .customPadding(.header)
 
-                FooterButton(title: "하단 버튼")
+                FooterButton(title: "게임하기")
                     .customPadding(.footer)
 
                 Spacer()

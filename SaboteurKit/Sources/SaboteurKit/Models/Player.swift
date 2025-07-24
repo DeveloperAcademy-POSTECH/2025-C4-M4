@@ -21,6 +21,14 @@ public struct Player {
         return true
     }
     
+    public mutating func discardCard(_ card: Card) -> Bool {
+        if let index = hand.firstIndex(of: card) {
+            hand.remove(at: index)
+            return true
+        }
+            return false
+    }
+    
     public func display() {
         let symbols = hand.map { $0.symbol }
         print("🃏 내 카드: \(symbols.joined(separator: " "))")

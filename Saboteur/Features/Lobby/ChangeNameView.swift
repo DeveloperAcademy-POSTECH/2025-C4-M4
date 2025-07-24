@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ChangeNameView: View {
     @State private var selectedCountry: String
+    @State private var shouldCloseMenu: Bool = false
     @State private var nickname: String
     var onNameChanged: () -> Void
 
@@ -70,7 +71,7 @@ struct ChangeNameView: View {
 
             // 입력 부분
             VStack(alignment: .leading, spacing: 10) {
-                HStack(alignment: .top, spacing: 20) {
+                HStack(alignment: .top, spacing: 8) {
                     Menu {
                         Picker("국적 선택", selection: $selectedCountry) {
                             ForEach(["🇰🇷", "🇺🇸", "🇯🇵", "🇫🇷", "🇩🇪", "🇨🇦", "🇧🇷", "🇦🇺", "🇮🇳", "🇨🇳"], id: \.self) {
@@ -78,19 +79,26 @@ struct ChangeNameView: View {
                             }
                         }
                         .pickerStyle(.segmented)
+                        .onChange(of: selectedCountry) {
+                            shouldCloseMenu.toggle()
+                        }
                     } label: {
-                        ZStack {
+                        HStack(spacing: 10) {
+                            Text(selectedCountry)
+                                .font(.system(size: 40))
+                            Image(.dropdownButton)
+                        }
+                        .foregroundStyle(Color.Ivory.ivory1)
+                        .padding(.horizontal, 12)
+                        .background {
                             RoundedRectangle(cornerRadius: 10)
-                                .foregroundStyle(Color.Ivory.ivory1)
-                                .frame(width: 68, height: 60)
-                                .dropShadow()
-
-                            HStack(spacing: 10) {
-                                Text(selectedCountry)
-                                Image(.dropdownButton)
-                            }
+                                .fill(Color.Ivory.ivory1.shadow(.inner(color: Color.Ivory.ivory3, radius: 0, x: 0, y: -4)))
+                                .stroke(Color.Ivory.ivory3, lineWidth: 1)
+                                .frame(width: 92, height: 60)
                         }
                     }
+                    .frame(height: 60)
+                    .id(shouldCloseMenu)
 
                     VStack(alignment: .leading) {
                         ZStack {
@@ -105,12 +113,14 @@ struct ChangeNameView: View {
                                 .body1Font()
                                 .keyboardType(.asciiCapable)
                                 .onChange(of: nickname) { newValue in
-                                    if newValue.count > 8 {
-                                        nickname = String(newValue.prefix(8))
+                                    var filtered = newValue.replacingOccurrences(of: " ", with: "")
+                                    if filtered.count > 8 {
+                                        filtered = String(filtered.prefix(8))
                                     }
+                                    nickname = filtered
                                 }
                         }
-                        .frame(height: 60)
+                        .frame(height: 56)
 
                         Text("*닉네임은 최대 영문 8자까지 입력 가능합니다")
                             .label3Font()
@@ -129,14 +139,14 @@ struct ChangeNameView: View {
             // 하단 버튼
             HStack {
                 Spacer()
-                Button {
+
+                FooterButton(action: {
                     let newDisplayName = "\(selectedCountry) \(nickname)"
                     P2PNetwork.outSession(displayName: newDisplayName)
                     onNameChanged()
-                } label: {
-                    FooterButton(title: "적용하기", isDisabled: nickname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                        .frame(width: 205)
-                }
+                }, title: "적용하기", isDisabled: nickname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    .frame(width: 205)
+
                 Spacer()
             }
             .padding(.vertical, 8)
@@ -150,5 +160,31 @@ struct ChangeNameView: View {
 #Preview {
     ChangeNameView(isPresented: .constant(true)) {
         print("닉네임 변경됨")
+    }
+}
+
+struct InnerShadowViewModifier: ViewModifier {
+    var color: Color
+    var radius: CGFloat
+    var x: CGFloat
+    var y: CGFloat
+
+    func body(content: Content) -> some View {
+        content
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(color, lineWidth: 1)
+                    .blur(radius: radius)
+                    .offset(x: x, y: y)
+                    .mask(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(LinearGradient(
+                                colors: [.black, .clear],
+                                startPoint: .bottom,
+                                endPoint: .bottom
+                            )
+                            )
+                    )
+            )
     }
 }

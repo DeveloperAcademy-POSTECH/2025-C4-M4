@@ -6,9 +6,9 @@ public enum PathCardType: CaseIterable, Sendable {
     case bomb
 }
 
-public struct Card: Sendable {
+public struct Card: Sendable, Equatable {
 //    public let type: PathCardType
-    public let directions: [Bool]
+    public var directions: [Bool]
     public let connect: Bool
     public let symbol: String
     public let imageName: String
@@ -22,6 +22,11 @@ public struct Card: Sendable {
         self.connect = connect
         self.symbol = symbol
         self.imageName = imageName
+    }
+    
+    public mutating func turnCard() {
+        let d = directions
+        directions = [d[2], d[3], d[0], d[1]]
     }
 }
 
