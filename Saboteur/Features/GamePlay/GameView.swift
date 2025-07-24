@@ -26,10 +26,12 @@ struct GameView: View {
         } else {
             VStack {
                 Button {
-                    let remainingPeers = P2PNetwork.connectedPeers
-
-                    if let remaining = remainingPeers.first {
-                        winner.value = remaining.displayName
+                    let allPeers = [P2PNetwork.myPeer] + P2PNetwork.connectedPeers
+                    if allPeers.count == 2 {
+                        let myName = P2PNetwork.myPeer.displayName
+                        if let remaining = allPeers.first(where: { $0.displayName != myName }) {
+                            winner.value = remaining.displayName
+                        }
                     }
                     router.currentScreen = .choosePlayer
 

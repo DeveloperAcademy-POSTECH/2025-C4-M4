@@ -57,8 +57,18 @@ struct GameResultView: View {
                                         .foregroundStyle(Color.Secondary.yellow2)
                                         .body2WideFont()
                                     Spacer()
+                                    if winnerCard == myName {
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: 4)
+                                                .frame(width: 50, height: 20)
+                                                .foregroundStyle(Color.Etc.pink)
+                                            Text("ME")
+                                                .label2Font()
+                                                .foregroundStyle(Color.Grayscale.whiteBg)
+                                        }
+                                    }
                                 }
-                                .padding(.horizontal, 20)
+                                .padding(.horizontal, 18)
                                 .frame(width: winnerCardWidth, height: winnerCardHeight)
 
                                 Text("\(winnerCard)")
@@ -173,8 +183,18 @@ extension GameResultView {
                     .foregroundStyle(Color.Secondary.blue1)
                     .label1Font()
                 Spacer()
+                if player == myName {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 4)
+                            .frame(width: 50, height: 20)
+                            .foregroundStyle(Color.Secondary.blue1)
+                        Text("ME")
+                            .label2Font()
+                            .foregroundStyle(Color.Grayscale.whiteBg)
+                    }
+                }
             }
-            .padding(.horizontal, 12)
+            .padding(.horizontal, 14)
             .frame(width: loserCardWidth, height: loserCardHeight)
 
             Text("\(player)")
