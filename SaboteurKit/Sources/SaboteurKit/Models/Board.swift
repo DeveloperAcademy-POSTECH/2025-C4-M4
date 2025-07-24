@@ -6,9 +6,6 @@ public class Board {
     public var grid: [[BoardCell]] = Array(repeating: Array(repeating: BoardCell(), count: 5), count: 9)
 
     public var lastGoal: (x: Int, y: Int)?
-    
-    public var lastGrid0: (x:Int, y:Int, d:Int)?
-    public var lastGrid1: (x:Int, y:Int, d:Int)?
 
     public init() {
         grid[0][2] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "Ⓢ", imageName: "Board/start", isConnect: true, contributor: "") // start
@@ -56,9 +53,6 @@ public class Board {
                         trueConnectedCount -= 1
                     }
                 } else if card.directions[myDir] != neighbor.directions[neighborDir] {
-                    lastGrid0 = (x, y, myDir)
-                    lastGrid1 = (nx, ny, neighborDir)
-                    
                     return false // 연결이 안 맞는 방향이 하나라도 있으면 false
                 }
             }
@@ -74,9 +68,6 @@ public class Board {
                 grid[x][y] = BoardCell(isCard: true, directions: card.directions, symbol: card.symbol, imageName: card.imageName, isConnect: card.connect, contributor: player)
                 return (true, "🪏 \(player)가 \(card.symbol)를 (\(x),\(y))에 놓았습니다.")
             } else {
-                if let g0 = lastGrid0, let g1 = lastGrid1 {
-                    return (false, "❌ 해당 위치에 카드를 놓을 수 없습니다.\n 해당위치 = \(g0.x),\(g0.y), \(g1.x),\(g1.y)")
-                } else {
                     return (false, "❌ 해당 위치에 카드를 놓을 수 없습니다.")
                 }
             }
