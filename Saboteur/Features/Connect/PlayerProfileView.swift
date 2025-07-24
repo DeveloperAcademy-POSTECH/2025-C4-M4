@@ -54,9 +54,9 @@ struct PlayerProfileComponentView: View {
     static let stylePresets: [(image: ImageResource, color: Color, fill: Color)] = [
         (.blackAirplane, Color.Grayscale.gray2, Color(hex: "575450")),
         (.blueAirplane, Color.Secondary.blue3, Color(hex: "4AB1BE")),
-        (.greenAirplane, Color.Etc.mint, Color.Etc.mintdeep),
-        (.pinkAirplane, Color.Etc.red, Color.Etc.reddeep),
-        (.yellowAirplane, Color.Etc.orange, Color.Etc.orangedeep),
+        (.greenAirplane, Color.Etc.mint, Color.Etc.mintDeep),
+        (.pinkAirplane, Color.Etc.red, Color.Etc.redDeep),
+        (.yellowAirplane, Color.Etc.orange, Color.Etc.orangeDeep),
     ]
 
     let text: String

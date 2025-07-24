@@ -100,7 +100,7 @@ struct ChangeNameView: View {
                             TextField("닉네임을 입력해주세요", text: $nickname)
                                 .textFieldStyle(.plain)
                                 .padding(.horizontal)
-                                .foregroundStyle(Color.emerald2)
+                                .foregroundStyle(Color.Emerald.emerald2)
                                 // .foregroundStyle(Color.Ivory.ivory3)
                                 .body1Font()
                                 .keyboardType(.asciiCapable)
