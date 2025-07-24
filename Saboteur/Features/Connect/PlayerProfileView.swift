@@ -55,8 +55,8 @@ struct PlayerProfileComponentView: View {
         (.blackAirplane, Color.Grayscale.gray2, Color(hex: "575450"), Color.Etc.grayShadow),
         (.blueAirplane, Color.Secondary.blue3, Color(hex: "4AB1BE"), Color.Etc.tealShadow),
         (.greenAirplane, Color.Etc.mint, Color(hex: "3C6C58"), Color.Etc.greenShadow),
-        (.pinkAirplane, Color.Etc.red, Color.Etc.reddeep, Color.Etc.pinkShadow),
-        (.yellowAirplane, Color.Etc.orange, Color.Etc.orangedeep, Color.Etc.yellowShadow),
+        (.pinkAirplane, Color.Etc.red, Color.Etc.redDeep, Color.Etc.pinkShadow),
+        (.yellowAirplane, Color.Etc.orange, Color.Etc.orangeDeep, Color.Etc.yellowShadow),
     ]
 
     let text: String
