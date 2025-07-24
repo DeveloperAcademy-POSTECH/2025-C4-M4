@@ -36,6 +36,7 @@ struct ChoosePlayerView: View {
                         Spacer()
                     }
                     .customPadding(.header)
+                    .ignoresSafeArea()
 
                     // 인원 설정
                     HStack {
@@ -52,7 +53,7 @@ struct ChoosePlayerView: View {
                             // lineHeight: 10,
                             textAlignment: .center
                         )
-                        .dropShadow()
+                        .blackdropShadow()
                         .frame(height: 50)
 
                         Spacer()
@@ -161,13 +162,15 @@ struct ChoosePlayerButton: View {
                 Circle()
                     .frame(width: 152, height: 152)
                     .foregroundStyle(isSelected ? Color.Ivory.ivory2 : Color.Ivory.ivory1)
-                    .dropShadow()
+                    .shadow(color: Color.Ivory.ivory2, radius: isSelected ? 0 : 2, x: 0, y: isSelected ? 0 : 2)
 
                 Image(currentImage)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 72)
             }
+            .offset(y: isSelected ? 0 : -2)
+            .animation(.easeOut(duration: 0.005), value: isSelected)
         }
     }
 }

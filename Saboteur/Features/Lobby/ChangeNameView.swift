@@ -79,18 +79,30 @@ struct ChangeNameView: View {
                         }
                         .pickerStyle(.segmented)
                     } label: {
-                        ZStack {
+                        HStack(spacing: 10) {
+                            Text(selectedCountry)
+                                .font(.system(size: 40))
+                            Image(.dropdownButton)
+                        }
+                        .foregroundStyle(Color.Ivory.ivory1)
+                        .padding(.horizontal, 12)
+                        .background {
                             RoundedRectangle(cornerRadius: 10)
-                                .foregroundStyle(Color.Ivory.ivory1)
-                                .frame(width: 68, height: 60)
-                                .dropShadow()
-
-                            HStack(spacing: 10) {
-                                Text(selectedCountry)
-                                Image(.dropdownButton)
-                            }
+                                .stroke(Color.Ivory.ivory3, lineWidth: 1)
+                                .frame(height: 56)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.Ivory.ivory3, lineWidth: 4)
+                                        .blur(radius: 0)
+                                        .mask(
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .offset(y: 4)
+                                                .frame(height: 60)
+                                        )
+                                )
                         }
                     }
+                    .frame(height: 56)
 
                     VStack(alignment: .leading) {
                         ZStack {
@@ -110,7 +122,7 @@ struct ChangeNameView: View {
                                     }
                                 }
                         }
-                        .frame(height: 60)
+                        .frame(height: 56)
 
                         Text("*닉네임은 최대 영문 8자까지 입력 가능합니다")
                             .label3Font()
@@ -150,5 +162,31 @@ struct ChangeNameView: View {
 #Preview {
     ChangeNameView(isPresented: .constant(true)) {
         print("닉네임 변경됨")
+    }
+}
+
+struct InnerShadowViewModifier: ViewModifier {
+    var color: Color
+    var radius: CGFloat
+    var x: CGFloat
+    var y: CGFloat
+
+    func body(content: Content) -> some View {
+        content
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(color, lineWidth: 1)
+                    .blur(radius: radius)
+                    .offset(x: x, y: y)
+                    .mask(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(LinearGradient(
+                                colors: [.black, .clear],
+                                startPoint: .bottom,
+                                endPoint: .bottom
+                            )
+                            )
+                    )
+            )
     }
 }

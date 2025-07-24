@@ -32,6 +32,7 @@ struct LobbyView: View {
                         }
                     }
                     .customPadding(.header)
+                    .ignoresSafeArea()
 
                     VStack(spacing: 40) {
                         Image(.logo)

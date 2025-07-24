@@ -187,6 +187,6 @@ extension GameResultView {
 }
 
 #Preview {
-    GameResultView(result: .winner("🇰🇷 JudyJ"), players: ["🇰🇷 JudyJ", "🇰🇷 Nike", "🇰🇷 Nike", "🇰🇷 Nike"], myName: "🇰🇷 JudyJ")
+    GameResultView(result: .winner("🇰🇷 JudyJ"), players: ["🇰🇷 JudyJ", "🇰🇷 Nike", "🇰🇷 Nike"], myName: "🇰🇷 JudyJ")
         .environmentObject(AppRouter())
 }
