@@ -66,9 +66,9 @@ struct LobbyView: View {
             }
         }
         .onAppear {
-            displayName = P2PNetwork.myPeer.displayName
+            displayName = P2PNetwork.myPeer.displayName.trimmingCharacters(in: .whitespacesAndNewlines)
 
-            if P2PNetwork.myPeer == nil {
+            if displayName.isEmpty || displayName.starts(with: "TEMP_USER_") {
                 showNameModal = true
             }
         }
