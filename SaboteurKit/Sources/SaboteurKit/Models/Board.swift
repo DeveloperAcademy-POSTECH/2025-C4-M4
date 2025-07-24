@@ -26,12 +26,11 @@ public class Board {
         print("")
     }
 
-    public func setGoal() -> Int {
+    public func setGoal(grandom _: Int) {
         let grandom = Int.random(in: 0 ... 2)
         grid[8][grandom * 2].isGoal = true
-        return grandom
     }
-    public func isGoalLine(x: Int, y: Int) -> Bool (x == 8 && (y == 0 || y == 2 || y == 4))
+
     // 카드 설치 가능 여부를 확인한다 - 로직 위주
     public func isPlacable(x: Int, y: Int, card: Card) -> Bool {
         guard x >= 0, x < 9, y >= 0, y < 5 else { return false } // 카드를 설치할 값의 위치가 좌표 위가 아니라면 false
@@ -44,12 +43,10 @@ public class Board {
             let ny = y + dy
             guard nx >= 0, nx < 9, ny >= 0, ny < 5 else { continue } // neighbor 카드의 존재 여부 체크
             let neighbor = grid[nx][ny]
-            
-            
-            if isGoalLine(x: nx, y: ny) ? (neighbor.isOpened == true) : neighbor.isCard {
+            if neighbor.isCard {
                 if card.directions[myDir], neighbor.directions[neighborDir] {
                     trueConnectedCount += 1
-                    if isGoalLine(x: nx, y: ny) && (neighbor.isOpened == false) {
+                    if nx == 8, ny == 2 {
                         trueConnectedCount -= 1
                     }
                 } else if card.directions[myDir] != neighbor.directions[neighborDir] {
@@ -68,8 +65,7 @@ public class Board {
                 grid[x][y] = BoardCell(isCard: true, directions: card.directions, symbol: card.symbol, imageName: card.imageName, isConnect: card.connect, contributor: player)
                 return (true, "🪏 \(player)가 \(card.symbol)를 (\(x),\(y))에 놓았습니다.")
             } else {
-                    return (false, "❌ 해당 위치에 카드를 놓을 수 없습니다.")
-                }
+                return (false, "❌ 해당 위치에 카드를 놓을 수 없습니다.")
             }
         } else {
             return (false, "❌ 이미 카드가 있거나 시작/도착 지점입니다.")
@@ -78,7 +74,7 @@ public class Board {
 
     // 폭탄 카드를 설치한다
     public func dropBoom(x: Int, y: Int) -> (Bool, String) {
-        if (x == 0 && y == 2) || isGoalLine(x: x, y: y) {
+        if (x == 0 && y == 2) || (x == 8 && y == 2) {
             return (false, "❌ 시작/도착 지점은 폭파할 수 없습니다.")
         }
         if grid[x][y].isCard {
@@ -113,7 +109,7 @@ public class Board {
             visited[x][y] = true
             // print("🚶‍♂️ 방문: (\(x),\(y)), 심볼: \(grid[x][y].symbol)")
 
-            if isGoalLine(x: x, y: y), grid[x][y].isOpened == false {
+            if x == 8, y == 0 || y == 2 || y == 4, grid[x][y].isOpened == false {
                 lastGoal = (x, y)
                 // print("🎯 목표에 도달했습니다! (\(x),\(y))")
                 return true
@@ -129,7 +125,7 @@ public class Board {
                 let nx = x + dx, ny = y + dy
                 if nx >= 0, nx < grid.count, ny >= 0, ny < grid[0].count {
                     let neigh = grid[nx][ny]
-                    let isGoal = isGoalLine(x: nx, y: ny) && grid[nx][ny].isOpened == false)
+                    let isGoal = (nx == 8 && (ny == 0 || ny == 2 || ny == 4) && grid[nx][ny].isOpened == false)
                     let canConnect = cell.directions[myDir]
                         && (isGoal || (neigh.isCard && neigh.isConnect))
                         && neigh.directions[neighDir]
@@ -148,5 +144,4 @@ public class Board {
         // print("✅ goalCheck 종료: 결과 = \(result)")
         return result
     }
-
 }

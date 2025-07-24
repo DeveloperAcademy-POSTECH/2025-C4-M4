@@ -53,8 +53,7 @@ var currentPlayer: Player { players[currentPlayerIndex] }
 
 let board = Board()
 
-var goal = board.setGoal()
-print("g\(goal)이 goal의 위치입니다.")
+var goal = board.setGoal
 
 while true {
     print("게임을 끝내려면 'stop'를 입력하세요. 계속하려면 Enter > ", terminator: "")

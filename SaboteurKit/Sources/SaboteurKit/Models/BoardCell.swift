@@ -19,6 +19,8 @@ public struct BoardCell: CustomStringConvertible, Decodable, Encodable, Equatabl
         self.imageName = imageName
         self.isConnect = isConnect
         self.contributor = contributor
+        self.isGoal = isGoal
+        self.isOpened = isOpened
     }
 
     public var description: String {
