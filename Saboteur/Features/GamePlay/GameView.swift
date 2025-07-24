@@ -3,14 +3,14 @@ import SaboteurKit
 import SwiftUI
 
 enum GameResult {
-    case winner(String)
+    case winner(Peer.Identifier)
 }
 
 struct GameView: View {
     @Binding var gameState: GameState
     @StateObject private var viewModel = GameViewModel()
 
-    @StateObject private var winner = P2PSyncedObservable(name: "GameWinner", initial: "")
+    @StateObject private var winner = P2PSyncedObservable<Peer.Identifier>(name: "GameWinner", initial: "")
     @StateObject private var players = P2PSyncedObservable(name: "AllPlayers", initial: [String]())
 
     @EnvironmentObject var router: AppRouter
@@ -21,16 +21,23 @@ struct GameView: View {
                 Color.black.opacity(0.6)
                     .ignoresSafeArea()
 
-                GameResultView(result: .winner(winner.value), players: players.value, myName: P2PNetwork.myPeer.displayName)
+                if !winner.value.isEmpty {
+                    let winnerID = winner.value
+                    GameResultView(
+                        result: .winner(winnerID),
+                        players: [P2PNetwork.myPeer] + P2PNetwork.connectedPeers,
+                        myID: P2PNetwork.myPeer.id
+                    )
+                }
             }
         } else {
             VStack {
                 Button {
                     let allPeers = [P2PNetwork.myPeer] + P2PNetwork.connectedPeers
                     if allPeers.count == 2 {
-                        let myName = P2PNetwork.myPeer.displayName
-                        if let remaining = allPeers.first(where: { $0.displayName != myName }) {
-                            winner.value = remaining.displayName
+                        let myID = P2PNetwork.myPeer.id
+                        if let remaining = allPeers.first(where: { $0.id != myID }) {
+                            winner.value = remaining.id
                         }
                     }
                     router.currentScreen = .choosePlayer
@@ -39,14 +46,18 @@ struct GameView: View {
                         gameState = .endGame
                         P2PNetwork.outSession()
                     }
-
                 } label: {
                     Text("게임 나가기")
                 }
 
-                GameBoardView(winner: winner)
+                GameBoardView(winner: winner as P2PSyncedObservable<Peer.Identifier>)
                     .onChange(of: winner.value) {
-                        gameState = .endGame
+                        if !winner.value.isEmpty {
+                            let finalPeers = [P2PNetwork.myPeer] + P2PNetwork.connectedPeers
+                            let simplifiedPeers = finalPeers.map { ["id": $0.id, "displayName": $0.displayName] }
+                            UserDefaults.standard.set(simplifiedPeers, forKey: "FinalPeers")
+                            gameState = .endGame
+                        }
                     }
                     .onAppear {
                         let allDisplayNames = ([P2PNetwork.myPeer] + P2PNetwork.connectedPeers).map(\.displayName)
@@ -64,8 +75,8 @@ struct GameView: View {
 struct GameBoardView: View {
     @StateObject private var boardViewModel: BoardViewModel
 
-    @ObservedObject var winner: P2PSyncedObservable<String>
-    init(winner: P2PSyncedObservable<String>) {
+    @ObservedObject var winner: P2PSyncedObservable<Peer.Identifier>
+    init(winner: P2PSyncedObservable<Peer.Identifier>) {
         _boardViewModel = StateObject(wrappedValue: BoardViewModel(winner: winner))
         self.winner = winner
     }
@@ -84,17 +95,18 @@ struct GameBoardView: View {
             HStack {
                 // 사용자 리스트
                 VStack(alignment: .leading, spacing: 8) {
-                    ForEach(allPlayers.map(\.displayName), id: \.self) { name in
-                        let isMe = name == myDisplayName
-                        let displayText = isMe ? "나: \(name)" : name
+                    ForEach(allPlayers, id: \.id) { player in
+                        let isMe = player.id == P2PNetwork.myPeer.id
+                        let displayText = isMe ? "나: \(player.displayName)" : player.displayName
+                        let isCurrent = boardViewModel.currentPlayer.value == player.id
 
                         Text(displayText)
                             .padding(6)
-                            .background(boardViewModel.currentPlayer.value == name ? Color.yellow.opacity(0.3) : Color.clear)
+                            .background(isCurrent ? Color.yellow.opacity(0.3) : Color.clear)
                             .cornerRadius(8)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8)
-                                    .stroke(boardViewModel.currentPlayer.value == name ? Color.orange : Color.clear, lineWidth: 2)
+                                    .stroke(isCurrent ? Color.orange : Color.clear, lineWidth: 2)
                             )
                     }
                 }
@@ -191,14 +203,14 @@ final class BoardViewModel: ObservableObject {
         [P2PNetwork.myPeer] + P2PNetwork.connectedPeers // 나 자신 + 연결된 사람
     }
 
-    // 현재 턴인 플레이어의 이름
-    @Published var currentPlayer = P2PNetwork.currentTurnPlayerName
+    // 현재 턴인 플레이어의 ID
+    @Published var currentPlayer: P2PSyncedObservable<Peer.Identifier> = P2PNetwork.currentTurnPlayerID
 
     // 어느 플레이어가 어떤 카드를 어디에 놓았는지 공유
     @Published var placedCards = P2PSyncedObservable(name: "PlacedCards", initial: [String: BoardCell]())
 
-    let winner: P2PSyncedObservable<String>
-    init(winner: P2PSyncedObservable<String>) {
+    let winner: P2PSyncedObservable<Peer.Identifier>
+    init(winner: P2PSyncedObservable<Peer.Identifier>) {
         self.winner = winner
     }
 
@@ -218,7 +230,7 @@ final class BoardViewModel: ObservableObject {
         }
         let (x, y) = cursor
 
-        if currentPlayer.value != P2PNetwork.myPeer.displayName {
+        if currentPlayer.value != P2PNetwork.myPeer.id {
             showToast("당신의 차례가 아닙니다.")
             return
         }
@@ -274,9 +286,9 @@ final class BoardViewModel: ObservableObject {
 
     func nextTurn() {
         let sortedPlayers = players.sorted { $0.displayName < $1.displayName }
-        guard let currentIndex = sortedPlayers.firstIndex(where: { $0.displayName == currentPlayer.value }) else { return }
+        guard let currentIndex = sortedPlayers.firstIndex(where: { $0.id == currentPlayer.value }) else { return }
         let nextIndex = (currentIndex + 1) % sortedPlayers.count
-        currentPlayer.value = sortedPlayers[nextIndex].displayName
+        currentPlayer.value = sortedPlayers[nextIndex].id
     }
 
     func resetGame() {
