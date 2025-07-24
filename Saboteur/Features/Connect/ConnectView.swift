@@ -178,12 +178,12 @@ struct ConnectView: View {
         }
     }
 
-    // 5분 이상 대기자가 없으면 생기는 timer
+    // 3분 이상 대기자가 없으면 생기는 timer
     private func startIdleTimer() {
         idleTimer?.invalidate()
         idleTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             idleTime += 1
-            if idleTime >= 300, state == .unstarted {
+            if idleTime >= 180, state == .unstarted {
                 idleTimer?.invalidate()
                 idleTimer = nil
                 showExitAlert = true
