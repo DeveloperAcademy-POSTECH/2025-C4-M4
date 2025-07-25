@@ -10,6 +10,7 @@ import SwiftUI
 
 // 버튼 드롭 쉐도우 - 인원 설정 버튼은 해당 뷰에서 따로 구현됨
 extension View {
+    // 글자 타이틀
     func blackdropShadow() -> some View {
         shadow(color: Color.black.opacity(0.25), radius: 4, x: 0, y: 2)
     }
@@ -27,7 +28,7 @@ extension Shape {
 
     func innerShadow(
         color: Color = .black.opacity(0.1),
-        radius: CGFloat = 1,
+        radius: CGFloat = 0,
         x: CGFloat = 0,
         y: CGFloat = -4
     ) -> some View {
