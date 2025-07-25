@@ -53,7 +53,7 @@ struct ConnectView: View {
                                 // lineHeight: 10,
                                 textAlignment: .center
                             )
-                            .blackdropShadow()
+                            .shadow1BlackDrop()
                             .frame(height: 50)
 
                             Spacer()
@@ -66,7 +66,7 @@ struct ConnectView: View {
 
                                 router.currentScreen = .choosePlayer
                             } label: {
-                                Image(.backButton)
+                                HeaderButton(image: Image(.backButton))
                             }
 
                             Spacer()

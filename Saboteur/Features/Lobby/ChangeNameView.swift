@@ -66,19 +66,12 @@ struct ChangeNameView: View {
                 HStack {
                     Spacer()
 
-                    Button {
-                        isPresented = false
-                    } label: {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 100)
-                                .innerShadow()
-                                .foregroundStyle(nickname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.Grayscale.gray : Color.Emerald.emerald2)
-                                .frame(width: 62, height: 50)
+                    let isButtonDisabled = P2PNetwork.myPeer.displayName.isEmpty || P2PNetwork.myPeer.displayName.starts(with: "TEMP_USER_")
 
-                            Image(.xButton)
-                        }
-                    }
-                    .disabled(nickname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    OutButton(action: {
+                        isPresented = false
+                    }, image: Image(.xButton), activeColor: Color.Emerald.emerald2,
+                    isDisabled: isButtonDisabled)
                 }
                 .padding(.horizontal, 24)
             }
@@ -115,6 +108,7 @@ struct ChangeNameView: View {
                                 .frame(width: 92, height: 60)
                         }
                     }
+                    .offset(y: shouldCloseMenu ? 4 : 0)
                     .frame(height: 60)
                     .id(shouldCloseMenu)
 

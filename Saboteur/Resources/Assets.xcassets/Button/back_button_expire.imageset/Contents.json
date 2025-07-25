@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "profile_button.png",
+      "filename" : "BackButton.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
