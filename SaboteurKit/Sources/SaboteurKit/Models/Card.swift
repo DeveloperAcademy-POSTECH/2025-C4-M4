@@ -3,7 +3,10 @@ import Foundation
 public enum PathCardType: CaseIterable, Sendable {
     case t, tb, tr, tl, rl, trb, trl, trbl
     case lBlock, tbBlock, trBlock, tlBlock, rlBlock, trbBlock, trlBlock, trblBlock
+    case tRotated, trRotated, tlRotated, trbRotated, trlRotated
+    case lBlockRotated, trBlockRotated, tlBlockRotated, trbBlockRotated, trlBlockRotated
     case bomb
+    case map
 }
 
 public struct Card: Sendable, Equatable {
@@ -12,10 +15,6 @@ public struct Card: Sendable, Equatable {
     public let connect: Bool
     public let symbol: String
     public let imageName: String
-
-    public var description: String {
-        symbol
-    }
 
     public init(directions: [Bool], connect: Bool, symbol: String, imageName: String) {
         self.directions = directions

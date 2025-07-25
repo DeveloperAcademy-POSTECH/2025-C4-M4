@@ -5,7 +5,7 @@ import SaboteurKit
 func selectCard() -> Card? {
     print("🎲 카드 덱")
     for (index, card) in cardSet.enumerated() {
-        print("[\(index)] \(card.description)")
+        print("[\(index)] \(card.symbol)")
     }
     print("🎲 사용할 카드 번호를 입력하세요. > ", terminator: "")
 
