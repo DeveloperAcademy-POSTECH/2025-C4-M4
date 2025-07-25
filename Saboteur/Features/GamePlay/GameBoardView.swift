@@ -9,14 +9,16 @@ struct GameBoardView: View {
     @StateObject private var boardViewModel: BoardViewModel
 
     @ObservedObject var winner: P2PSyncedObservable<Peer.Identifier>
+    var exitToastMessage: P2PSyncedObservable<String>
 
     @State private var turnTimeRemaining: Int = 90
     @State private var turnTimer: Timer? = nil
 
-    init(winner: P2PSyncedObservable<Peer.Identifier>, gameState: Binding<GameState>) {
+    init(winner: P2PSyncedObservable<Peer.Identifier>, gameState: Binding<GameState>, exitToastMessage: P2PSyncedObservable<String>) {
         _boardViewModel = StateObject(wrappedValue: BoardViewModel(winner: winner))
         self.winner = winner
         _gameState = gameState
+        self.exitToastMessage = exitToastMessage
     }
 
     private func startTurnTimer() {
@@ -56,6 +58,8 @@ struct GameBoardView: View {
                             if let remaining = allPeers.first(where: { $0.id != myID }) {
                                 winner.value = remaining.id
                             }
+                            let myDisplayName = P2PNetwork.myPeer.displayName
+                            exitToastMessage.value = "\(myDisplayName)님이 나가서 게임이 강제 종료되었습니다"
                         }
                         router.currentScreen = .choosePlayer
 
@@ -207,16 +211,18 @@ struct GameBoardView: View {
                 .animation(.easeInOut, value: boardViewModel.toastMessage)
             }
         }
-        .frame(minHeight: UIScreen.main.bounds.height - 32)
+        // .frame(minHeight: UIScreen.main.bounds.height - 32)
     }
 }
 
 #Preview {
     let dummyWinner = P2PSyncedObservable<String>(name: "🇰🇷 JudyJ", initial: "dummy_winner")
+    let exitToastMessage = P2PSyncedObservable<String>(name: "ExitToastMessage", initial: "")
 
     GameBoardView(
         winner: dummyWinner,
-        gameState: .constant(.startedGame)
+        gameState: .constant(.startedGame),
+        exitToastMessage: exitToastMessage
     )
     .environmentObject(AppRouter())
 }
