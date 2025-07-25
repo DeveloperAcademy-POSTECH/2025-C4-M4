@@ -36,7 +36,7 @@ public struct EventInfo: Codable {
 
 public enum P2PNetwork {
     public static var maxConnectedPeers: Int = 2 // 기본 플레이 인원은 2명
-    public static var currentTurnPlayerName = P2PSyncedObservable(name: "currentTurnPlayerName", initial: "")
+    public static var currentTurnPlayerID = P2PSyncedObservable<Peer.Identifier>(name: "currentTurnPlayerID", initial: P2PNetwork.myPeer.id)
 
     private static var session = P2PSession(myPeer: Peer.getMyPeer())
     private static let sessionListener = P2PNetworkSessionListener()
@@ -209,10 +209,10 @@ extension P2PNetworkSessionListener: P2PSessionDelegate {
     func p2pSession(_: P2PSession, didUpdate peer: Peer) {
         guard !P2PNetwork.soloMode else { return }
 
-        if P2PNetwork.currentTurnPlayerName.value.isEmpty {
+        if P2PNetwork.currentTurnPlayerID.value.isEmpty {
             let candidates = [P2PNetwork.myPeer] + P2PNetwork.connectedPeers
             if let firstPlayer = candidates.randomElement() {
-                P2PNetwork.currentTurnPlayerName.value = firstPlayer.displayName
+                P2PNetwork.currentTurnPlayerID.value = firstPlayer.id
             }
         }
 

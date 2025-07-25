@@ -5,6 +5,7 @@
 //  Created by 이주현 on 7/15/25.
 //
 
+import MultipeerConnectivity
 import P2PKit
 import SwiftUI
 
@@ -17,9 +18,10 @@ private let loserCardSpacing: CGFloat = 8
 
 struct GameResultView: View {
     let result: GameResult
-    let players: [String]
-    let myName: String
+    let players: [Peer]
+    let myID: Peer.Identifier
     @EnvironmentObject var router: AppRouter
+    @State private var finalPlayers: [Peer] = []
 
     var body: some View {
         VStack {
@@ -32,7 +34,7 @@ struct GameResultView: View {
                 switch result {
                 case let .winner(name):
                     ZStack {
-                        if name == myName {
+                        if name == myID {
                             Image(.resultWin)
                         } else {
                             Image(.resultLose)
@@ -45,40 +47,42 @@ struct GameResultView: View {
                 case let .winner(name):
                     VStack {
                         // 승자 카드
-                        if let winnerCard = players.first(where: { $0 == name }) {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 10)
-                                    .colorinnerShadow(color: Color.Ivory.ivory3)
-                                    .frame(width: winnerCardWidth, height: winnerCardHeight)
-                                    .foregroundStyle(Color.Ivory.ivory1)
+                        Group {
+                            if let winnerCard = finalPlayers.first(where: { $0.id == name }) {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .innerShadow()
+                                        .frame(width: winnerCardWidth, height: winnerCardHeight)
+                                        .foregroundStyle(Color.Ivory.ivory1)
 
-                                HStack {
-                                    Text("WIN")
-                                        .foregroundStyle(Color.Secondary.yellow2)
-                                        .body2WideFont()
-                                    Spacer()
-                                    if winnerCard == myName {
-                                        ZStack {
-                                            RoundedRectangle(cornerRadius: 4)
-                                                .frame(width: 50, height: 20)
-                                                .foregroundStyle(Color.Etc.pink)
-                                            Text("ME")
-                                                .label2Font()
-                                                .foregroundStyle(Color.Grayscale.whiteBg)
+                                    HStack {
+                                        Text("WIN")
+                                            .foregroundStyle(Color.Secondary.yellow2)
+                                            .body2WideFont()
+                                        Spacer()
+                                        if winnerCard.id == myID {
+                                            ZStack {
+                                                RoundedRectangle(cornerRadius: 4)
+                                                    .frame(width: 50, height: 20)
+                                                    .foregroundStyle(Color.Etc.pink)
+                                                Text("ME")
+                                                    .label2Font()
+                                                    .foregroundStyle(Color.Grayscale.whiteBg)
+                                            }
                                         }
                                     }
-                                }
-                                .padding(.horizontal, 18)
-                                .frame(width: winnerCardWidth, height: winnerCardHeight)
+                                    .padding(.horizontal, 18)
+                                    .frame(width: winnerCardWidth, height: winnerCardHeight)
 
-                                Text("\(winnerCard)")
-                                    .foregroundStyle(Color.Emerald.emerald2)
-                                    .body2Font()
+                                    Text("\(winnerCard.displayName)")
+                                        .foregroundStyle(Color.Emerald.emerald2)
+                                        .body2Font()
+                                }
                             }
                         }
 
                         // 패자 카드 (플레이어 수에 따라 다르게 배치)
-                        let losers = players.filter { $0 != name }
+                        let losers = finalPlayers.filter { $0.id != name }
                         let row1 = Array(losers.prefix(2))
                         let row2 = losers.count > 2 ? [losers[2]] : []
 
@@ -93,7 +97,7 @@ struct GameResultView: View {
                                 .frame(height: loserCardHeight)
                         } else {
                             HStack(spacing: loserCardSpacing) {
-                                ForEach(row1, id: \.self) { player in
+                                ForEach(row1, id: \.id) { player in
                                     loserCard(player: player)
                                 }
                             }
@@ -151,15 +155,29 @@ struct GameResultView: View {
                 .layoutPriority(1)
         }
         .task {
-            P2PNetwork.outSession()
-            P2PNetwork.removeAllDelegates()
+            if let storedPeers = UserDefaults.standard.array(forKey: "FinalPeers") as? [[String: String]] {
+                finalPlayers = storedPeers.compactMap { dict in
+                    if let id = dict["id"], let displayName = dict["displayName"] {
+                        return Peer(MCPeerID(displayName: displayName), id: id)
+                    } else {
+                        return nil
+                    }
+                }
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                P2PNetwork.outSession()
+                P2PNetwork.removeAllDelegates()
+            }
+//            P2PNetwork.outSession()
+//            P2PNetwork.removeAllDelegates()
         }
     }
 
     private var resultTexts: [String] {
         switch result {
         case let .winner(name):
-            return players.map { $0 == name ? "\($0) 승리!" : "\($0) 패배" }
+            return finalPlayers.map { $0.id == name ? "\($0.displayName) 승리!" : "\($0.displayName) 패배" }
         }
     }
 }
@@ -168,7 +186,7 @@ struct GameResultView: View {
 
 extension GameResultView {
     @ViewBuilder
-    private func loserCard(player: String) -> some View {
+    private func loserCard(player: Peer) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
                 .foregroundStyle(Color.Ivory.ivory2)
@@ -183,7 +201,7 @@ extension GameResultView {
                     .foregroundStyle(Color.Secondary.blue1)
                     .label1Font()
                 Spacer()
-                if player == myName {
+                if player.id == myID {
                     ZStack {
                         RoundedRectangle(cornerRadius: 4)
                             .frame(width: 50, height: 20)
@@ -197,7 +215,7 @@ extension GameResultView {
             .padding(.horizontal, 14)
             .frame(width: loserCardWidth, height: loserCardHeight)
 
-            Text("\(player)")
+            Text("\(player.displayName)")
                 .foregroundStyle(Color.Emerald.emerald2)
                 .label1Font()
         }
@@ -206,7 +224,7 @@ extension GameResultView {
     }
 }
 
-#Preview {
-    GameResultView(result: .winner("🇰🇷 JudyJ"), players: ["🇰🇷 JudyJ", "🇰🇷 Nike", "🇰🇷 Nike"], myName: "🇰🇷 JudyJ")
-        .environmentObject(AppRouter())
-}
+// #Preview {
+//    GameResultView(result: .winner("🇰🇷 JudyJ"), players: ["🇰🇷 JudyJ", "🇰🇷 Nike", "🇰🇷 Nike"], myName: "🇰🇷 JudyJ")
+//        .environmentObject(AppRouter())
+// }
