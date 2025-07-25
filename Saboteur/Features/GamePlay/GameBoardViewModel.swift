@@ -64,7 +64,7 @@ final class BoardViewModel: ObservableObject {
         }
     }
 
-    // MARK: - 카드 놓기
+    // MARK: - 카드 관련 로직
 
     /// 카드 유효성 검사
     private func validateSelectedCard() -> (Card, Int)? {
