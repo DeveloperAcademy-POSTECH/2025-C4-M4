@@ -32,25 +32,8 @@ struct GameView: View {
             }
         } else {
             VStack {
-                Button {
-                    let allPeers = [P2PNetwork.myPeer] + P2PNetwork.connectedPeers
-                    if allPeers.count == 2 {
-                        let myID = P2PNetwork.myPeer.id
-                        if let remaining = allPeers.first(where: { $0.id != myID }) {
-                            winner.value = remaining.id
-                        }
-                    }
-                    router.currentScreen = .choosePlayer
-
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        gameState = .endGame
-                        P2PNetwork.outSession()
-                    }
-                } label: {
-                    Text("게임 나가기")
-                }
-
-                GameBoardView(winner: winner as P2PSyncedObservable<Peer.Identifier>)
+                GameBoardView(winner: winner as P2PSyncedObservable<Peer.Identifier>, gameState: $gameState)
+                    .environmentObject(router)
                     .onChange(of: winner.value) {
                         if !winner.value.isEmpty {
                             let finalPeers = [P2PNetwork.myPeer] + P2PNetwork.connectedPeers
