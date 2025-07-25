@@ -53,7 +53,7 @@ struct GameBoardView: View {
                     )
 
                     CardSelectionView(
-                        cards: Array(cardSet.prefix(5)),
+                        cards: boardViewModel.getMe?.cardsInHand ?? [],
                         selectedCard: $boardViewModel.selectedCard,
                         onSelect: { card in
                             boardViewModel.selectedCard = card
