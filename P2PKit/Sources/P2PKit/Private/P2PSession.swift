@@ -97,14 +97,6 @@ class P2PSession: NSObject {
         browser.delegate = nil
     }
 
-    func stopAdverting() {
-        advertiser.stopAdvertisingPeer()
-    }
-
-    func stopBrowsing() {
-        browser.stopBrowsingForPeers()
-    }
-
     func connectionState(for peer: MCPeerID) -> MCSessionState? {
         peersLock.lock(); defer { peersLock.unlock() }
         return sessionStates[peer]

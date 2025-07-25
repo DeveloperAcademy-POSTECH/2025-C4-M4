@@ -9,21 +9,21 @@ final class BoardViewModel: ObservableObject {
     @Published var selectedCard: Card? = nil
     @Published var toastMessage: String? = nil
 
-    // 모든 플레이어 배열
-    private var players: [Peer] {
-        [P2PNetwork.myPeer] + P2PNetwork.connectedPeers // 나 자신 + 연결된 사람
-    }
+    @Published var currentDeck = Deck()
+    @Published var players: [PeerPlayer] = []
 
-    // 현재 턴인 플레이어의 ID
     @Published var currentPlayer: P2PSyncedObservable<Peer.Identifier> = P2PNetwork.currentTurnPlayerID
-
-    // 어느 플레이어가 어떤 카드를 어디에 놓았는지 공유
     @Published var placedCards = P2PSyncedObservable(name: "PlacedCards", initial: [String: BoardCell]())
 
     let winner: P2PSyncedObservable<Peer.Identifier>
+
     init(winner: P2PSyncedObservable<Peer.Identifier>) {
         self.winner = winner
+        setupPlayers()
+        dealInitialHands()
     }
+
+    // MARK: - 유틸
 
     func showToast(_ message: String) {
         toastMessage = message
@@ -34,23 +34,52 @@ final class BoardViewModel: ObservableObject {
         }
     }
 
+    // MARK: - 초기 세팅
+
+    private func setupPlayers() {
+        let allPeers = [P2PNetwork.myPeer] + P2PNetwork.connectedPeers
+        players = allPeers.map { peer in
+            PeerPlayer(peer: peer, nation: "Korean")
+        }
+    }
+
+    private func dealInitialHands() {
+        for index in players.indices {
+            for _ in 0 ..< players[index].maxHandSize {
+                players[index].drawCard(from: &currentDeck)
+            }
+        }
+    }
+
+    // MARK: - 카드 놓기
+
     func placeSelectedCard() {
         guard let card = selectedCard else {
             showToast("카드를 먼저 선택해주세요.")
             return
         }
-        let (x, y) = cursor
 
-        if currentPlayer.value != P2PNetwork.myPeer.id {
+        guard let myIndex = players.firstIndex(where: { $0.peer.id == P2PNetwork.myPeer.id }) else {
+            showToast("내 플레이어 정보를 찾을 수 없습니다.")
+            return
+        }
+
+        guard currentPlayer.value == players[myIndex].peer.id else {
             showToast("당신의 차례가 아닙니다.")
             return
         }
 
+        if !players[myIndex].hand.contains(card) {
+            showToast("해당 카드를 손에 들고 있지 않습니다.")
+            return
+        }
+
+        let (x, y) = cursor
+
         if card.symbol == "💣" {
             let (success, message) = board.dropBoom(x: x, y: y)
             if success {
-                let key = "\(x),\(y)"
-                let newMove = BoardCell(
+                let cell = BoardCell(
                     isCard: false,
                     directions: card.directions,
                     symbol: card.symbol,
@@ -58,10 +87,10 @@ final class BoardViewModel: ObservableObject {
                     isConnect: card.connect,
                     contributor: currentPlayer.value
                 )
-                placedCards.value[key] = newMove
-
-                board.grid[x][y] = newMove
-
+                placedCards.value["\(x),\(y)"] = cell
+                board.grid[x][y] = cell
+                players[myIndex].discardCard(card)
+                players[myIndex].drawCard(from: &currentDeck)
                 nextTurn()
             }
             showToast(message)
@@ -70,8 +99,7 @@ final class BoardViewModel: ObservableObject {
             showToast(message)
 
             if success {
-                let key = "\(x),\(y)"
-                let newMove = BoardCell(
+                let cell = BoardCell(
                     isCard: true,
                     directions: card.directions,
                     symbol: card.symbol,
@@ -79,9 +107,8 @@ final class BoardViewModel: ObservableObject {
                     isConnect: card.connect,
                     contributor: currentPlayer.value
                 )
-                placedCards.value[key] = newMove
-
-                board.grid[x][y] = newMove
+                placedCards.value["\(x),\(y)"] = cell
+                board.grid[x][y] = cell
 
                 if board.grid[7][2].isCard || board.grid[8][1].isCard || board.grid[8][3].isCard {
                     if board.goalCheck() {
@@ -90,16 +117,20 @@ final class BoardViewModel: ObservableObject {
                     }
                 }
 
+                players[myIndex].discardCard(card)
+                players[myIndex].drawCard(from: &currentDeck)
                 nextTurn()
             }
         }
-    }
 
-    func nextTurn() {
-        let sortedPlayers = players.sorted { $0.displayName < $1.displayName }
-        guard let currentIndex = sortedPlayers.firstIndex(where: { $0.id == currentPlayer.value }) else { return }
-        let nextIndex = (currentIndex + 1) % sortedPlayers.count
-        currentPlayer.value = sortedPlayers[nextIndex].id
+        // MARK: - 턴 넘기기
+
+        func nextTurn() {
+            let sortedPlayers = players.sorted { $0.peer.displayName < $1.peer.displayName }
+            guard let currentIndex = sortedPlayers.firstIndex(where: { $0.peer.id == currentPlayer.value }) else { return }
+            let nextIndex = (currentIndex + 1) % sortedPlayers.count
+            currentPlayer.value = sortedPlayers[nextIndex].peer.id
+        }
     }
 
     func resetGame() {
@@ -108,6 +139,9 @@ final class BoardViewModel: ObservableObject {
         selectedCard = nil
         toastMessage = nil
         showGameEndDialog = false
+        currentDeck = Deck()
+        setupPlayers()
+        dealInitialHands()
     }
 
     func syncBoardWithPlacedCards() {
@@ -118,5 +152,15 @@ final class BoardViewModel: ObservableObject {
                 board.grid[x][y] = cell
             }
         }
+    }
+
+    func displayMyHand() {
+        if let me = getMe {
+            me.display()
+        }
+    }
+
+    var getMe: PeerPlayer? {
+        players.first(where: { $0.peer.id == P2PNetwork.myPeer.id })
     }
 }
