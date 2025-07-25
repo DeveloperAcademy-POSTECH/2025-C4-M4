@@ -64,13 +64,6 @@ final class BoardViewModel: ObservableObject {
         }
     }
 
-    func nextTurn() {
-        let sortedPlayers = players.sorted { $0.peer.displayName < $1.peer.displayName }
-        guard let currentIndex = sortedPlayers.firstIndex(where: { $0.peer.id == currentPlayer.value }) else { return }
-        let nextIndex = (currentIndex + 1) % sortedPlayers.count
-        currentPlayer.value = sortedPlayers[nextIndex].peer.id
-    }
-
     // MARK: - 카드 놓기
 
     /// 카드 유효성 검사
