@@ -170,8 +170,7 @@ final class BoardViewModel: ObservableObject {
             showToast("카드를 먼저 선택해주세요.")
             return
         }
-        card.turnCard()
-        card.turnCard() // 180도 회전
+        card.rotate180() // 180도 회전
         selectedCard = card
         showToast("카드가 회전되었습니다.")
     }

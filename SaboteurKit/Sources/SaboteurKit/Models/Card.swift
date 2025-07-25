@@ -23,7 +23,7 @@ public struct Card: Sendable, Equatable {
         self.imageName = imageName
     }
 
-    public mutating func turnCard() {
+    public mutating func rotate180() {
         let d = directions
         directions = [d[2], d[3], d[0], d[1]]
     }
