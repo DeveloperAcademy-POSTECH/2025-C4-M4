@@ -4,6 +4,7 @@
 //
 //  Created by 이주현 on 7/15/25.
 //
+import MultipeerConnectivity
 import P2PKit
 import SwiftUI
 
@@ -20,14 +21,23 @@ struct ChangeNameView: View {
         self.onNameChanged = onNameChanged
 
         let fullName = P2PNetwork.myPeer.displayName
-        if let firstSpace = fullName.firstIndex(of: " ") {
+        if fullName.starts(with: "TEMP_USER_") {
+            _selectedCountry = State(initialValue: "🇰🇷")
+            _nickname = State(initialValue: "")
+        } else if let firstSpace = fullName.firstIndex(of: " ") {
             let flag = String(fullName[..<firstSpace])
             let name = String(fullName[fullName.index(after: firstSpace)...])
             _selectedCountry = State(initialValue: flag)
             _nickname = State(initialValue: name)
         } else {
-            _selectedCountry = State(initialValue: "🇰🇷")
-            _nickname = State(initialValue: fullName)
+            let components = fullName.split(separator: " ", maxSplits: 1).map { String($0) }
+            if components.count == 2 {
+                _selectedCountry = State(initialValue: components[0])
+                _nickname = State(initialValue: components[1])
+            } else {
+                _selectedCountry = State(initialValue: "🇰🇷")
+                _nickname = State(initialValue: fullName)
+            }
         }
     }
 
@@ -59,8 +69,16 @@ struct ChangeNameView: View {
                     Button {
                         isPresented = false
                     } label: {
-                        Image(.xButton)
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 100)
+                                .innerShadow()
+                                .foregroundStyle(nickname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.Grayscale.gray : Color.Emerald.emerald2)
+                                .frame(width: 62, height: 50)
+
+                            Image(.xButton)
+                        }
                     }
+                    .disabled(nickname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
                 .padding(.horizontal, 24)
             }
@@ -160,31 +178,5 @@ struct ChangeNameView: View {
 #Preview {
     ChangeNameView(isPresented: .constant(true)) {
         print("닉네임 변경됨")
-    }
-}
-
-struct InnerShadowViewModifier: ViewModifier {
-    var color: Color
-    var radius: CGFloat
-    var x: CGFloat
-    var y: CGFloat
-
-    func body(content: Content) -> some View {
-        content
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(color, lineWidth: 1)
-                    .blur(radius: radius)
-                    .offset(x: x, y: y)
-                    .mask(
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(LinearGradient(
-                                colors: [.black, .clear],
-                                startPoint: .bottom,
-                                endPoint: .bottom
-                            )
-                            )
-                    )
-            )
     }
 }
