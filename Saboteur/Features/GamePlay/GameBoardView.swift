@@ -168,22 +168,39 @@ struct GameBoardView: View {
                             boardViewModel.placeSelectedCard()
                         }
                     )
+                    HStack {
+                        Button(action: {
+                            boardViewModel.rotateSelectedCard()
+                        }, label: {
+                            Text("회전")
+                        }).frame(width: 60, height: 50)
+                            .foregroundColor(.red)
 
-                    CardSelectionView(
-                        cards: boardViewModel.getMe?.cardsInHand ?? [],
-                        selectedCard: $boardViewModel.selectedCard,
-                        onSelect: { card in
-                            boardViewModel.selectedCard = card
-                        }
-                    )
+                        CardSelectionView(
+                            cards: boardViewModel.getMe?.cardsInHand ?? [],
+                            selectedCard: $boardViewModel.selectedCard,
+                            onSelect: { card in
+                                boardViewModel.selectedCard = card
+                            }
+                        )
+                        .frame(width: 388, height: 72)
+
+                        Button(action: {
+                            boardViewModel.deleteSelectedCard()
+                        }, label: {
+                            Text("삭제")
+                        }).frame(width: 60, height: 50)
+                            .foregroundColor(.red)
+                    }.frame(width: 554, height: 72)
+
                 }
-                .padding(.vertical, 16)
-                .onReceive(boardViewModel.currentPlayer.objectWillChange) { _ in
-                    boardViewModel.cursor = boardViewModel.cursor
-                }
-                .onChange(of: boardViewModel.placedCards.value) { _ in
-                    boardViewModel.syncBoardWithPlacedCards()
-                }
+                    .padding(.vertical, 16)
+                    .onReceive(boardViewModel.currentPlayer.objectWillChange) { _ in
+                        boardViewModel.cursor = boardViewModel.cursor
+                    }
+                    .onChange(of: boardViewModel.placedCards.value) { _ in
+                        boardViewModel.syncBoardWithPlacedCards()
+                    }
             }
             .onChange(of: boardViewModel.currentPlayer.value) { _ in
                 startTurnTimer()
