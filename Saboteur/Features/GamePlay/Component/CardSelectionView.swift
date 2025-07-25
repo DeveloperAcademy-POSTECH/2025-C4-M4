@@ -7,48 +7,45 @@ struct CardSelectionView: View {
     let onSelect: (Card) -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                ForEach(cards, id: \.symbol) { card in
-                    Button(action: {
-                        selectedCard = card
-                        onSelect(card)
-                    }) {
-                        Rectangle()
-                            .foregroundColor(.clear)
-                            .frame(width: 60, height: 50)
-                            .background(
-                                ZStack {
-                                    Image(card.imageName)
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(width: 60, height: 50)
-                                        .clipped()
+        HStack {
+            ForEach(cards, id: \.id) { card in
+                Button(action: {
+                    selectedCard = card
+                    onSelect(card)
+                }) {
+                    Rectangle()
+                        .foregroundColor(.clear)
+                        .frame(width: 60, height: 50)
+                        .background(
+                            ZStack {
+                                Image(card.type.imageName)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 60, height: 50)
+                                    .clipped()
 
-                                    if isSelected(card) {
-                                        Color.blue.opacity(0.3)
-                                            .cornerRadius(4)
-                                    }
+                                if isSelected(card) {
+                                    Color.blue.opacity(0.3)
+                                        .cornerRadius(4)
                                 }
-                            )
-                            .cornerRadius(4)
-                            .shadow(color: Color.blue, radius: 0, x: 0, y: 2)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 4)
-                                    .inset(by: 0.5)
-                                    .stroke(
-                                        isSelected(card) ? Color.blue : Color.gray,
-                                        lineWidth: 2
-                                    )
-                            )
-                    }
+                            }
+                        )
+                        .cornerRadius(4)
+                        .shadow(color: Color.blue, radius: 0, x: 0, y: 2)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 4)
+                                .inset(by: 0.5)
+                                .stroke(
+                                    isSelected(card) ? Color.blue : Color.gray,
+                                    lineWidth: 2
+                                )
+                        )
                 }
             }
         }
         .padding(.horizontal, 36)
         .padding(.top, 10)
         .padding(.bottom, 12)
-        .frame(width: 388, height: 72, alignment: .topLeading)
         .background(Color.Emerald.emerald3)
         .cornerRadius(10)
         .overlay(
@@ -59,6 +56,6 @@ struct CardSelectionView: View {
     }
 
     private func isSelected(_ card: Card) -> Bool {
-        selectedCard?.symbol == card.symbol
+        selectedCard?.id == card.id
     }
 }

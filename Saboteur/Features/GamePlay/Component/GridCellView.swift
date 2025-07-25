@@ -11,11 +11,11 @@ struct GridCellView: View {
     // MARK: - Semantic Helpers
 
     private var hasCard: Bool {
-        cell.imageName != nil
+        cell.type != nil
     }
 
     private var isRoadCard: Bool {
-        cell.imageName?.contains("Road") == true
+        cell.type?.imageName.contains("Road") == true
     }
 
     private var shadowColor: Color {
@@ -53,7 +53,7 @@ struct GridCellView: View {
 
     var imageLayer: some View {
         Group {
-            if let imageName = cell.imageName {
+            if let imageName = cell.type?.imageName {
                 Image(imageName)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -75,7 +75,7 @@ struct GridCellView: View {
 #Preview {
     GridCellView(
         x: 0, y: 0,
-        cell: BoardCell(imageName: "Card/start_2"),
+        cell: BoardCell(type: CardType.blockTB),
         isCursor: false,
         onTap: { print("Tapped") }
     )

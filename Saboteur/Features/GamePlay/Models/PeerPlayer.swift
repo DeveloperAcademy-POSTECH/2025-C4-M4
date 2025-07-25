@@ -42,9 +42,8 @@ public struct PeerPlayer: Identifiable {
         return false
     }
 
-    /// 손패를 출력합니다. (디버깅용)
-    public func display() {
-        let symbols = hand.map(\.symbol)
-        print("🃏 내 카드: \(symbols.joined(separator: " "))")
+    public mutating func replaceCard(at index: Int, with newCard: Card) {
+        guard hand.indices.contains(index) else { return }
+        hand[index] = newCard
     }
 }
