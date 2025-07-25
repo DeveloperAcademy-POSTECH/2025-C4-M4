@@ -32,7 +32,7 @@ struct OutButton: View {
         Button(action: action) {
             ZStack(alignment: .center) {
                 RoundedRectangle(cornerRadius: 100)
-                    .innerShadow()
+                    .shadow3BlackInner()
                     .foregroundStyle((isDisabled ?? false) ? Color.Grayscale.gray : activeColor)
                     .frame(width: 62, height: 50)
 

@@ -67,7 +67,7 @@ struct PlayerProfileComponentView: View {
         ZStack {
             RoundedRectangle(cornerRadius: 20)
                 .fill(showBackground ? style.fill : Color.Ivory.ivory1)
-                .colordropShadow(color: showBackground ? style.shadowFill : Color.Ivory.ivory2)
+                .shadow5ColorDrop(color: showBackground ? style.shadowFill : Color.Ivory.ivory2)
 
             VStack(spacing: 20) {
                 Image(style.image)
