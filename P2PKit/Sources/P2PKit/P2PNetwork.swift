@@ -96,6 +96,18 @@ public enum P2PNetwork {
 //        }
     }
 
+    // MARK: - Stop Advertising and browser
+
+    public static func stopAdvertising() {
+        session.stopAdverting()
+    }
+
+    public static func stopbrowsing() {
+        session.stopBrowsing()
+    }
+
+    // MARK: - Session Connection States
+
     public static func connectionState(for peer: MCPeerID) -> MCSessionState? {
         session.connectionState(for: peer)
     }
