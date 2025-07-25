@@ -1,0 +1,82 @@
+import SaboteurKit
+import SwiftUI
+
+struct GridCellView: View {
+    let x: Int
+    let y: Int
+    let cell: BoardCell
+    let isCursor: Bool
+    let onTap: () -> Void
+
+    // MARK: - Semantic Helpers
+
+    private var hasCard: Bool {
+        cell.imageName != nil
+    }
+
+    private var isRoadCard: Bool {
+        cell.imageName?.contains("Road") == true
+    }
+
+    private var shadowColor: Color {
+        !hasCard || !isRoadCard ? Color.clear : Color.Emerald.emerald2
+    }
+
+    // MARK: - Body
+
+    var body: some View {
+        ZStack(alignment: .bottomLeading) {
+            backgroundLayer
+            cursorOverlay
+            imageLayer
+        }
+        .frame(width: 60, height: 50)
+        .shadow(color: shadowColor, radius: 0, x: 0, y: 2)
+        .contentShape(Rectangle())
+        .onTapGesture { onTap() }
+        .zIndex(hasCard ? 1 : 0)
+        .padding(2)
+    }
+
+    // MARK: - View Components
+
+    var backgroundLayer: some View {
+        Group {
+            if !hasCard {
+                Rectangle()
+                    .foregroundColor(.clear)
+                    .background(Color(red: 0.36, green: 0.73, blue: 0.87).opacity(0.4))
+                    .cornerRadius(4)
+            }
+        }
+    }
+
+    var imageLayer: some View {
+        Group {
+            if let imageName = cell.imageName {
+                Image(imageName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            }
+        }
+    }
+
+    var cursorOverlay: some View {
+        Group {
+            if isCursor {
+                Rectangle()
+                    .stroke(Color.yellow, lineWidth: 3)
+                    .cornerRadius(4)
+            }
+        }
+    }
+}
+
+#Preview {
+    GridCellView(
+        x: 0, y: 0,
+        cell: BoardCell(imageName: "Card/start_2"),
+        isCursor: false,
+        onTap: { print("Tapped") }
+    )
+}

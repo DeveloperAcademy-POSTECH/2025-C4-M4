@@ -8,10 +8,10 @@ public class Board {
     public var lastGoal: (x: Int, y: Int)?
 
     public init() {
-        grid[0][2] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "Ⓢ", imageName: "Board/start", isConnect: true, contributor: "") // start
-        grid[8][0] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "G0", imageName: "Board/goal", isConnect: true, contributor: "", isGoal: false, isOpened: false) // top
-        grid[8][2] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "G1", imageName: "Board/goal", isConnect: true, contributor: "", isGoal: false, isOpened: false) // middle
-        grid[8][4] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "G2", imageName: "Board/goal", isConnect: true, contributor: "", isGoal: false, isOpened: false) // bottom
+        grid[0][2] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "Ⓢ", imageName: "Card/start_2", isConnect: true, contributor: "") // start
+        grid[8][0] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "G0", imageName: "Card/Goal/hidden", isConnect: true, contributor: "", isGoal: false, isOpened: false) // top
+        grid[8][2] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "G1", imageName: "Card/Goal/true_2", isConnect: true, contributor: "", isGoal: false, isOpened: false) // middle
+        grid[8][4] = BoardCell(isCard: true, directions: [true, true, true, true], symbol: "G2", imageName: "Card/Goal/false_2", isConnect: true, contributor: "", isGoal: false, isOpened: false) // bottom
     }
 
     // 보드 현황을 보여준다
