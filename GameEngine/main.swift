@@ -5,7 +5,7 @@ import SaboteurKit
 func selectCard() -> Card? {
     print("🎲 카드 덱")
     for (index, card) in cardSet.enumerated() {
-        print("[\(index)] \(card.description)")
+        print("[\(index)] \(card.symbol)")
     }
     print("🎲 사용할 카드 번호를 입력하세요. > ", terminator: "")
 
@@ -53,7 +53,8 @@ var currentPlayer: Player { players[currentPlayerIndex] }
 
 let board = Board()
 
-var goal = board.setGoal
+var goal = board.setGoal()
+print("g\(goal)이 goal의 위치입니다.")
 
 while true {
     print("게임을 끝내려면 'stop'를 입력하세요. 계속하려면 Enter > ", terminator: "")
