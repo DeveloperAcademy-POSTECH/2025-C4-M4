@@ -31,7 +31,7 @@ struct ChoosePlayerView: View {
                         Button {
                             router.currentScreen = .lobby
                         } label: {
-                            Image(.backButton)
+                            HeaderButton(image: Image(.backButton))
                         }
                         Spacer()
                     }
@@ -53,7 +53,7 @@ struct ChoosePlayerView: View {
                             // lineHeight: 10,
                             textAlignment: .center
                         )
-                        .blackdropShadow()
+                        .shadow1BlackDrop()
                         .frame(height: 50)
 
                         Spacer()

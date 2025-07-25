@@ -33,7 +33,7 @@ struct CustomPaddingView: View {
             VStack(spacing: 30) {
                 HStack {
                     Spacer()
-                    Image(.profileButton)
+                    HeaderButton(image: Image(.profileButton))
                 }
                 .customPadding(.header)
 

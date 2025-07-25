@@ -30,7 +30,7 @@ struct LobbyView: View {
                         Button {
                             showNameModal = true
                         } label: {
-                            Image(.profileButton)
+                            HeaderButton(image: Image(.profileButton))
                         }
                     }
                     .customPadding(.header)

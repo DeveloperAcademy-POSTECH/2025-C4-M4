@@ -51,7 +51,7 @@ struct GameResultView: View {
                             if let winnerCard = finalPlayers.first(where: { $0.id == name }) {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 10)
-                                        .innerShadow()
+                                        .shadow4ColorInner(color: Color.Ivory.ivory3)
                                         .frame(width: winnerCardWidth, height: winnerCardHeight)
                                         .foregroundStyle(Color.Ivory.ivory1)
 
@@ -123,7 +123,7 @@ struct GameResultView: View {
                     } label: {
                         ZStack {
                             RoundedRectangle(cornerRadius: 50)
-                                .innerShadow()
+                                .shadow3BlackInner()
                                 .foregroundStyle(Color.Secondary.blue4)
                                 .frame(width: 205, height: 64)
 
@@ -138,7 +138,7 @@ struct GameResultView: View {
                     } label: {
                         ZStack {
                             RoundedRectangle(cornerRadius: 50)
-                                .innerShadow()
+                                .shadow3BlackInner()
                                 .foregroundStyle(Color.Secondary.yellow2)
                                 .frame(width: 205, height: 64)
 
@@ -189,6 +189,7 @@ extension GameResultView {
     private func loserCard(player: Peer) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
+                .shadow4ColorInner(color: Color.Ivory.ivory3)
                 .foregroundStyle(Color.Ivory.ivory2)
                 .frame(width: loserCardWidth, height: loserCardHeight)
                 .overlay(

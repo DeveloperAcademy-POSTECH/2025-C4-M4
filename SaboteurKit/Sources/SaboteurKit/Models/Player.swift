@@ -28,9 +28,4 @@ public struct Player {
         }
         return false
     }
-
-    public func display() {
-        let symbols = hand.map(\.symbol)
-        print("🃏 내 카드: \(symbols.joined(separator: " "))")
-    }
 }

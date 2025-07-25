@@ -53,7 +53,7 @@ struct ConnectView: View {
                                 // lineHeight: 10,
                                 textAlignment: .center
                             )
-                            .blackdropShadow()
+                            .shadow1BlackDrop()
                             .frame(height: 50)
 
                             Spacer()
@@ -66,7 +66,7 @@ struct ConnectView: View {
 
                                 router.currentScreen = .choosePlayer
                             } label: {
-                                Image(.backButton)
+                                HeaderButton(image: Image(.backButton))
                             }
 
                             Spacer()
@@ -172,8 +172,6 @@ struct ConnectView: View {
                 countdownTimer = nil
                 if connected.peers.count == P2PNetwork.maxConnectedPeers {
                     P2PNetwork.makeMeHost()
-                    P2PNetwork.stopAdvertising()
-                    P2PNetwork.stopbrowsing()
                     state = .startedGame
                 }
             }
