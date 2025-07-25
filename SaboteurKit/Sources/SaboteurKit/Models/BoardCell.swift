@@ -19,7 +19,5 @@ public struct BoardCell: Decodable, Encodable, Equatable {
         self.imageName = imageName
         self.isConnect = isConnect
         self.contributor = contributor
-        self.isGoal = isGoal
-        self.isOpened = isOpened
     }
 }

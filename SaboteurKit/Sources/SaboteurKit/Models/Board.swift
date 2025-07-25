@@ -26,9 +26,10 @@ public class Board {
         print("")
     }
 
-    public func setGoal(grandom _: Int) {
+    public func setGoal() -> Int {
         let grandom = Int.random(in: 0 ... 2)
         grid[8][grandom * 2].isGoal = true
+        return grandom
     }
 
     public func isGoalLine(x: Int, y: Int) -> Bool {
