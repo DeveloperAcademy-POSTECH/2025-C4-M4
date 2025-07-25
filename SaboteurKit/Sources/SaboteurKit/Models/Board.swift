@@ -40,6 +40,8 @@ public class Board {
     // 카드 설치 가능 여부를 확인한다 - 로직 위주
        public func isPlacable(x: Int, y: Int, card: Card) -> Bool {
            guard x >= 0, x < 9, y >= 0, y < 5 else { return false } // 카드를 설치할 값의 위치가 좌표 위가 아니라면 false
+           
+           if x == 8 { return false }
 
            var trueConnectedCount = 0
            let directions = [(-1, 0, 3, 1), (1, 0, 1, 3), (0, -1, 0, 2), (0, 1, 2, 0)]

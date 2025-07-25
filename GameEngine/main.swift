@@ -97,8 +97,8 @@ while true {
             print(message)
             if success {
                 if board.grid[7][2].isCard
-                    || board.grid[8][1].isCard
-                    || board.grid[8][3].isCard
+//                    || board.grid[8][1].isCard
+//                    || board.grid[8][3].isCard
                     || board.grid[7][0].isCard
                     || board.grid[7][4].isCard
                 {
