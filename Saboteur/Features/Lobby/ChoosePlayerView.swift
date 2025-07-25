@@ -31,7 +31,7 @@ struct ChoosePlayerView: View {
                         Button {
                             router.currentScreen = .lobby
                         } label: {
-                            Image(.backButton)
+                            HeaderButton(image: Image(.backButton))
                         }
                         Spacer()
                     }
