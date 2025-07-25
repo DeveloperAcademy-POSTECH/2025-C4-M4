@@ -28,7 +28,7 @@ struct FooterButton: View {
                     .fill(.shadow(.inner(color: Color.black.opacity(0.1), radius: 0, x: 0, y: isSelected ? 0 : -4)))
                     .frame(maxWidth: .infinity)
                     .frame(height: 55)
-                    .foregroundStyle(isDisabled == true ? Color.gray : Color.Emerald.emerald2)
+                    .foregroundStyle(isDisabled == true ? Color.Grayscale.gray : Color.Emerald.emerald2)
 
                 Text(title)
                     .foregroundStyle(Color.Grayscale.whiteBg)

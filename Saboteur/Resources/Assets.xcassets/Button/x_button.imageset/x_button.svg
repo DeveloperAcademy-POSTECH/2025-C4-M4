@@ -1,17 +1,3 @@
-<svg width="62" height="50" viewBox="0 0 62 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g filter="url(#filter0_i_920_736)">
-<rect width="62" height="50" rx="25" fill="#19505A"/>
-</g>
-<path d="M34.5574 16.1053C36.0311 14.6316 38.4197 14.6316 39.8933 16.1053C41.3669 17.5789 41.3669 19.9675 39.8933 21.4412L36.3357 24.9988L39.8943 28.5574C41.3679 30.0311 41.3679 32.4207 39.8943 33.8943C38.4207 35.368 36.0311 35.368 34.5574 33.8943L30.9988 30.3357L27.4412 33.8943C25.9676 35.3675 23.5788 35.3675 22.1052 33.8943C20.6316 32.4206 20.6316 30.0311 22.1052 28.5574L25.6629 24.9998L22.1052 21.4422C20.6316 19.9685 20.6317 17.579 22.1052 16.1053C23.5789 14.6316 25.9685 14.6316 27.4422 16.1053L30.9998 19.6629L34.5574 16.1053Z" fill="#FFF9E6"/>
-<defs>
-<filter id="filter0_i_920_736" x="0" y="0" width="62" height="50" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dy="-4"/>
-<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/>
-<feBlend mode="normal" in2="shape" result="effect1_innerShadow_920_736"/>
-</filter>
-</defs>
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M13.5574 1.10526C15.0311 -0.368363 17.4197 -0.368402 18.8933 1.10526C20.3669 2.57892 20.3669 4.96753 18.8933 6.4412L15.3357 9.99882L18.8943 13.5574C20.3679 15.0311 20.3679 17.4207 18.8943 18.8943C17.4207 20.368 15.0311 20.368 13.5574 18.8943L9.9988 15.3357L6.44119 18.8943C4.96763 20.3675 2.57883 20.3675 1.10525 18.8943C-0.368416 17.4206 -0.368416 15.0311 1.10525 13.5574L4.66287 9.9998L1.10525 6.44218C-0.368371 4.96854 -0.368279 2.57896 1.10525 1.10526C2.57891 -0.368422 4.9685 -0.368422 6.44216 1.10526L9.99978 4.66288L13.5574 1.10526Z" fill="#FFF9E6"/>
 </svg>

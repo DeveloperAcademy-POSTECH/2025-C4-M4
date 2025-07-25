@@ -45,8 +45,8 @@ extension Peer {
         {
             return Peer(peerID, id: id)
         } else {
-            let randomAnimal = Array("🦊🐯🐹🐶🐸🐵🐮🦄").randomElement()!
-            let peerID = MCPeerID(displayName: "\(randomAnimal) \(UIDevice.current.name)")
+            let initialName = "TEMP_USER_\(UUID().uuidString.prefix(4))"
+            let peerID = MCPeerID(displayName: "\(initialName)")
             return resetMyPeer(with: peerID)
         }
     }

@@ -48,7 +48,7 @@ struct GameResultView: View {
                         if let winnerCard = players.first(where: { $0 == name }) {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 10)
-                                    .innerShadow()
+                                    .colorinnerShadow(color: Color.Ivory.ivory3)
                                     .frame(width: winnerCardWidth, height: winnerCardHeight)
                                     .foregroundStyle(Color.Ivory.ivory1)
 
