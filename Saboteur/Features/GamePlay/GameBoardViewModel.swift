@@ -51,6 +51,13 @@ final class BoardViewModel: ObservableObject {
         }
     }
 
+    func nextTurn() {
+        let sortedPlayers = players.sorted { $0.peer.displayName < $1.peer.displayName }
+        guard let currentIndex = sortedPlayers.firstIndex(where: { $0.peer.id == currentPlayer.value }) else { return }
+        let nextIndex = (currentIndex + 1) % sortedPlayers.count
+        currentPlayer.value = sortedPlayers[nextIndex].peer.id
+    }
+
     // MARK: - 카드 놓기
 
     func placeSelectedCard() {
@@ -121,15 +128,6 @@ final class BoardViewModel: ObservableObject {
                 players[myIndex].drawCard(from: &currentDeck)
                 nextTurn()
             }
-        }
-
-        // MARK: - 턴 넘기기
-
-        func nextTurn() {
-            let sortedPlayers = players.sorted { $0.peer.displayName < $1.peer.displayName }
-            guard let currentIndex = sortedPlayers.firstIndex(where: { $0.peer.id == currentPlayer.value }) else { return }
-            let nextIndex = (currentIndex + 1) % sortedPlayers.count
-            currentPlayer.value = sortedPlayers[nextIndex].peer.id
         }
     }
 

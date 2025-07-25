@@ -9,14 +9,35 @@ import SwiftUI
 
 struct Practice: View {
     var body: some View {
+        // 내 차례
         VStack(alignment: .leading, spacing: 3) {
-            Image(.koreaIcon)
-                .resizable()
-                .frame(width: 20, height: 20)
-                .overlay(
-                    Circle()
-                        .stroke(Color.Emerald.emerald1, lineWidth: 2)
-                )
+            HStack {
+                Image(.koreaIcon)
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .overlay(
+                        Circle()
+                            .stroke(Color.Emerald.emerald1, lineWidth: 2)
+                    )
+
+                Spacer()
+
+                HStack(spacing: 1) {
+                    Image(systemName: "clock.fill")
+                        .font(.system(size: 10))
+
+                    Text("1:30")
+                }
+                .foregroundStyle(Color.Grayscale.whiteBg)
+                .label4Font()
+                .padding(.vertical, 2)
+                .padding(.leading, 3)
+                .padding(.trailing, 7)
+                .background {
+                    RoundedRectangle(cornerRadius: 4)
+                        .foregroundStyle(Color.Etc.pink)
+                }
+            }
 
             Text("WWWWWWWW")
                 .foregroundStyle(Color.Ivory.ivory1)
@@ -34,6 +55,9 @@ struct Practice: View {
                         })
                 )
         }
+        .frame(width: 86, height: 39)
+
+        // 다른 사람
         VStack(alignment: .leading, spacing: 3) {
             Image(.koreaIcon)
                 .resizable()
