@@ -8,7 +8,7 @@ struct CardSelectionView: View {
 
     var body: some View {
         HStack {
-            ForEach(cards, id: \.symbol) { card in
+            ForEach(cards, id: \.id) { card in
                 Button(action: {
                     selectedCard = card
                     onSelect(card)
@@ -18,7 +18,7 @@ struct CardSelectionView: View {
                         .frame(width: 60, height: 50)
                         .background(
                             ZStack {
-                                Image(card.imageName)
+                                Image(card.type.imageName)
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)
                                     .frame(width: 60, height: 50)
@@ -56,6 +56,6 @@ struct CardSelectionView: View {
     }
 
     private func isSelected(_ card: Card) -> Bool {
-        selectedCard?.symbol == card.symbol
+        selectedCard?.id == card.id
     }
 }

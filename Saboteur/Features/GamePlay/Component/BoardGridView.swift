@@ -56,7 +56,7 @@ struct BoardGridView: View {
 }
 
 #Preview {
-    let placed = ["3,2": BoardCell(imageName: "Card/Road/tl")]
+    let placed = ["3,2": BoardCell(type: CardType.blockL)]
 
     return BoardGridView(
         board: Board().grid,

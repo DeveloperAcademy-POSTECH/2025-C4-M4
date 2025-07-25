@@ -94,9 +94,17 @@ final class BoardViewModel: ObservableObject {
     /// 현재 선택된 카드를 보드에 놓기
     func placeSelectedCard() {
         guard let (card, myIndex) = validateSelectedCard() else { return }
+
+        // 추가: 카드 타입 확인
+        guard CardType.allCases.contains(card.type) else {
+            showToast("⚠️ 유효하지 않은 카드입니다.")
+            print("🧨 카드 타입이 유효하지 않음: \(card)")
+            return
+        }
+
         let (x, y) = cursor
 
-        if card.symbol == "💣" {
+        if card.type == .bomb {
             handleBombCard(card, at: (x, y), playerIndex: myIndex)
         } else {
             handleNormalCard(card, at: (x, y), playerIndex: myIndex)
@@ -127,15 +135,9 @@ final class BoardViewModel: ObservableObject {
     }
 
     /// 보드 셀 업데이트
-    private func updateCell(at pos: (Int, Int), with card: Card, isCard: Bool) {
-        let cell = BoardCell(
-            isCard: isCard,
-            directions: card.directions,
-            symbol: card.symbol,
-            imageName: card.imageName,
-            isConnect: card.connect,
-            contributor: currentPlayer.value
-        )
+    private func updateCell(at pos: (Int, Int), with card: Card, isCard _: Bool) {
+        let cell = BoardCell(type: card.type, contributor: currentPlayer.value)
+
         placedCards.value["\(pos.0),\(pos.1)"] = cell
         board.grid[pos.0][pos.1] = cell
     }
@@ -166,12 +168,24 @@ final class BoardViewModel: ObservableObject {
 
     /// 선택한 카드 회전
     func rotateSelectedCard() {
-        guard var card = selectedCard else {
+        guard let card = selectedCard else {
             showToast("카드를 먼저 선택해주세요.")
             return
         }
-        card.rotate180() // 180도 회전
-        selectedCard = card
+        guard let myIndex = getMeIndex else {
+            showToast("내 정보를 찾을 수 없습니다.")
+            return
+        }
+        guard let handIndex = players[myIndex].cardsInHand.firstIndex(of: card) else {
+            showToast("손패에서 카드를 찾을 수 없습니다.")
+            return
+        }
+
+        var rotatedCard = card
+        rotatedCard.rotate180()
+        players[myIndex].replaceCard(at: handIndex, with: rotatedCard)
+        selectedCard = rotatedCard
+
         showToast("카드가 회전되었습니다.")
     }
 
