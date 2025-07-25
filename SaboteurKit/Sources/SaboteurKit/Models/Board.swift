@@ -93,6 +93,20 @@ public class Board {
                return (false, "❌ 해당 지점에 카드가 없습니다.")
            }
        }
+    
+        // 해당 목적지가 isGoal인지 확인한다
+        public func mapCheck(x: Int, y: Int) -> (Bool, String) {
+            if isGoalLine(x: x, y: y) == false {
+                return (false, "해당 지점은 확인할 수 없습니다.")
+            }
+    
+            if grid[x][y].isGoal == true {
+                return (true, "g\(y/2)이 goal이 맞습니다.")
+            } else {
+                return (false, "g\(y/2)은 goal이 아닙니다.")
+            }
+        }
+    
 
        public func goalCheck() -> Bool {
            // print("🔍 goalCheck 시작: start 위치에서 탐색을 시작합니다.")

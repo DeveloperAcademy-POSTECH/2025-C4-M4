@@ -83,7 +83,7 @@ while true {
         }
 
         // #5. 카드 설치를 수행한다
-        if selectedCard.symbol == "💣" {
+        if selectedCard.imageName == "Card/Road/bomb" {
             let (success, message) = board.dropBoom(x: x, y: y)
             print(message)
             if success {
@@ -92,6 +92,9 @@ while true {
             } else {
                 continue
             }
+        } else if selectedCard.imageName == "Card/map" {
+            let (success, message) = board.mapCheck(x: x, y: y)
+            print(message)
         } else {
             let (success, message) = board.placeCard(x: x, y: y, card: selectedCard, player: currentPlayer.name)
             print(message)

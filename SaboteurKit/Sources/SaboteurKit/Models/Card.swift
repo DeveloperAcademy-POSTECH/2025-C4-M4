@@ -52,4 +52,7 @@ public let cardSet: [Card] = [
 
     // 폭탄 카드
     Card(directions: [false, false, false, false], connect: false, symbol: "💣", imageName: "Card/Road/bomb"), // bomb
+    
+    // 맵 카드
+    Card(directions: [false, false, false, false], connect: false, symbol: "🗺️", imageName: "Card/map") // map
 ]
