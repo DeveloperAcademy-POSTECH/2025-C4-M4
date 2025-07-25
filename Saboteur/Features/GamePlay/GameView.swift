@@ -32,23 +32,12 @@ struct GameView: View {
                 }
 
                 if !exitToastMessage.value.isEmpty {
-                    VStack {
-                        Text(exitToastMessage.value)
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 16)
-                            .background(Color.black.opacity(0.75))
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                            .transition(.move(edge: .top).combined(with: .opacity))
-                        Spacer()
-                    }
-                    .padding()
-                    .animation(.easeInOut, value: exitToastMessage.value)
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                            exitToastMessage.value = ""
+                    ToastMessage(message: exitToastMessage.value, animationTrigger: exitToastMessage.value)
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                exitToastMessage.value = ""
+                            }
                         }
-                    }
                 }
             }
         } else {

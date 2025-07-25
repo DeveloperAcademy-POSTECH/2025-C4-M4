@@ -197,18 +197,7 @@ struct GameBoardView: View {
             }
 
             if let message = boardViewModel.toastMessage {
-                VStack {
-                    Text(message)
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 16)
-                        .background(Color.black.opacity(0.75))
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .transition(.move(edge: .top).combined(with: .opacity))
-                    Spacer()
-                }
-                .padding()
-                .animation(.easeInOut, value: boardViewModel.toastMessage)
+                ToastMessage(message: message, animationTrigger: boardViewModel.toastMessage)
             }
         }
         // .frame(minHeight: UIScreen.main.bounds.height - 32)
