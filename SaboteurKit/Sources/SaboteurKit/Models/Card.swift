@@ -33,7 +33,7 @@ public let cardSet: [Card] = [
     // 연결 가능한 길 카드
     Card(directions: [true, false, false, true], connect: true, symbol: "┘", imageName: "Card/Road/tl"), // tl
     Card(directions: [true, true, false, false], connect: true, symbol: "└", imageName: "Card/Road/tr"), // tr
-    Card(directions: [true, false, true, true], connect: true, symbol: "│", imageName: "Card/Road/tb"), // tb
+    Card(directions: [true, false, true, false], connect: true, symbol: "│", imageName: "Card/Road/tb"), // tb
     Card(directions: [false, true, false, true], connect: true, symbol: "─", imageName: "Card/Road/rl"), // rl
     Card(directions: [true, true, true, false], connect: true, symbol: "├", imageName: "Card/Road/trb"), // trb
     Card(directions: [true, true, false, true], connect: true, symbol: "ㅗ", imageName: "Card/Road/trl"), // trl
@@ -44,7 +44,7 @@ public let cardSet: [Card] = [
     Card(directions: [false, false, false, true], connect: false, symbol: "◀︎", imageName: "Card/Road/l_block"), // l_block
     Card(directions: [true, false, false, true], connect: false, symbol: "▴◀︎", imageName: "Card/Road/tl_block"), // tl_block
     Card(directions: [true, true, false, false], connect: false, symbol: "╰", imageName: "Card/Road/tr_block"), // tr_block
-    Card(directions: [true, false, true, true], connect: false, symbol: "▴▾", imageName: "Card/Road/tb_block"), // tb_block
+    Card(directions: [true, false, true, false], connect: false, symbol: "▴▾", imageName: "Card/Road/tb_block"), // tb_block
     Card(directions: [false, true, false, true], connect: false, symbol: "◀︎‣", imageName: "Card/Road/rl_block"), // rl_block
     Card(directions: [true, true, true, false], connect: false, symbol: "▴‣▾", imageName: "Card/Road/trb_block"), // trb_block
     Card(directions: [true, true, false, true], connect: false, symbol: "▴‣◀︎", imageName: "Card/Road/trl_block"), // trl_block

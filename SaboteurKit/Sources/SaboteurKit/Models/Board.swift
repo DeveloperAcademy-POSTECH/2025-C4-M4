@@ -50,20 +50,18 @@ public class Board {
                guard nx >= 0, nx < 9, ny >= 0, ny < 5 else { continue } // neighbor 카드의 존재 여부 체크
                let neighbor = grid[nx][ny]
                
-               
                if isGoalLine(x: nx, y: ny) ? (neighbor.isOpened == true) : neighbor.isCard {
                    if card.directions[myDir], neighbor.directions[neighborDir] {
+//                       print("연결 발생 \(x),\(y) - myDir:\(myDir),\(card.directions[myDir]) / \(nx),\(ny) - neighborDir:\(neighborDir),\(neighbor.directions[neighborDir])")
                        trueConnectedCount += 1
-                       if isGoalLine(x: nx, y: ny) && (neighbor.isOpened == false) {
-                           trueConnectedCount -= 1
-                       }
                    } else if card.directions[myDir] != neighbor.directions[neighborDir] {
-                       return false // 연결이 안 맞는 방향이 하나라도 있으면 false
+//                       print("연결오류 발생 \(x),\(y) / \(nx),\(ny)")
+                       return false
                    }
                }
            }
 
-           return trueConnectedCount > 0 // true-true인 방향이 있어야 한 개 이상 있으면 true
+           return trueConnectedCount > 0 // true-true인 방향이 한 개 이상 있어야 true
        }
 
        // 카드를 설치한다 - 기본적인 isCard나 시작, 도착 지점 여부 확인도 이루어진다
