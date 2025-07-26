@@ -34,7 +34,8 @@ struct LobbyView: View {
                     VStack(spacing: 40) {
                         Image(.logo)
                             .resizable()
-                            .frame(width: UIScreen.main.bounds.width * 0.55, height: UIScreen.main.bounds.height * 0.45)
+                            .scaledToFit()
+                            .frame(height: 180)
 
                         FooterButton(action: {
                                          router.currentScreen = .choosePlayer
@@ -59,6 +60,9 @@ struct LobbyView: View {
                 displayName = P2PNetwork.myPeer.displayName
                 showNameModal = false
             }
+        }
+        .onTapGesture {
+            endTextEditing()
         }
     }
 }

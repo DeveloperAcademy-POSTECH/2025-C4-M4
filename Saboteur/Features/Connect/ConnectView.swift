@@ -95,7 +95,7 @@ struct ConnectView: View {
                             Text("게임이 \(countdown)초 후 시작됩니다")
                                 .foregroundStyle(Color.Emerald.emerald1)
                                 .body2Font()
-                                .padding()
+                                .frame(height: 20)
                         }
                     } else {
                         HStack {
@@ -106,6 +106,7 @@ struct ConnectView: View {
                         }
                         .foregroundStyle(Color.Emerald.emerald1)
                         .body2Font()
+                        .frame(height: 20)
                     }
 
                     Spacer()

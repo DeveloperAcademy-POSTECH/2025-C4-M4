@@ -61,7 +61,7 @@ struct GameBoardView: View {
                                 winner.value = remaining.id
                             }
 
-                            exitToastMessage.value = "\(boardViewModel.myName)님이 나가서 게임이 강제 종료되었습니다"
+                            exitToastMessage.value = "\(boardViewModel.myName)님이 나가서 게임이 강제 종료되었습니다."
                         }
                         router.currentScreen = .choosePlayer
 
