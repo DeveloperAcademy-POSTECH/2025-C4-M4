@@ -69,7 +69,7 @@ public class Board {
             guard goalCell.type?.category == .goal, goalCell.isOpened == false else { continue }
 
             grid[gx][gy].isOpened = true
-            print("🎯 Goal 카드가 열렸습니다: (\(gx), \(gy))")
+            print("🎯 Goal 카드가 열렸습니다: (\(gx), \(gy)).")
             revealed = true
         }
 
