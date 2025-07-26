@@ -42,6 +42,7 @@ struct GameView: View {
             }
         } else {
             VStack {
+                Text("Treasure Island")
                 GameBoardView(winner: winner as P2PSyncedObservable<Peer.Identifier>, gameState: $gameState, exitToastMessage: exitToastMessage)
                     .environmentObject(router)
                     .onChange(of: winner.value) {
