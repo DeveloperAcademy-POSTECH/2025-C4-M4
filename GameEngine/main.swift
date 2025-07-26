@@ -99,12 +99,16 @@ while true {
                 continue
             }
         } else if selectedCard.type == .map {
-//            let (success, message) = board.mapCheck(x: x, y: y)
-//            print(message)
-            currentPlayerIndex = (currentPlayerIndex + 1) % players.count
-            players[currentPlayerIndex].drawCard(from: &deck)
-            break
-
+            let (success, message) = board.mapCheck(x: x, y: y)
+            print(message)
+            if success {
+                players[currentPlayerIndex].discardCard(selectedCard)
+                players[currentPlayerIndex].drawCard(from: &deck)
+                currentPlayerIndex = (currentPlayerIndex + 1) % players.count
+                break
+            } else {
+                continue
+            }
         } else {
             let (success, message) = board.placeCard(x: x, y: y, card: selectedCard, player: currentPlayer.name)
             print(message)
