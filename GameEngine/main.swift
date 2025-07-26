@@ -80,7 +80,7 @@ while true {
         guard let input = readLine(),
               let x = Int(input.split(separator: " ")[0]),
               let y = Int(input.split(separator: " ")[1]),
-              x >= 0, x < 9, y >= 0, y < 5
+              x >= 0, x < 8, y >= 0, y < 5
         else {
             print("❌ 잘못된 입력입니다.")
             continue
