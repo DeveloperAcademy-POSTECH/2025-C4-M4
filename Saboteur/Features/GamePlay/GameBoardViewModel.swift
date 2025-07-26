@@ -1,3 +1,4 @@
+import Combine
 import P2PKit
 import SaboteurKit
 import SwiftUI
@@ -6,7 +7,7 @@ final class BoardViewModel: ObservableObject {
     // MARK: - Published Properties
 
     @Published var showGameEndDialog: Bool = false
-    @Published var board = Board()
+    @Published var board: Board = .init(goalIndex: 0)
     @Published var cursor: (Int, Int) = (0, 0)
     @Published var selectedCard: Card? = nil
     @Published var toastMessage: String? = nil
@@ -16,13 +17,36 @@ final class BoardViewModel: ObservableObject {
 
     @Published var currentPlayer: P2PSyncedObservable<Peer.Identifier> = P2PNetwork.currentTurnPlayerID
     @Published var placedCards = P2PSyncedObservable(name: "PlacedCards", initial: [String: BoardCell]())
-
+    private var cancellables = Set<AnyCancellable>()
+    let syncedGoalIndex: P2PSyncedObservable<Int>
     let winner: P2PSyncedObservable<Peer.Identifier>
 
     init(winner: P2PSyncedObservable<Peer.Identifier>) {
         self.winner = winner
+
+        syncedGoalIndex = P2PSyncedObservable(
+            name: "GoalIndex",
+            initial: P2PNetwork.isHost ? Int.random(in: 0 ..< 3) : -1
+        )
+
         setupPlayers()
         dealInitialHands()
+
+        // ✅ goalIndex가 호스트로부터 전달되었을 때 보드 재설정
+        syncedGoalIndex.objectWillChange
+            .sink { [weak self] in
+                guard let self = self else { return }
+                let newIndex = self.syncedGoalIndex.value
+                guard (0 ..< 3).contains(newIndex) else { return }
+
+                self.board = Board(goalIndex: newIndex)
+                print("📦 클라이언트에서 goalIndex 수신 및 보드 재생성: \(newIndex)")
+            }
+            .store(in: &cancellables)
+
+        if P2PNetwork.isHost {
+            print("🎲 나는 호스트이며 goalIndex는 \(syncedGoalIndex.value)")
+        }
     }
 
     // MARK: - 유틸리티 메서드
@@ -238,7 +262,11 @@ final class BoardViewModel: ObservableObject {
 
     /// 게임 리셋
     func resetGame() {
-        board = Board()
+        if P2PNetwork.isHost {
+            syncedGoalIndex.value = Int.random(in: 0 ..< 3)
+        }
+        board = Board(goalIndex: syncedGoalIndex.value)
+
         cursor = (0, 0)
         selectedCard = nil
         toastMessage = nil
