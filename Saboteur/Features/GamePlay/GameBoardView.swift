@@ -31,7 +31,9 @@ struct GameBoardView: View {
             } else {
                 timer.invalidate()
                 turnTimer = nil
-                // 여기에 자동으로 카드 하나 버리고 채워지는 함수 추가
+
+                // ⏰ 시간 초과 시 무작위 카드 제거 및 새 카드 지급
+                boardViewModel.autoDiscardAndDraw()
                 boardViewModel.nextTurn()
             }
         }
