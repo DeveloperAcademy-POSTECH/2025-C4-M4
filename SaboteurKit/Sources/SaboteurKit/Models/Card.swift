@@ -17,7 +17,7 @@ public enum CardType: String, Codable, Hashable, CaseIterable, Sendable {
     case blockTRB, blockTRL, blockTRBL
 
     // 길 카드 180도 회전
-    case pathB, pathBL, pathRB, pathRBL, pathTBL
+    case pathBL, pathRB, pathRBL, pathTBL
 
     // 방해 카드 180도 회전
     case blockB, blockBL, blockR, blockRB, blockRBL, blockTBL
@@ -49,7 +49,7 @@ public extension CardType {
         case .start,
              .pathTL, .pathTR, .pathTB, .pathRL,
              .pathTRB, .pathTRL, .pathTRBL,
-             .pathB, .pathBL, .pathRB, .pathRBL, .pathTBL,
+             .pathBL, .pathRB, .pathRBL, .pathTBL,
              .blockT, .blockL, .blockTL, .blockTR, .blockTB, .blockRL,
              .blockTRB, .blockTRL, .blockTRBL,
              .blockB, .blockBL, .blockR, .blockRB, .blockRBL, .blockTBL:
@@ -69,7 +69,6 @@ public extension CardType {
         case .pathTRB: [true, true, true, false]
         case .pathTRL: [true, true, false, true]
         case .pathTRBL: [true, true, true, true]
-        case .pathB: [false, false, true, false]
         case .pathBL: [false, false, true, true]
         case .pathRB: [false, true, true, false]
         case .pathRBL: [false, true, true, true]
@@ -78,7 +77,7 @@ public extension CardType {
         case .blockL: [false, false, false, true]
         case .blockTL: [true, false, false, true]
         case .blockTR: [true, true, false, false]
-        case .blockTB: [true, false, true, true]
+        case .blockTB: [true, false, true, false]
         case .blockRL: [false, true, false, true]
         case .blockTRB: [true, true, true, false]
         case .blockTRL: [true, true, false, true]
@@ -99,7 +98,7 @@ public extension CardType {
     var connect: Bool {
         switch self {
         case .pathTL, .pathTR, .pathTB, .pathRL,
-             .pathTRB, .pathTRL, .pathTRBL, .pathB,
+             .pathTRB, .pathTRL, .pathTRBL,
              .pathBL, .pathRB, .pathRBL, .pathTBL,
              .start, .goalTrue, .goalFalse:
             return true
@@ -132,7 +131,6 @@ public extension CardType {
         case .blockTRB: "▴‣▾"
         case .blockTRL: "▴‣◀︎"
         case .blockTRBL: "╳"
-        case .pathB: "▾"
         case .pathBL: "◀︎▾"
         case .pathRB: "‣▾"
         case .pathRBL: "‣▾◀︎"
@@ -165,7 +163,6 @@ public extension CardType {
         case .blockTRB: "Card/Road/trb_block"
         case .blockTRL: "Card/Road/trl_block"
         case .blockTRBL: "Card/Road/trbl_block"
-        case .pathB: "Card/Road/b"
         case .pathBL: "Card/Road/bl"
         case .pathRB: "Card/Road/rb"
         case .pathRBL: "Card/Road/rbl"
