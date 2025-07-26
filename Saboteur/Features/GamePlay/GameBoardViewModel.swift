@@ -148,6 +148,29 @@ final class BoardViewModel: ObservableObject {
         players[index].drawCard(from: &currentDeck)
     }
 
+    /// ⏰ 시간 초과 시 무작위 카드 제거 및 새 카드 뽑기
+    func autoDiscardAndDraw() {
+        guard let myIndex = getMeIndex else {
+            showToast("내 정보를 찾을 수 없습니다.")
+            return
+        }
+
+        let myHand = players[myIndex].cardsInHand
+        guard !myHand.isEmpty else {
+            showToast("손패가 비어있습니다.")
+            return
+        }
+
+        // 무작위 카드 제거
+        let randomIndex = Int.random(in: 0 ..< myHand.count)
+        let discardedCard = players[myIndex].removeCard(at: randomIndex)
+
+        // 새 카드 지급
+        players[myIndex].drawCard(from: &currentDeck)
+
+        showToast("⏳ 시간이 초과되어 카드를 자동으로 교체했습니다.")
+    }
+
     /// 도착지 세 곳(G0, G1, G2) 중 하나라도 카드가 설치되었는지 확인하는 유틸 함수
     ///
     /// G1: (7,2), G0: (8,1), G2: (8,3)
