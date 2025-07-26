@@ -17,6 +17,7 @@ final class BoardViewModel: ObservableObject {
 
     @Published var currentPlayer: P2PSyncedObservable<Peer.Identifier> = P2PNetwork.currentTurnPlayerID
     @Published var placedCards = P2PSyncedObservable(name: "PlacedCards", initial: [String: BoardCell]())
+    @Published var revealedGoalCell: (x: Int, y: Int)? = nil
 
     let latestPlacedCoord = P2PSyncedObservable<Coordinate?>(name: "LatestCoord", initial: nil)
 
@@ -168,8 +169,14 @@ final class BoardViewModel: ObservableObject {
             return
         }
 
-        // 1. 나만 보는 메시지
-        showToast("🗺 이 카드는 \(isGoal ? "🎯 진짜 Goal" : "❌ 가짜 Goal")입니다.")
+        // 1. 나만 보는 UI 업데이트
+        // ✅ 보여줄 좌표 설정
+        revealedGoalCell = (x, y)
+
+        // ✅ 2초 뒤에 감추기
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.revealedGoalCell = nil
+        }
 
         // 2. 나를 제외한 모두에게 알림
         let myName = P2PNetwork.myPeer.displayName

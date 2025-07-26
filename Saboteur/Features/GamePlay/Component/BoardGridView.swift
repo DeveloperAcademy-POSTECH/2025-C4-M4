@@ -7,6 +7,7 @@ struct BoardGridView: View {
     let cursor: (Int, Int)?
     let onTapCell: (Int, Int) -> Void
     let latestPlacedCoord: Coordinate? // 가장 최근에 놓인 카드 위치
+    let temporarilyRevealedCell: (x: Int, y: Int)?
 
     // MARK: - Grid Layout
 
@@ -35,6 +36,7 @@ struct BoardGridView: View {
                     cell: cell(at: x, y),
                     isCursor: isCursor(at: x, y),
                     isLatestPlaced: latestPlacedCoord == Coordinate(x: x, y: y),
+                    showRevealedGoalImage: temporarilyRevealedCell?.x == x && temporarilyRevealedCell?.y == y,
                     onTap: { onTapCell(x, y) }
                 )
             }

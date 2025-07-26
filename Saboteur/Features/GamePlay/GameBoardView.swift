@@ -159,7 +159,8 @@ struct GameBoardView: View {
                             boardViewModel.cursor = (x, y)
                             boardViewModel.placeSelectedCard()
                         },
-                        latestPlacedCoord: boardViewModel.latestPlacedCoord.value
+                        latestPlacedCoord: boardViewModel.latestPlacedCoord.value,
+                        temporarilyRevealedCell: boardViewModel.revealedGoalCell
                     )
                     HStack(spacing: 24) {
                         Button(action: {

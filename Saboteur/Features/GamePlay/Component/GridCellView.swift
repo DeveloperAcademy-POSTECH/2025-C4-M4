@@ -7,6 +7,7 @@ struct GridCellView: View {
     let cell: BoardCell
     let isCursor: Bool
     let isLatestPlaced: Bool // 가장 최근에 놓인 카드에 두께를 주기 위함
+    let showRevealedGoalImage: Bool
     let onTap: () -> Void
 
     // MARK: - Semantic Helpers
@@ -64,10 +65,15 @@ struct GridCellView: View {
     var imageLayer: some View {
         Group {
             if cell.type?.category == .goal, !(cell.isOpened ?? false) {
-                Image(
-                    "Card/Goal/hidden"
-                ).resizable()
-                    .aspectRatio(contentMode: .fit)
+                if showRevealedGoalImage {
+                    Image(cell.type!.imageName) // 실제 이미지 표시
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                } else {
+                    Image("Card/Goal/hidden")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                }
             } else {
                 if let imageName = cell.type?.imageName {
                     Image(
@@ -88,14 +94,4 @@ struct GridCellView: View {
             }
         }
     }
-}
-
-#Preview {
-    GridCellView(
-        x: 0, y: 0,
-        cell: BoardCell(type: CardType.blockTB),
-        isCursor: false,
-        isLatestPlaced: true,
-        onTap: { print("Tapped") }
-    )
 }
