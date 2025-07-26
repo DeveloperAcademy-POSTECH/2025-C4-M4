@@ -20,7 +20,6 @@ struct GridCellView: View {
     }
 
     private var shadowColor: Color {
-        // !hasCard || !isRoadCard ? Color.clear : Color.Emerald.emerald1
         guard hasCard, isRoadCard else { return .clear }
         return isLatestPlaced ? Color.Emerald.emerald2 : Color.Emerald.emerald1
     }

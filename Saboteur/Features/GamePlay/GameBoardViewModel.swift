@@ -56,14 +56,6 @@ final class BoardViewModel: ObservableObject {
         players.first(where: { $0.peer.id == P2PNetwork.myPeer.id })
     }
 
-//    /// 가장 최근에 놓인 카드의 좌표 반환
-//    var latestPlacedCoord: (Int, Int)? {
-//        guard let lastKey = placedCards.value.keys.sorted().last else { return nil }
-//        let coords = lastKey.split(separator: ",").compactMap { Int($0) }
-//        guard coords.count == 2 else { return nil }
-//        return (coords[0], coords[1])
-//    }
-
     // MARK: - 초기화
 
     /// 연결된 Peer를 기반으로 플레이어 목록 구성
