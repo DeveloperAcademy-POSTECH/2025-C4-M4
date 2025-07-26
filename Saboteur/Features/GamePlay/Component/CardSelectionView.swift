@@ -43,16 +43,16 @@ struct CardSelectionView: View {
                 }
             }
         }
+        .foregroundStyle(Color.Emerald.emerald3)
         .padding(.horizontal, 36)
         .padding(.top, 10)
         .padding(.bottom, 12)
-        .background(Color.Emerald.emerald3)
-        .cornerRadius(10)
-        .overlay(
+        .background {
             RoundedRectangle(cornerRadius: 10)
                 .inset(by: 1)
-                .stroke(Color.Emerald.emerald1, lineWidth: 2)
-        )
+                .fill(Color.Emerald.emerald3.shadow(.inner(color: Color.Emerald.emerald1, radius: 0, x: 0, y: -4))) // 배경색, 드롭쉐도우
+                .stroke(Color.Emerald.emerald1, lineWidth: 2) // 이너 스트라이크
+        }
     }
 
     private func isSelected(_ card: Card) -> Bool {

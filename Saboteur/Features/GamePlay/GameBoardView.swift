@@ -22,7 +22,7 @@ struct GameBoardView: View {
 
     var body: some View {
         ZStack {
-            HStack {
+            HStack(spacing: 15.5) {
                 // 사용자 리스트
                 VStack(alignment: .leading, spacing: 8) {
                     ForEach(allPlayers, id: \.id) { player in
@@ -51,13 +51,22 @@ struct GameBoardView: View {
                             boardViewModel.placeSelectedCard()
                         }
                     )
-                    HStack {
+                    HStack(spacing: 24) {
                         Button(action: {
                             boardViewModel.rotateSelectedCard()
                         }, label: {
-                            Text("회전")
-                        }).frame(width: 60, height: 50)
-                            .foregroundColor(.red)
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 100)
+                                    .shadow3BlackInner()
+                                    .foregroundStyle(Color.Ivory.ivory1)
+                                    .frame(width: 54, height: 50)
+
+                                Image(.turnButton)
+                                    .resizable()
+                                    .frame(width: 25.26, height: 29)
+                                    .foregroundStyle(Color.Emerald.emerald2)
+                            }
+                        })
 
                         CardSelectionView(
                             cards: boardViewModel.getMe?.cardsInHand ?? [],
@@ -71,10 +80,21 @@ struct GameBoardView: View {
                         Button(action: {
                             boardViewModel.deleteSelectedCard()
                         }, label: {
-                            Text("삭제")
-                        }).frame(width: 60, height: 50)
-                            .foregroundColor(.red)
-                    }.frame(width: 554, height: 72)
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .shadow3BlackInner()
+                                    .foregroundStyle(Color.Ivory.ivory1)
+                                    .frame(width: 54, height: 50)
+
+                                Image(.trashButton)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 32)
+                                    .padding(.top, -10)
+                            }
+                        })
+                    }
+                    .frame(height: 72)
 
                 }.padding()
                     .onReceive(boardViewModel.currentPlayer.objectWillChange) { _ in
