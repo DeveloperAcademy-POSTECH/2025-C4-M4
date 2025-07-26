@@ -1,12 +1,16 @@
 import Foundation
 import SaboteurKit
 
-// 사용할 카드를 선택한다
-func selectCard() -> Card? {
-    print("🎲 카드 덱")
-    for (index, card) in cardSet.enumerated() {
-        print("[\(index)] \(card.symbol)")
+extension Player {
+    func displayHand() {
+        let symbols = hand.map(\.type.symbol)
+        let items = symbols.enumerated().map { "[\($0)] \($1)" }
+        print("🎲 \(name)'s hand: \(items.joined(separator: " "))")
     }
+}
+
+func selectCard(from player: Player) -> Card? {
+    player.displayHand()
     print("🎲 사용할 카드 번호를 입력하세요. > ", terminator: "")
 
     guard let input = readLine() else {
@@ -14,12 +18,12 @@ func selectCard() -> Card? {
         return nil
     }
 
-    guard let idx = Int(input), idx >= 0, idx < cardSet.count else {
+    guard let idx = Int(input), idx >= 0, idx < player.hand.count else {
         print("❌ 잘못된 입력입니다.")
         return nil
     }
 
-    return cardSet[idx]
+    return player.hand[idx]
 }
 
 // 게임이 진행
@@ -45,15 +49,15 @@ for i in players.indices {
     for _ in 0 ..< players[i].maxCount {
         _ = players[i].drawCard(from: &deck)
     }
-    players[i].display()
+    players[i].displayHand()
 }
 
 var currentPlayerIndex = 0
 var currentPlayer: Player { players[currentPlayerIndex] }
 
-let board = Board()
+let goal = Int.random(in: 0 ... 2)
+let board = Board(goalIndex: goal)
 
-var goal = board.setGoal()
 print("g\(goal)이 goal의 위치입니다.")
 
 while true {
@@ -67,7 +71,7 @@ while true {
 
     while true {
         // #3. 카드를 선택한다
-        let card = selectCard()
+        let card = selectCard(from: players[currentPlayerIndex])
 
         guard var selectedCard = card else { continue }
 
@@ -83,10 +87,23 @@ while true {
         }
 
         // #5. 카드 설치를 수행한다
-        if selectedCard.symbol == "💣" {
+        if selectedCard.type == .bomb {
             let (success, message) = board.dropBoom(x: x, y: y)
             print(message)
             if success {
+                players[currentPlayerIndex].discardCard(selectedCard)
+                players[currentPlayerIndex].drawCard(from: &deck)
+                currentPlayerIndex = (currentPlayerIndex + 1) % players.count
+                break
+            } else {
+                continue
+            }
+        } else if selectedCard.type == .map {
+            let (success, message) = board.mapCheck(x: x, y: y)
+            print(message)
+            if success {
+                players[currentPlayerIndex].discardCard(selectedCard)
+                players[currentPlayerIndex].drawCard(from: &deck)
                 currentPlayerIndex = (currentPlayerIndex + 1) % players.count
                 break
             } else {
@@ -97,8 +114,8 @@ while true {
             print(message)
             if success {
                 if board.grid[7][2].isCard
-                    || board.grid[8][1].isCard
-                    || board.grid[8][3].isCard
+                    //                    || board.grid[8][1].isCard
+                    //                    || board.grid[8][3].isCard
                     || board.grid[7][0].isCard
                     || board.grid[7][4].isCard
                 {
@@ -110,12 +127,15 @@ while true {
                                 exit(0)
                             } else {
                                 board.grid[goal.x][goal.y].isOpened = true
-                                board.grid[goal.x][goal.y].symbol = "┼"
+                                board.grid[goal.x][goal.y].type = .pathTRBL
+
                                 print("🎲 G\(goal.y / 2)에는 보석이 없습니다.\n")
                             }
                         }
                     }
                 }
+                players[currentPlayerIndex].discardCard(selectedCard)
+                players[currentPlayerIndex].drawCard(from: &deck)
                 currentPlayerIndex = (currentPlayerIndex + 1) % players.count
                 break
             }

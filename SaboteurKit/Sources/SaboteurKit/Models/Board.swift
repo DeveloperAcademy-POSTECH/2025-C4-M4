@@ -31,16 +31,22 @@ public class Board {
         print("")
     }
 
-    // main.swift only
-    public func setGoal() -> Int {
-        let grandom = Int.random(in: 0 ... 2)
-        grid[8][grandom * 2].isGoal = true
-        return grandom
-    }
 
     /// 해당 좌표가 목적지 라인인지 확인
     public func isGoalLine(x: Int, y: Int) -> Bool {
         Board.goalPositions.contains(where: { $0.0 == x && $0.1 == y })
+    }
+    
+    public func mapCheck(x: Int, y: Int) -> (Bool, String) {
+        if isGoalLine(x: x, y: y) == false {
+            return (false, "해당 지점은 확인할 수 없습니다.")
+        }
+
+        if grid[x][y].isGoal == true {
+            return (true, "g\(y/2)이 goal이 맞습니다.")
+        } else {
+            return (true, "g\(y/2)은 goal이 아닙니다.")
+        }
     }
 
     public func revealAllGoals() {
