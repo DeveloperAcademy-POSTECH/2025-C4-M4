@@ -209,6 +209,30 @@ struct GameBoardView: View {
                 }.padding()
                     .onReceive(boardViewModel.currentPlayer.objectWillChange) { _ in
                         boardViewModel.cursor = boardViewModel.cursor
+                        let toast = boardViewModel.syncedToast.value
+
+                        guard !toast.message.isEmpty else { return }
+
+                        let myID = P2PNetwork.myPeer.id
+                        let shouldShow: Bool = {
+                            switch toast.target {
+                            case .global: return true
+                            case .personal: return toast.senderID == myID
+                            case .other: return toast.senderID != myID
+                            }
+                        }()
+
+                        if shouldShow {
+                            boardViewModel.showToast(toast.message)
+                        }
+
+                        if toast.senderID == myID {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                                if boardViewModel.syncedToast.value == toast {
+                                    boardViewModel.syncedToast.value = TargetedToast(message: "", target: .personal, senderID: "")
+                                }
+                            }
+                        }
                     }
                     .onChange(of: boardViewModel.placedCards.value) { _ in
                         boardViewModel.syncBoardWithPlacedCards()
@@ -231,16 +255,4 @@ struct GameBoardView: View {
         }
         // .frame(minHeight: UIScreen.main.bounds.height - 32)
     }
-}
-
-#Preview {
-    let dummyWinner = P2PSyncedObservable<String>(name: "🇰🇷 JudyJ", initial: "dummy_winner")
-    let exitToastMessage = P2PSyncedObservable<String>(name: "ExitToastMessage", initial: "")
-
-    GameBoardView(
-        winner: dummyWinner,
-        gameState: .constant(.startedGame),
-        exitToastMessage: exitToastMessage
-    )
-    .environmentObject(AppRouter())
 }

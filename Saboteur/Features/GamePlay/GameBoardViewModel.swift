@@ -3,11 +3,6 @@ import P2PKit
 import SaboteurKit
 import SwiftUI
 
-struct Coordinate: Codable, Equatable {
-    let x: Int
-    let y: Int
-}
-
 final class BoardViewModel: ObservableObject {
     // MARK: - Published Properties
 
@@ -22,12 +17,16 @@ final class BoardViewModel: ObservableObject {
 
     @Published var currentPlayer: P2PSyncedObservable<Peer.Identifier> = P2PNetwork.currentTurnPlayerID
     @Published var placedCards = P2PSyncedObservable(name: "PlacedCards", initial: [String: BoardCell]())
-  
+
     let latestPlacedCoord = P2PSyncedObservable<Coordinate?>(name: "LatestCoord", initial: nil)
-  
+
+    let syncedToast = P2PSyncedObservable<TargetedToast>(
+        name: "SyncedToastMessage",
+        initial: TargetedToast(message: "", target: .personal, senderID: "")
+    )
     private var cancellables = Set<AnyCancellable>()
     let syncedGoalIndex: P2PSyncedObservable<Int>
- 
+
     let winner: P2PSyncedObservable<Peer.Identifier>
 
     init(winner: P2PSyncedObservable<Peer.Identifier>) {
@@ -60,7 +59,7 @@ final class BoardViewModel: ObservableObject {
 
     // MARK: - 유틸리티 메서드
 
-    /// 토스트 메시지를 지정 시간 후 자동 제거
+    /// 로컬 전용 토스트 메시지 표시 (global 전파 안 함)
     func showToast(_ message: String) {
         toastMessage = message
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
@@ -68,6 +67,16 @@ final class BoardViewModel: ObservableObject {
                 self.toastMessage = nil
             }
         }
+    }
+
+    /// 글로벌 toast 전송
+    func sendToast(_ message: String, target: ToastTarget) {
+        let toast = TargetedToast(
+            message: message,
+            target: target,
+            senderID: P2PNetwork.myPeer.id
+        )
+        syncedToast.value = toast
     }
 
     /// 현재 플레이어(나)의 인덱스 반환
@@ -136,12 +145,34 @@ final class BoardViewModel: ObservableObject {
         }
 
         let (x, y) = cursor
-
         if card.type == .bomb {
             handleBombCard(card, at: (x, y), playerIndex: myIndex)
+        } else if card.type == .map {
+            handleMapCard(card, at: (x, y), playerIndex: myIndex)
         } else {
             handleNormalCard(card, at: (x, y), playerIndex: myIndex)
         }
+    }
+
+    /// 맵 카드 처리
+    private func handleMapCard(_ card: Card, at pos: (Int, Int), playerIndex: Int) {
+        let (x, y) = pos
+        guard board.isGoalLine(x: x, y: y),
+              let isGoal = board.grid[x][y].isGoal
+        else {
+            showToast("🗺 map 카드는 goal 위치에서만 사용할 수 있습니다.")
+            return
+        }
+
+        // 1. 나만 보는 메시지
+        showToast("🗺 이 카드는 \(isGoal ? "🎯 진짜 Goal" : "❌ 가짜 Goal")입니다.")
+
+        // 2. 나를 제외한 모두에게 알림
+        let myName = P2PNetwork.myPeer.displayName
+        sendToast("🗺 \(myName)님이 map 카드를 사용했습니다.", target: .other)
+
+        removeCardAndDrawNew(for: playerIndex, card: card)
+        nextTurn()
     }
 
     /// 폭탄 카드 처리
