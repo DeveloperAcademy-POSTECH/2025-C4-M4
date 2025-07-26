@@ -1,3 +1,4 @@
+import Combine
 import P2PKit
 import SaboteurKit
 import SwiftUI
@@ -6,7 +7,7 @@ final class BoardViewModel: ObservableObject {
     // MARK: - Published Properties
 
     @Published var showGameEndDialog: Bool = false
-    @Published var board = Board()
+    @Published var board: Board = .init(goalIndex: 0)
     @Published var cursor: (Int, Int) = (0, 0)
     @Published var selectedCard: Card? = nil
     @Published var toastMessage: String? = nil
@@ -16,13 +17,36 @@ final class BoardViewModel: ObservableObject {
 
     @Published var currentPlayer: P2PSyncedObservable<Peer.Identifier> = P2PNetwork.currentTurnPlayerID
     @Published var placedCards = P2PSyncedObservable(name: "PlacedCards", initial: [String: BoardCell]())
-
+    private var cancellables = Set<AnyCancellable>()
+    let syncedGoalIndex: P2PSyncedObservable<Int>
     let winner: P2PSyncedObservable<Peer.Identifier>
 
     init(winner: P2PSyncedObservable<Peer.Identifier>) {
         self.winner = winner
+
+        syncedGoalIndex = P2PSyncedObservable(
+            name: "GoalIndex",
+            initial: P2PNetwork.isHost ? Int.random(in: 0 ..< 3) : -1
+        )
+
         setupPlayers()
         dealInitialHands()
+
+        // ✅ goalIndex가 호스트로부터 전달되었을 때 보드 재설정
+        syncedGoalIndex.objectWillChange
+            .sink { [weak self] in
+                guard let self = self else { return }
+                let newIndex = self.syncedGoalIndex.value
+                guard (0 ..< 3).contains(newIndex) else { return }
+
+                self.board = Board(goalIndex: newIndex)
+                print("📦 클라이언트에서 goalIndex 수신 및 보드 재생성: \(newIndex)")
+            }
+            .store(in: &cancellables)
+
+        if P2PNetwork.isHost {
+            print("🎲 나는 호스트이며 goalIndex는 \(syncedGoalIndex.value)")
+        }
     }
 
     // MARK: - 유틸리티 메서드
@@ -148,6 +172,29 @@ final class BoardViewModel: ObservableObject {
         players[index].drawCard(from: &currentDeck)
     }
 
+    /// ⏰ 시간 초과 시 무작위 카드 제거 및 새 카드 뽑기
+    func autoDiscardAndDraw() {
+        guard let myIndex = getMeIndex else {
+            showToast("내 정보를 찾을 수 없습니다.")
+            return
+        }
+
+        let myHand = players[myIndex].cardsInHand
+        guard !myHand.isEmpty else {
+            showToast("손패가 비어있습니다.")
+            return
+        }
+
+        // 무작위 카드 제거
+        let randomIndex = Int.random(in: 0 ..< myHand.count)
+        let discardedCard = players[myIndex].removeCard(at: randomIndex)
+
+        // 새 카드 지급
+        players[myIndex].drawCard(from: &currentDeck)
+
+        showToast("⏳ 시간이 초과되어 카드를 자동으로 교체했습니다.")
+    }
+
     /// 도착지 세 곳(G0, G1, G2) 중 하나라도 카드가 설치되었는지 확인하는 유틸 함수
     ///
     /// G1: (7,2), G0: (8,1), G2: (8,3)
@@ -215,7 +262,11 @@ final class BoardViewModel: ObservableObject {
 
     /// 게임 리셋
     func resetGame() {
-        board = Board()
+        if P2PNetwork.isHost {
+            syncedGoalIndex.value = Int.random(in: 0 ..< 3)
+        }
+        board = Board(goalIndex: syncedGoalIndex.value)
+
         cursor = (0, 0)
         selectedCard = nil
         toastMessage = nil

@@ -54,15 +54,3 @@ struct BoardGridView: View {
         (cursor ?? (-1, -1)) == (x, y)
     }
 }
-
-#Preview {
-    let placed = ["3,2": BoardCell(type: CardType.blockL)]
-
-    return BoardGridView(
-        board: Board().grid,
-        placedCards: placed,
-        cursor: (3, 3),
-        onTapCell: { x, y in print("Tapped: (\(x), \(y))") }
-    )
-    .padding()
-}
