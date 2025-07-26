@@ -53,10 +53,18 @@ struct GridCellView: View {
 
     var imageLayer: some View {
         Group {
-            if let imageName = cell.type?.imageName {
-                Image(imageName)
-                    .resizable()
+            if cell.type?.category == .goal, !(cell.isOpened ?? false) {
+                Image(
+                    "Card/Goal/hidden"
+                ).resizable()
                     .aspectRatio(contentMode: .fit)
+            } else {
+                if let imageName = cell.type?.imageName {
+                    Image(
+                        imageName
+                    ).resizable()
+                        .aspectRatio(contentMode: .fit)
+                }
             }
         }
     }

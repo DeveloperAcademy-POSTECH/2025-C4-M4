@@ -1,26 +1,13 @@
 import Foundation
 
 private let cardDistribution: [CardType: Int] = [
-    .pathTR: 3,
-    .pathTL: 3,
-    .pathTB: 3,
+    .pathTR: 2,
+    .pathTL: 2,
+    .pathTB: 2,
     .pathRL: 3,
     .pathTRB: 2,
     .pathTRL: 2,
     .pathTRBL: 2,
-
-    .blockT: 2,
-    .blockL: 2,
-    .blockTL: 1,
-    .blockTR: 1,
-    .blockTB: 1,
-    .blockRL: 1,
-    .blockTRB: 1,
-    .blockTRL: 1,
-    .blockTRBL: 1,
-
-    .bomb: 2,
-    .map: 2,
 ]
 
 public struct Deck {

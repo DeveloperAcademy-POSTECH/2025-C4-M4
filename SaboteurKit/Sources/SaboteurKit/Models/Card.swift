@@ -1,5 +1,12 @@
 import Foundation
 
+public enum CardCategory {
+    case road
+    case goal
+    case skill
+    case other
+}
+
 public enum CardType: String, Codable, Hashable, CaseIterable, Sendable {
     // 길 카드
     case pathTL, pathTR, pathTB, pathRL
@@ -23,7 +30,6 @@ public enum CardType: String, Codable, Hashable, CaseIterable, Sendable {
     case start
     case goalTrue
     case goalFalse
-    case goalHidden
 }
 
 public extension CardType {
@@ -31,6 +37,25 @@ public extension CardType {
     static func from(directions: [Bool], connect: Bool) -> CardType? {
         allCases.first {
             $0.directions == directions && $0.connect == connect
+        }
+    }
+
+    var category: CardCategory {
+        switch self {
+        case .goalTrue, .goalFalse:
+            return .goal
+        case .bomb, .map:
+            return .skill
+        case .start,
+             .pathTL, .pathTR, .pathTB, .pathRL,
+             .pathTRB, .pathTRL, .pathTRBL,
+             .pathB, .pathBL, .pathRB, .pathRBL, .pathTBL,
+             .blockT, .blockL, .blockTL, .blockTR, .blockTB, .blockRL,
+             .blockTRB, .blockTRL, .blockTRBL,
+             .blockB, .blockBL, .blockR, .blockRB, .blockRBL, .blockTBL:
+            return .road
+        default:
+            return .other
         }
     }
 
@@ -65,7 +90,7 @@ public extension CardType {
         case .blockRBL: [false, true, true, true]
         case .blockTBL: [true, false, true, true]
         case .bomb, .map: [false, false, false, false]
-        case .start, .goalTrue, .goalFalse, .goalHidden:
+        case .start, .goalTrue, .goalFalse:
             [true, true, true, true]
         }
     }
@@ -76,7 +101,7 @@ public extension CardType {
         case .pathTL, .pathTR, .pathTB, .pathRL,
              .pathTRB, .pathTRL, .pathTRBL, .pathB,
              .pathBL, .pathRB, .pathRBL, .pathTBL,
-             .start, .goalTrue, .goalFalse, .goalHidden:
+             .start, .goalTrue, .goalFalse:
             return true
         default:
             return false
@@ -89,9 +114,8 @@ public extension CardType {
         case .bomb: "💣"
         case .map: "🗺"
         case .start: "Ⓢ"
-        case .goalTrue: "G1"
-        case .goalFalse: "G2"
-        case .goalHidden: "G?"
+        case .goalTrue: "GT"
+        case .goalFalse: "GF"
         case .pathTL: "┘"
         case .pathTR: "└"
         case .pathTB: "│"
@@ -157,7 +181,6 @@ public extension CardType {
         case .start: "Card/start_2"
         case .goalTrue: "Card/Goal/true_2"
         case .goalFalse: "Card/Goal/false_2"
-        case .goalHidden: "Card/Goal/hidden"
         }
     }
 }
