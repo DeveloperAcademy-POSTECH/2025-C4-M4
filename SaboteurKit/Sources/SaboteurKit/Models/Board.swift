@@ -1,5 +1,3 @@
-
-
 import Foundation
 
 public class Board {
@@ -31,12 +29,11 @@ public class Board {
         print("")
     }
 
-
     /// 해당 좌표가 목적지 라인인지 확인
     public func isGoalLine(x: Int, y: Int) -> Bool {
         Board.goalPositions.contains(where: { $0.0 == x && $0.1 == y })
     }
-    
+
     public func mapCheck(x: Int, y: Int) -> (Bool, String) {
         if isGoalLine(x: x, y: y) == false {
             return (false, "해당 지점은 확인할 수 없습니다.")
@@ -135,11 +132,7 @@ public class Board {
     }
 
     public func goalCheck() -> Bool {
-        // 로직 오류러 인해 테스트를 위하여 임시 추가
-        // goal영역 근처에 도달하면 자동 실행
-        return true
-
-        print("🔍 goalCheck 시작: start 위치에서 탐색을 시작합니다.")
+        // print("🔍 goalCheck 시작: start 위치에서 탐색을 시작합니다.")
         var visited = Array(
             repeating: Array(repeating: false, count: grid[0].count),
             count: grid.count
@@ -152,26 +145,25 @@ public class Board {
         ]
         func dfs(x: Int, y: Int) -> Bool {
             guard x >= 0, x < grid.count, y >= 0, y < grid[0].count else {
-                print("⚠️ (\(x),\(y))는 보드 범위를 벗어났습니다.")
+                // print("⚠️ (\(x),\(y))는 보드 범위를 벗어났습니다.")
                 return false
             }
             guard !visited[x][y] else {
-                print("🔄 (\(x),\(y))는 이미 방문했습니다.")
+                // print("🔄 (\(x),\(y))는 이미 방문했습니다.")
                 return false
             }
             visited[x][y] = true
-            print("🚶‍♂️ 방문: (\(x),\(y)), 심볼: \(grid[x][y].symbol)")
+            // print("🚶‍♂️ 방문: (\(x),\(y)), 심볼: \(grid[x][y].symbol)")
 
             if isGoalLine(x: x, y: y), grid[x][y].isOpened == false {
                 lastGoal = (x, y)
-                print("🎯 목표에 도달했습니다! (\(x),\(y))")
-                grid[x][y].isOpened = true // ✅ goal 카드를 공개 처리
+                // print("🎯 목표에 도달했습니다! (\(x),\(y))")
                 return true
             }
 
             let cell = grid[x][y]
             guard cell.isConnect else {
-                print("❌ (\(x),\(y))는 연결 가능한 카드가 아닙니다.")
+                // print("❌ (\(x),\(y))는 연결 가능한 카드가 아닙니다.")
                 return false
             }
 
@@ -179,13 +171,11 @@ public class Board {
                 let nx = x + dx, ny = y + dy
                 if nx >= 0, nx < grid.count, ny >= 0, ny < grid[0].count {
                     let neigh = grid[nx][ny]
-
                     let isGoal = isGoalLine(x: nx, y: ny) && grid[nx][ny].isOpened == false
-
                     let canConnect = cell.directions[myDir]
                         && (isGoal || (neigh.isCard && neigh.isConnect))
                         && neigh.directions[neighDir]
-                    print("➡️ 연결 검사: (\(x),\(y)) -> (\(nx),\(ny)) : \(canConnect ? "가능" : "불가능")")
+                    // print("➡️ 연결 검사: (\(x),\(y)) -> (\(nx),\(ny)) : \(canConnect ? "가능" : "불가능")")
                     if canConnect {
                         if dfs(x: nx, y: ny) {
                             return true
