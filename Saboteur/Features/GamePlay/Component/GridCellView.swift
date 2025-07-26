@@ -6,6 +6,7 @@ struct GridCellView: View {
     let y: Int
     let cell: BoardCell
     let isCursor: Bool
+    let isLatestPlaced: Bool // 가장 최근에 놓인 카드에 두께를 주기 위함
     let onTap: () -> Void
 
     // MARK: - Semantic Helpers
@@ -19,7 +20,8 @@ struct GridCellView: View {
     }
 
     private var shadowColor: Color {
-        !hasCard || !isRoadCard ? Color.clear : Color.Emerald.emerald2
+        guard hasCard, isRoadCard else { return .clear }
+        return isLatestPlaced ? Color.Emerald.emerald2 : Color.Emerald.emerald1
     }
 
     // MARK: - Body
@@ -35,6 +37,14 @@ struct GridCellView: View {
         .contentShape(Rectangle())
         .onTapGesture { onTap() }
         .zIndex(hasCard ? 1 : 0)
+        .overlay(
+            Group {
+                if isLatestPlaced {
+                    RoundedRectangle(cornerRadius: 4)
+                        .stroke(Color.Emerald.emerald2, lineWidth: 1)
+                }
+            }
+        )
         .padding(2)
     }
 
@@ -45,7 +55,7 @@ struct GridCellView: View {
             if !hasCard {
                 Rectangle()
                     .foregroundColor(.clear)
-                    .background(Color(red: 0.36, green: 0.73, blue: 0.87).opacity(0.4))
+                    .background(Color.Emerald.emerald4.opacity(0.4))
                     .cornerRadius(4)
             }
         }
@@ -85,6 +95,7 @@ struct GridCellView: View {
         x: 0, y: 0,
         cell: BoardCell(type: CardType.blockTB),
         isCursor: false,
+        isLatestPlaced: true,
         onTap: { print("Tapped") }
     )
 }

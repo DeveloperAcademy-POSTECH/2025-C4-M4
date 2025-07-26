@@ -3,6 +3,11 @@ import P2PKit
 import SaboteurKit
 import SwiftUI
 
+struct Coordinate: Codable, Equatable {
+    let x: Int
+    let y: Int
+}
+
 final class BoardViewModel: ObservableObject {
     // MARK: - Published Properties
 
@@ -17,8 +22,12 @@ final class BoardViewModel: ObservableObject {
 
     @Published var currentPlayer: P2PSyncedObservable<Peer.Identifier> = P2PNetwork.currentTurnPlayerID
     @Published var placedCards = P2PSyncedObservable(name: "PlacedCards", initial: [String: BoardCell]())
+  
+    let latestPlacedCoord = P2PSyncedObservable<Coordinate?>(name: "LatestCoord", initial: nil)
+  
     private var cancellables = Set<AnyCancellable>()
     let syncedGoalIndex: P2PSyncedObservable<Int>
+ 
     let winner: P2PSyncedObservable<Peer.Identifier>
 
     init(winner: P2PSyncedObservable<Peer.Identifier>) {
@@ -184,6 +193,8 @@ final class BoardViewModel: ObservableObject {
 
         placedCards.value["\(pos.0),\(pos.1)"] = cell
         board.grid[pos.0][pos.1] = cell
+
+        latestPlacedCoord.value = Coordinate(x: pos.0, y: pos.1)
     }
 
     /// 카드 폐기 후 새 카드 뽑기

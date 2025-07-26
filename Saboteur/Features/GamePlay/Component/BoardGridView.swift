@@ -6,6 +6,7 @@ struct BoardGridView: View {
     let placedCards: [String: BoardCell]
     let cursor: (Int, Int)?
     let onTapCell: (Int, Int) -> Void
+    let latestPlacedCoord: Coordinate? // 가장 최근에 놓인 카드 위치
 
     // MARK: - Grid Layout
 
@@ -33,6 +34,7 @@ struct BoardGridView: View {
                     y: y,
                     cell: cell(at: x, y),
                     isCursor: isCursor(at: x, y),
+                    isLatestPlaced: latestPlacedCoord == Coordinate(x: x, y: y),
                     onTap: { onTapCell(x, y) }
                 )
             }
@@ -54,3 +56,17 @@ struct BoardGridView: View {
         (cursor ?? (-1, -1)) == (x, y)
     }
 }
+
+// #Preview {
+//     let placed = ["3,2": BoardCell(type: CardType.blockL)]
+//     let latestCoord = Coordinate(x: 3, y: 2)
+
+//     BoardGridView(
+//         board: Board().grid,
+//         placedCards: placed,
+//         cursor: (3, 3),
+//         onTapCell: { x, y in print("Tapped: (\(x), \(y))") },
+//         latestPlacedCoord: latestCoord
+//     )
+//     .padding()
+// }

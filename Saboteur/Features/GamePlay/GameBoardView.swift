@@ -87,17 +87,7 @@ struct GameBoardView: View {
                             let flag = playerName.first ?? "🇰🇷"
                             let name = playerName.count > 1 ? playerName[1] : ""
                             let flagToIcon: [String: String] = [
-                                "🇺🇸": "usa_icon",
-                                "🇧🇷": "brazil_icon",
-                                "🇮🇳": "india_icon",
-                                "🇰🇷": "korea_icon",
-                                "🇨🇳": "china_icon",
-                                "🇯🇵": "japan_icon",
-                                "🇮🇩": "indonesia_icon",
-                                "🇩🇪": "german_icon",
-                                "🇬🇧": "uk_icon",
-                                "🇹🇷": "turkey_icon",
-                                "🇲🇽": "mexico_icon",
+                                "🇺🇸": "usa_icon", "🇧🇷": "brazil_icon", "🇮🇳": "india_icon", "🇰🇷": "korea_icon", "🇨🇳": "china_icon", "🇯🇵": "japan_icon", "🇮🇩": "indonesia_icon", "🇩🇪": "german_icon", "🇬🇧": "uk_icon", "🇹🇷": "turkey_icon", "🇲🇽": "mexico_icon",
                             ]
 
                             HStack(spacing: 10) {
@@ -168,15 +158,25 @@ struct GameBoardView: View {
                         onTapCell: { x, y in
                             boardViewModel.cursor = (x, y)
                             boardViewModel.placeSelectedCard()
-                        }
+                        },
+                        latestPlacedCoord: boardViewModel.latestPlacedCoord.value
                     )
-                    HStack {
+                    HStack(spacing: 24) {
                         Button(action: {
                             boardViewModel.rotateSelectedCard()
                         }, label: {
-                            Text("회전")
-                        }).frame(width: 60, height: 50)
-                            .foregroundColor(.red)
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 100)
+                                    .shadow3BlackInner()
+                                    .foregroundStyle(Color.Ivory.ivory1)
+                                    .frame(width: 54, height: 50)
+
+                                Image(.turnButton)
+                                    .resizable()
+                                    .frame(width: 25.26, height: 29)
+                                    .foregroundStyle(Color.Emerald.emerald2)
+                            }
+                        })
 
                         CardSelectionView(
                             cards: boardViewModel.getMe?.cardsInHand ?? [],
@@ -190,18 +190,29 @@ struct GameBoardView: View {
                         Button(action: {
                             boardViewModel.deleteSelectedCard()
                         }, label: {
-                            Text("삭제")
-                        }).frame(width: 60, height: 50)
-                            .foregroundColor(.red)
-                    }.frame(width: 554, height: 72)
-                }
-                .padding(.vertical, 16)
-                .onReceive(boardViewModel.currentPlayer.objectWillChange) { _ in
-                    boardViewModel.cursor = boardViewModel.cursor
-                }
-                .onChange(of: boardViewModel.placedCards.value) { _ in
-                    boardViewModel.syncBoardWithPlacedCards()
-                }
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .shadow3BlackInner()
+                                    .foregroundStyle(Color.Ivory.ivory1)
+                                    .frame(width: 54, height: 50)
+
+                                Image(.trashButton)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 32)
+                                    .padding(.top, -10)
+                            }
+                        })
+                    }
+                    .frame(height: 72)
+
+                }.padding()
+                    .onReceive(boardViewModel.currentPlayer.objectWillChange) { _ in
+                        boardViewModel.cursor = boardViewModel.cursor
+                    }
+                    .onChange(of: boardViewModel.placedCards.value) { _ in
+                        boardViewModel.syncBoardWithPlacedCards()
+                    }
             }
             .onChange(of: boardViewModel.currentPlayer.value) { _ in
                 startTurnTimer()
