@@ -22,8 +22,6 @@ final class BoardViewModel: ObservableObject {
     @Published var currentPlayer: P2PSyncedObservable<Peer.Identifier> = P2PNetwork.currentTurnPlayerID
     @Published var placedCards = P2PSyncedObservable(name: "PlacedCards", initial: [String: BoardCell]())
 
-    // @Published var latestPlacedCoord: (Int, Int)? = nil
-
     let latestPlacedCoord = P2PSyncedObservable<Coordinate?>(name: "LatestCoord", initial: nil)
 
     let winner: P2PSyncedObservable<Peer.Identifier>
