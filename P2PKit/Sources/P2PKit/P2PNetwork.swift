@@ -50,6 +50,11 @@ public enum P2PNetwork {
 
     // MARK: - Public P2PHostSelector
 
+    /// 현재 디바이스가 P2P 호스트인지 여부
+    public static var isHost: Bool {
+        host?.id == myPeer.id
+    }
+
     public static var host: Peer? {
         hostSelector.host
     }
