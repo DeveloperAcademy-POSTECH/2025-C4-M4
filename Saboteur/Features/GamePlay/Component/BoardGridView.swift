@@ -57,16 +57,16 @@ struct BoardGridView: View {
     }
 }
 
-#Preview {
-    let placed = ["3,2": BoardCell(type: CardType.blockL)]
-    let latestCoord = Coordinate(x: 3, y: 2)
+// #Preview {
+//     let placed = ["3,2": BoardCell(type: CardType.blockL)]
+//     let latestCoord = Coordinate(x: 3, y: 2)
 
-    BoardGridView(
-        board: Board().grid,
-        placedCards: placed,
-        cursor: (3, 3),
-        onTapCell: { x, y in print("Tapped: (\(x), \(y))") },
-        latestPlacedCoord: latestCoord
-    )
-    .padding()
-}
+//     BoardGridView(
+//         board: Board().grid,
+//         placedCards: placed,
+//         cursor: (3, 3),
+//         onTapCell: { x, y in print("Tapped: (\(x), \(y))") },
+//         latestPlacedCoord: latestCoord
+//     )
+//     .padding()
+// }

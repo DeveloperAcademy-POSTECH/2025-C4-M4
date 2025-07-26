@@ -3,16 +3,20 @@
 import Foundation
 
 public class Board {
+    public static let goalPositions = [(8, 0), (8, 2), (8, 4)]
     public var grid: [[BoardCell]] = Array(repeating: Array(repeating: BoardCell(), count: 5), count: 9)
-
     public var lastGoal: (x: Int, y: Int)?
 
-    public init() {
+    public init(goalIndex: Int) {
         grid[0][2] = BoardCell(type: .start)
 
-        grid[8][0] = BoardCell(type: .goalHidden, isGoal: false, isOpened: false)
-        grid[8][2] = BoardCell(type: .goalTrue, isGoal: false, isOpened: false)
-        grid[8][4] = BoardCell(type: .goalFalse, isGoal: false, isOpened: false)
+        for (index, pos) in Self.goalPositions.enumerated() {
+            grid[pos.0][pos.1] = BoardCell(
+                type: index == goalIndex ? .goalTrue : .goalFalse,
+                isGoal: index == goalIndex,
+                isOpened: false
+            )
+        }
     }
 
     // 보드 현황을 보여준다
@@ -27,15 +31,16 @@ public class Board {
         print("")
     }
 
+    // main.swift only
     public func setGoal() -> Int {
         let grandom = Int.random(in: 0 ... 2)
         grid[8][grandom * 2].isGoal = true
         return grandom
     }
 
+    /// 해당 좌표가 목적지 라인인지 확인
     public func isGoalLine(x: Int, y: Int) -> Bool {
-        let result = (x == 8 && (y == 0 || y == 2 || y == 4))
-        return result
+        Board.goalPositions.contains(where: { $0.0 == x && $0.1 == y })
     }
 
     // 카드 설치 가능 여부를 확인한다 - 로직 위주
