@@ -152,10 +152,30 @@ final class BoardViewModel: ObservableObject {
         showToast(message)
         guard success else { return }
 
+        // 1) 로컬 보드에 카드 반영
         updateCell(at: pos, with: card, isCard: true)
+
+        // 2) 인접한 goal 카드(진짜/가짜) 공개 및 동기화
+        if board.checkAndRevealGoal(fromX: pos.0, y: pos.1) {
+            syncGoalOpenStates()
+        }
+
+        // 3) 전체 경로 완성(진짜) 여부 확인
         checkGoalCompletion()
+
+        // 4) 손패 교체 및 턴 종료
         removeCardAndDrawNew(for: playerIndex, card: card)
         nextTurn()
+    }
+
+    /// 공개된 goal 셀(isOpened = true) 상태를 P2P로 전파
+    private func syncGoalOpenStates() {
+        for (gx, gy) in Board.goalPositions {
+            let cell = board.grid[gx][gy]
+            if cell.isOpened == true {
+                placedCards.value["\(gx),\(gy)"] = cell
+            }
+        }
     }
 
     /// 보드 셀 업데이트
@@ -197,18 +217,49 @@ final class BoardViewModel: ObservableObject {
 
     /// 도착지 세 곳(G0, G1, G2) 중 하나라도 카드가 설치되었는지 확인하는 유틸 함수
     ///
-    /// G1: (7,2), G0: (8,1), G2: (8,3)
     /// 해당 위치에 카드가 놓였다는 것은 경로가 도착지 근처까지 연결되었음을 의미
     private func hasAnyGoalEntryCard() -> Bool {
-        board.grid[7][2].isCard || board.grid[8][1].isCard || board.grid[8][3].isCard
+        for (gx, gy) in Board.goalPositions {
+            let directions = [(-1, 0), (1, 0), (0, -1), (0, 1)] // 상하좌우
+
+            for (dx, dy) in directions {
+                let nx = gx + dx
+                let ny = gy + dy
+
+                // 보드 범위 체크
+                guard board.isValidPosition(x: nx, y: ny) else { continue }
+
+                let neighbor = board.grid[nx][ny]
+                if neighbor.type?.connect ?? false {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     /// 길 완성 여부 확인
     private func checkGoalCompletion() {
-        if hasAnyGoalEntryCard() {
-            if board.goalCheck() {
-                showToast("🎉 \(currentPlayer.value)가 길을 완성했습니다!")
-                winner.value = currentPlayer.value
+        guard hasAnyGoalEntryCard() else { return }
+
+        let isCompleted = board.goalCheck()
+
+        // Goal 카드 이미지 전환을 반영할 수 있도록 일단 동기 UI 업데이트
+        if isCompleted {
+            // 1) 모든 goal 카드 로컬에 공개
+            board.revealAllGoals()
+            // -> @Published board 갱신
+            board = board
+
+            // 2) 공개된 goal 카드 정보를 P2P로 전파
+            syncGoalOpenStates()
+
+            // 3) 토스트 알림
+            showToast("🎉 \(currentPlayer.value)가 길을 완성했습니다!")
+
+            // 4) 2초 후 승패 동기화
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                self.winner.value = self.currentPlayer.value
             }
         }
     }
