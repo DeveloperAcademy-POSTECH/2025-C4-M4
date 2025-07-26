@@ -148,17 +148,13 @@ struct ConnectView: View {
                 idleTime = 0
             }
         }
-        .alert("5분 동안 연결되지 않았습니다. 인원 설정 화면으로 돌아가시겠습니까?", isPresented: $showExitAlert) {
-            Button("네", role: .destructive) {
+        .modalOverlay(isPresented: $showExitAlert, modalView: {
+            PopupView(popupText: "대기 시간이 초과되어\n인원 설정 화면으로 이동합니다.") {
                 P2PNetwork.outSession()
                 P2PNetwork.removeAllDelegates()
                 router.currentScreen = .choosePlayer
             }
-            Button("아니오", role: .cancel) {
-                idleTime = 0
-                startIdleTimer()
-            }
-        }
+        })
     }
 
     private func startCountdown() {
