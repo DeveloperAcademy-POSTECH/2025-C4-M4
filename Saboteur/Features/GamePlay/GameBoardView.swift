@@ -60,8 +60,8 @@ struct GameBoardView: View {
                             if let remaining = allPeers.first(where: { $0.id != myID }) {
                                 winner.value = remaining.id
                             }
-                            let myDisplayName = P2PNetwork.myPeer.displayName
-                            exitToastMessage.value = "\(myDisplayName)님이 나가서 게임이 강제 종료되었습니다"
+
+                            exitToastMessage.value = "\(boardViewModel.myName)님이 나가서 게임이 강제 종료되었습니다"
                         }
                         router.currentScreen = .choosePlayer
 

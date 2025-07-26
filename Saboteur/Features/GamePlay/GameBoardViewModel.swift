@@ -89,6 +89,10 @@ final class BoardViewModel: ObservableObject {
         players.first(where: { $0.peer.id == P2PNetwork.myPeer.id })
     }
 
+    var myName: String {
+        getMe?.peer.displayName ?? "Anonymous"
+    }
+
     // MARK: - 초기화
 
     /// 연결된 Peer를 기반으로 플레이어 목록 구성
@@ -188,8 +192,8 @@ final class BoardViewModel: ObservableObject {
 
     /// 일반 카드 처리
     private func handleNormalCard(_ card: Card, at pos: (Int, Int), playerIndex: Int) {
-        let (success, message) = board.placeCard(x: pos.0, y: pos.1, card: card, player: currentPlayer.value)
-        showToast(message)
+        let (success, message) = board.placeCard(x: pos.0, y: pos.1, card: card, player: myName)
+        sendToast(message, target: .global)
         guard success else { return }
 
         // 1) 로컬 보드에 카드 반영
@@ -296,8 +300,8 @@ final class BoardViewModel: ObservableObject {
             // 2) 공개된 goal 카드 정보를 P2P로 전파
             syncGoalOpenStates()
 
-            // 3) 토스트 알림
-            showToast("🎉 \(currentPlayer.value)가 길을 완성했습니다!")
+            // 3) 토스트 알림let myName = getMe?.peer.displayName ?? "Anonymous"
+            sendToast("🎉 \(myName)가 길을 완성했습니다!", target: .global)
 
             // 4) 2초 후 승패 동기화
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
