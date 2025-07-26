@@ -132,6 +132,13 @@ public class Board {
     }
 
     public func goalCheck() -> Bool {
+        guard let goal = lastGoal else {
+            return false
+        }
+        return grid[goal.x][goal.y].isGoal == true
+    }
+
+    public func loadConnect() -> Bool {
         // print("🔍 goalCheck 시작: start 위치에서 탐색을 시작합니다.")
         var visited = Array(
             repeating: Array(repeating: false, count: grid[0].count),
@@ -158,6 +165,8 @@ public class Board {
             if isGoalLine(x: x, y: y), grid[x][y].isOpened == false {
                 lastGoal = (x, y)
                 // print("🎯 목표에 도달했습니다! (\(x),\(y))")
+                grid[x][y].isOpened = true
+                print("🎯 Goal 카드가 열렸습니다: (\(x), \(y))")
                 return true
             }
 
