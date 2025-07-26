@@ -60,8 +60,8 @@ struct GameBoardView: View {
                             if let remaining = allPeers.first(where: { $0.id != myID }) {
                                 winner.value = remaining.id
                             }
-                            let myDisplayName = P2PNetwork.myPeer.displayName
-                            exitToastMessage.value = "\(myDisplayName)님이 나가서 게임이 강제 종료되었습니다"
+
+                            exitToastMessage.value = "\(boardViewModel.myName)님이 나가서 게임이 강제 종료되었습니다"
                         }
                         router.currentScreen = .choosePlayer
 
@@ -159,7 +159,8 @@ struct GameBoardView: View {
                             boardViewModel.cursor = (x, y)
                             boardViewModel.placeSelectedCard()
                         },
-                        latestPlacedCoord: boardViewModel.latestPlacedCoord.value
+                        latestPlacedCoord: boardViewModel.latestPlacedCoord.value,
+                        temporarilyRevealedCell: boardViewModel.revealedGoalCell
                     )
                     HStack(spacing: 24) {
                         Button(action: {
@@ -209,6 +210,30 @@ struct GameBoardView: View {
                 }.padding()
                     .onReceive(boardViewModel.currentPlayer.objectWillChange) { _ in
                         boardViewModel.cursor = boardViewModel.cursor
+                        let toast = boardViewModel.syncedToast.value
+
+                        guard !toast.message.isEmpty else { return }
+
+                        let myID = P2PNetwork.myPeer.id
+                        let shouldShow: Bool = {
+                            switch toast.target {
+                            case .global: return true
+                            case .personal: return toast.senderID == myID
+                            case .other: return toast.senderID != myID
+                            }
+                        }()
+
+                        if shouldShow {
+                            boardViewModel.showToast(toast.message)
+                        }
+
+                        if toast.senderID == myID {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                                if boardViewModel.syncedToast.value == toast {
+                                    boardViewModel.syncedToast.value = TargetedToast(message: "", target: .personal, senderID: "")
+                                }
+                            }
+                        }
                     }
                     .onChange(of: boardViewModel.placedCards.value) { _ in
                         boardViewModel.syncBoardWithPlacedCards()
@@ -231,16 +256,4 @@ struct GameBoardView: View {
         }
         // .frame(minHeight: UIScreen.main.bounds.height - 32)
     }
-}
-
-#Preview {
-    let dummyWinner = P2PSyncedObservable<String>(name: "🇰🇷 JudyJ", initial: "dummy_winner")
-    let exitToastMessage = P2PSyncedObservable<String>(name: "ExitToastMessage", initial: "")
-
-    GameBoardView(
-        winner: dummyWinner,
-        gameState: .constant(.startedGame),
-        exitToastMessage: exitToastMessage
-    )
-    .environmentObject(AppRouter())
 }

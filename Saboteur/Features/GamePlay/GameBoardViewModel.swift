@@ -3,11 +3,6 @@ import P2PKit
 import SaboteurKit
 import SwiftUI
 
-struct Coordinate: Codable, Equatable {
-    let x: Int
-    let y: Int
-}
-
 final class BoardViewModel: ObservableObject {
     // MARK: - Published Properties
 
@@ -22,12 +17,17 @@ final class BoardViewModel: ObservableObject {
 
     @Published var currentPlayer: P2PSyncedObservable<Peer.Identifier> = P2PNetwork.currentTurnPlayerID
     @Published var placedCards = P2PSyncedObservable(name: "PlacedCards", initial: [String: BoardCell]())
-  
+    @Published var revealedGoalCell: (x: Int, y: Int)? = nil
+
     let latestPlacedCoord = P2PSyncedObservable<Coordinate?>(name: "LatestCoord", initial: nil)
-  
+
+    let syncedToast = P2PSyncedObservable<TargetedToast>(
+        name: "SyncedToastMessage",
+        initial: TargetedToast(message: "", target: .personal, senderID: "")
+    )
     private var cancellables = Set<AnyCancellable>()
     let syncedGoalIndex: P2PSyncedObservable<Int>
- 
+
     let winner: P2PSyncedObservable<Peer.Identifier>
 
     init(winner: P2PSyncedObservable<Peer.Identifier>) {
@@ -60,7 +60,7 @@ final class BoardViewModel: ObservableObject {
 
     // MARK: - 유틸리티 메서드
 
-    /// 토스트 메시지를 지정 시간 후 자동 제거
+    /// 로컬 전용 토스트 메시지 표시 (global 전파 안 함)
     func showToast(_ message: String) {
         toastMessage = message
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
@@ -68,6 +68,16 @@ final class BoardViewModel: ObservableObject {
                 self.toastMessage = nil
             }
         }
+    }
+
+    /// 글로벌 toast 전송
+    func sendToast(_ message: String, target: ToastTarget) {
+        let toast = TargetedToast(
+            message: message,
+            target: target,
+            senderID: P2PNetwork.myPeer.id
+        )
+        syncedToast.value = toast
     }
 
     /// 현재 플레이어(나)의 인덱스 반환
@@ -78,6 +88,10 @@ final class BoardViewModel: ObservableObject {
     /// 현재 플레이어(나)의 PeerPlayer 객체 반환
     var getMe: PeerPlayer? {
         players.first(where: { $0.peer.id == P2PNetwork.myPeer.id })
+    }
+
+    var myName: String {
+        getMe?.peer.displayName ?? "Anonymous"
     }
 
     // MARK: - 초기화
@@ -136,12 +150,40 @@ final class BoardViewModel: ObservableObject {
         }
 
         let (x, y) = cursor
-
         if card.type == .bomb {
             handleBombCard(card, at: (x, y), playerIndex: myIndex)
+        } else if card.type == .map {
+            handleMapCard(card, at: (x, y), playerIndex: myIndex)
         } else {
             handleNormalCard(card, at: (x, y), playerIndex: myIndex)
         }
+    }
+
+    /// 맵 카드 처리
+    private func handleMapCard(_ card: Card, at pos: (Int, Int), playerIndex: Int) {
+        let (x, y) = pos
+        guard board.isGoalLine(x: x, y: y),
+              let isGoal = board.grid[x][y].isGoal
+        else {
+            showToast("🗺 map 카드는 goal 위치에서만 사용할 수 있습니다.")
+            return
+        }
+
+        // 1. 나만 보는 UI 업데이트
+        // ✅ 보여줄 좌표 설정
+        revealedGoalCell = (x, y)
+
+        // ✅ 2초 뒤에 감추기
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.revealedGoalCell = nil
+        }
+
+        // 2. 나를 제외한 모두에게 알림
+        let myName = P2PNetwork.myPeer.displayName
+        sendToast("🗺 \(myName)님이 map 카드를 사용했습니다.", target: .other)
+
+        removeCardAndDrawNew(for: playerIndex, card: card)
+        nextTurn()
     }
 
     /// 폭탄 카드 처리
@@ -157,8 +199,8 @@ final class BoardViewModel: ObservableObject {
 
     /// 일반 카드 처리
     private func handleNormalCard(_ card: Card, at pos: (Int, Int), playerIndex: Int) {
-        let (success, message) = board.placeCard(x: pos.0, y: pos.1, card: card, player: currentPlayer.value)
-        showToast(message)
+        let (success, message) = board.placeCard(x: pos.0, y: pos.1, card: card, player: myName)
+        sendToast(message, target: .global)
         guard success else { return }
 
         // 1) 로컬 보드에 카드 반영
@@ -265,8 +307,8 @@ final class BoardViewModel: ObservableObject {
             // 2) 공개된 goal 카드 정보를 P2P로 전파
             syncGoalOpenStates()
 
-            // 3) 토스트 알림
-            showToast("🎉 \(currentPlayer.value)가 길을 완성했습니다!")
+            // 3) 토스트 알림let myName = getMe?.peer.displayName ?? "Anonymous"
+            sendToast("🎉 \(myName)가 길을 완성했습니다!", target: .global)
 
             // 4) 2초 후 승패 동기화
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
