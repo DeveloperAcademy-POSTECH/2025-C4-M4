@@ -2,6 +2,11 @@ import P2PKit
 import SaboteurKit
 import SwiftUI
 
+struct Coordinate: Codable, Equatable {
+    let x: Int
+    let y: Int
+}
+
 final class BoardViewModel: ObservableObject {
     // MARK: - Published Properties
 
@@ -16,6 +21,10 @@ final class BoardViewModel: ObservableObject {
 
     @Published var currentPlayer: P2PSyncedObservable<Peer.Identifier> = P2PNetwork.currentTurnPlayerID
     @Published var placedCards = P2PSyncedObservable(name: "PlacedCards", initial: [String: BoardCell]())
+
+    // @Published var latestPlacedCoord: (Int, Int)? = nil
+
+    let latestPlacedCoord = P2PSyncedObservable<Coordinate?>(name: "LatestCoord", initial: nil)
 
     let winner: P2PSyncedObservable<Peer.Identifier>
 
@@ -46,6 +55,14 @@ final class BoardViewModel: ObservableObject {
     var getMe: PeerPlayer? {
         players.first(where: { $0.peer.id == P2PNetwork.myPeer.id })
     }
+
+//    /// 가장 최근에 놓인 카드의 좌표 반환
+//    var latestPlacedCoord: (Int, Int)? {
+//        guard let lastKey = placedCards.value.keys.sorted().last else { return nil }
+//        let coords = lastKey.split(separator: ",").compactMap { Int($0) }
+//        guard coords.count == 2 else { return nil }
+//        return (coords[0], coords[1])
+//    }
 
     // MARK: - 초기화
 
@@ -140,12 +157,37 @@ final class BoardViewModel: ObservableObject {
 
         placedCards.value["\(pos.0),\(pos.1)"] = cell
         board.grid[pos.0][pos.1] = cell
+
+        latestPlacedCoord.value = Coordinate(x: pos.0, y: pos.1)
     }
 
     /// 카드 폐기 후 새 카드 뽑기
     private func removeCardAndDrawNew(for index: Int, card: Card) {
         players[index].discardCard(card)
         players[index].drawCard(from: &currentDeck)
+    }
+
+    /// ⏰ 시간 초과 시 무작위 카드 제거 및 새 카드 뽑기
+    func autoDiscardAndDraw() {
+        guard let myIndex = getMeIndex else {
+            showToast("내 정보를 찾을 수 없습니다.")
+            return
+        }
+
+        let myHand = players[myIndex].cardsInHand
+        guard !myHand.isEmpty else {
+            showToast("손패가 비어있습니다.")
+            return
+        }
+
+        // 무작위 카드 제거
+        let randomIndex = Int.random(in: 0 ..< myHand.count)
+        let discardedCard = players[myIndex].removeCard(at: randomIndex)
+
+        // 새 카드 지급
+        players[myIndex].drawCard(from: &currentDeck)
+
+        showToast("⏳ 시간이 초과되어 카드를 자동으로 교체했습니다.")
     }
 
     /// 도착지 세 곳(G0, G1, G2) 중 하나라도 카드가 설치되었는지 확인하는 유틸 함수

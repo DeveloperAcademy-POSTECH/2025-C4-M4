@@ -9,38 +9,35 @@ struct CardSelectionView: View {
     var body: some View {
         HStack {
             ForEach(cards, id: \.id) { card in
-                Button(action: {
-                    selectedCard = card
-                    onSelect(card)
-                }) {
-                    Rectangle()
-                        .foregroundColor(.clear)
-                        .frame(width: 60, height: 50)
-                        .background(
-                            ZStack {
-                                Image(card.type.imageName)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 60, height: 50)
-                                    .clipped()
+                Rectangle()
+                    .foregroundColor(.clear)
+                    .frame(width: 60, height: 50)
+                    .background(
+                        ZStack {
+                            Image(card.type.imageName)
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 60, height: 50)
+                                .clipped()
 
-                                if isSelected(card) {
-                                    Color.blue.opacity(0.3)
-                                        .cornerRadius(4)
-                                }
-                            }
-                        )
-                        .cornerRadius(4)
-                        .shadow(color: Color.blue, radius: 0, x: 0, y: 2)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 4)
-                                .inset(by: 0.5)
-                                .stroke(
-                                    isSelected(card) ? Color.blue : Color.gray,
-                                    lineWidth: 2
-                                )
-                        )
-                }
+                            // 오퍼시티
+//                                if isSelected(card) {
+//                                    Color.blue.opacity(0.3)
+//                                        .cornerRadius(4)
+//                                }
+                        }
+                    )
+                    .cornerRadius(4)
+                    .shadow(color: isSelected(card) ? Color.Emerald.emerald2 : Color.Emerald.emerald1, radius: 0, x: 0, y: 2)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 4)
+                            .inset(by: isSelected(card) ? 0 : 1)
+                            .stroke(isSelected(card) ? Color.Emerald.emerald2 : Color.Emerald.emerald1, lineWidth: isSelected(card) ? 2 : 2)
+                    )
+                    .onTapGesture {
+                        selectedCard = card
+                        onSelect(card)
+                    }
             }
         }
         .foregroundStyle(Color.Emerald.emerald3)
