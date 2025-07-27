@@ -207,7 +207,7 @@ final class BoardViewModel: ObservableObject {
         updateCell(at: pos, with: card, isCard: true)
 
         // 2) 인접한 goal 카드(진짜/가짜) 공개 및 동기화
-        if board.checkAndRevealGoal(fromX: pos.0, y: pos.1) {
+        if board.adjacentCheckAndFindLoad() {
             syncGoalOpenStates()
         }
 
