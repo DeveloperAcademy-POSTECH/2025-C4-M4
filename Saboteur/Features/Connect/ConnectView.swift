@@ -10,12 +10,9 @@ import P2PKit
 import SwiftUI
 
 struct ConnectView: View {
-    // let id: String
     @EnvironmentObject var router: AppRouter
 
     @StateObject var connected = ConnectedPeers()
-    // @State private var state: GameState = .unstarted
-
     @State private var countdown: Int? = nil
     @State private var countdownTimer: Timer? = nil
 

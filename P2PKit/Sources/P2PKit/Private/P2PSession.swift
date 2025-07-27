@@ -353,13 +353,6 @@ extension P2PSession {
     // Call this from inside a peerLock()
     private func invitePeerIfNeeded(_ peerID: MCPeerID) {
         func invitePeer(attempt: Int) {
-//            guard let remoteState = discoveryInfos[peerID]?.gameState, // 상태 접근
-//                  remoteState == "unstarted"
-//            else {
-//                prettyPrint(level: .info, "Not inviting \(peerID.displayName) due to gameState: \(discoveryInfos[peerID]?.gameState ?? "unknown")")
-//                return
-//            }
-
             let remoteState = discoveryInfos[peerID]?.gameState
             guard remoteState == "unstarted",
                   GameStateManager.shared.current.rawValue == "unstarted"
@@ -372,14 +365,6 @@ extension P2PSession {
             browser.invitePeer(peerID, to: session, withContext: nil, timeout: inviteTimeout)
             invitesHistory[peerID] = InviteHistory(attempt: attempt, nextInviteAfter: Date().addingTimeInterval(retryWaitTime))
         }
-
-        // Between any pair of devices, only one invites.
-//        guard let otherDiscoverID = discoveryInfos[peerID]?.discoveryId,
-//              myDiscoveryInfo.discoveryId < otherDiscoverID,
-//              isNotConnected(peerID)
-//        else {
-//            return
-//        }
 
         guard session.connectedPeers.count < P2PNetwork.maxConnectedPeers
         // 이미 한 명 연결됨

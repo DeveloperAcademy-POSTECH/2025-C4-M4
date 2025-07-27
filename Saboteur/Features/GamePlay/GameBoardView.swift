@@ -3,7 +3,6 @@ import SaboteurKit
 import SwiftUI
 
 struct GameBoardView: View {
-    // @Binding var gameState: GameState
     @EnvironmentObject var router: AppRouter
 
     @StateObject private var boardViewModel: BoardViewModel
@@ -17,7 +16,6 @@ struct GameBoardView: View {
     init(winner: P2PSyncedObservable<Peer.Identifier>, exitToastMessage: P2PSyncedObservable<String>) {
         _boardViewModel = StateObject(wrappedValue: BoardViewModel(winner: winner))
         self.winner = winner
-        // _gameState = gameState
         self.exitToastMessage = exitToastMessage
     }
 
