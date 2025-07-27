@@ -14,7 +14,7 @@ struct ConnectView: View {
     @EnvironmentObject var router: AppRouter
 
     @StateObject var connected = ConnectedPeers()
-    @State private var state: GameState = .unstarted
+    // @State private var state: GameState = .unstarted
 
     @State private var countdown: Int? = nil
     @State private var countdownTimer: Timer? = nil
@@ -36,7 +36,7 @@ struct ConnectView: View {
 
             VStack {
                 // 1. 게임 상태가 unstarted면 기본적으로 연결된 사용자를 보여주는 PlayerProfileView을 띄움
-                if state == .unstarted {
+                if GameStateManager.shared.current == .unstarted {
                     // 상단 헤더
                     ZStack(alignment: .bottom) {
                         HStack {
@@ -112,7 +112,7 @@ struct ConnectView: View {
                 }
 
                 //: : 2. pausedGame이 되는 순간은 명시되지 않았음. 예외처리용.
-                else if state == .pausedGame {
+                else if GameStateManager.shared.current == .pausedGame {
                     Button {
                         P2PNetwork.outSession()
                         P2PNetwork.removeAllDelegates()
@@ -124,7 +124,10 @@ struct ConnectView: View {
                     }
 
                 } else {
-                    GameView(gameState: $state)
+                    GameView()
+                        .onAppear {
+                            print("📒 GameView loaded with state: \(GameStateManager.shared.current)")
+                        }
                 }
             }
         }
@@ -136,9 +139,10 @@ struct ConnectView: View {
         }
         .onChange(of: connected.peers.count) {
             let connectedCount = connected.peers.count
-            if connectedCount == 0, state == .startedGame {
-                state = .endGame
-            } else if connectedCount == P2PNetwork.maxConnectedPeers, state == .unstarted {
+            if connectedCount == 0, GameStateManager.shared.current == .startedGame {
+                GameStateManager.shared.current = .endGame
+                P2PNetwork.updateGameState()
+            } else if connectedCount == P2PNetwork.maxConnectedPeers, GameStateManager.shared.current == .unstarted {
                 startCountdown()
             } else {
                 countdown = nil
@@ -168,7 +172,8 @@ struct ConnectView: View {
                 countdownTimer = nil
                 if connected.peers.count == P2PNetwork.maxConnectedPeers {
                     P2PNetwork.makeMeHost()
-                    state = .startedGame
+                    GameStateManager.shared.current = .startedGame
+                    P2PNetwork.updateGameState()
                 }
             }
         }
@@ -179,7 +184,7 @@ struct ConnectView: View {
         idleTimer?.invalidate()
         idleTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             idleTime += 1
-            if idleTime >= 180, state == .unstarted {
+            if idleTime >= 180, GameStateManager.shared.current == .unstarted {
                 idleTimer?.invalidate()
                 idleTimer = nil
                 showExitAlert = true

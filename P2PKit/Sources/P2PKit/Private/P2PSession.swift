@@ -21,7 +21,7 @@ class P2PSession: NSObject {
     private let myDiscoveryInfo: DiscoveryInfo
 
     private let session: MCSession
-    private let advertiser: MCNearbyServiceAdvertiser
+    private var advertiser: MCNearbyServiceAdvertiser
     private let browser: MCNearbyServiceBrowser
 
     private var peersLock = NSLock()
@@ -56,14 +56,17 @@ class P2PSession: NSObject {
         return Peer(peerID, id: discoverID)
     }
 
-    init(myPeer: Peer) {
+    init(myPeer: Peer, gameStateRawValue _: String? = nil) {
         self.myPeer = myPeer
-        myDiscoveryInfo = DiscoveryInfo(discoveryId: myPeer.id)
+        myDiscoveryInfo = DiscoveryInfo(discoveryId: myPeer.id, gameState: nil)
         discoveryInfos[myPeer.peerID] = myDiscoveryInfo
         let myPeerID = myPeer.peerID
         session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .required)
         advertiser = MCNearbyServiceAdvertiser(peer: myPeerID,
-                                               discoveryInfo: ["discoveryId": "\(myDiscoveryInfo.discoveryId)"],
+                                               discoveryInfo: [
+                                                   "discoveryId": "\(myDiscoveryInfo.discoveryId)",
+                                                   "gameState": GameStateManager.shared.current.rawValue,
+                                               ],
                                                serviceType: P2PConstants.networkChannelName)
         browser = MCNearbyServiceBrowser(peer: myPeerID, serviceType: P2PConstants.networkChannelName)
 
@@ -78,6 +81,26 @@ class P2PSession: NSObject {
         advertiser.startAdvertisingPeer()
         browser.startBrowsingForPeers()
         delegate?.p2pSession(self, didUpdate: myPeer)
+    }
+
+    func updateGameState() {
+        advertiser.stopAdvertisingPeer()
+
+        let updatedInfo = [
+            "discoveryId": "\(myDiscoveryInfo.discoveryId)",
+            "gameState": GameStateManager.shared.current.rawValue,
+        ]
+
+        let newAdvertiser = MCNearbyServiceAdvertiser(
+            peer: myPeer.peerID,
+            discoveryInfo: updatedInfo,
+            serviceType: P2PConstants.networkChannelName
+        )
+
+        newAdvertiser.delegate = self
+        newAdvertiser.startAdvertisingPeer()
+
+        advertiser = newAdvertiser
     }
 
     deinit {
@@ -246,7 +269,8 @@ extension P2PSession: MCSessionDelegate {
 extension P2PSession: MCNearbyServiceBrowserDelegate {
     func browser(_: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String: String]?) {
         if let discoveryId = info?["discoveryId"], discoveryId != myDiscoveryInfo.discoveryId {
-            prettyPrint("Found Peer: [\(peerID)], with id: [\(discoveryId)]")
+            let remoteGameState = info?["gameState"] ?? "nil"
+            prettyPrint("Found Peer: [\(peerID.displayName)], gameState: \(remoteGameState), with id: [\(discoveryId)]")
 
             peersLock.lock()
             foundPeers.insert(peerID)
@@ -260,7 +284,7 @@ extension P2PSession: MCNearbyServiceBrowserDelegate {
                     invitesHistory[otherPeerId] = nil
                 }
             }
-            discoveryInfos[peerID] = DiscoveryInfo(discoveryId: discoveryId)
+            discoveryInfos[peerID] = DiscoveryInfo(discoveryId: discoveryId, gameState: info?["gameState"])
 
             if sessionStates[peerID] == nil, session.connectedPeers.contains(peerID) {
                 startLoopbackTest(peerID)
@@ -299,12 +323,20 @@ extension P2PSession: MCNearbyServiceBrowserDelegate {
 extension P2PSession: MCNearbyServiceAdvertiserDelegate {
     // 누군가 나에게 연결 요청을 보냈을 때 호출됨
     func advertiser(_: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext _: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
-        let totalAttemptingPeers = session.connectedPeers.count +
-            sessionStates.values.filter { $0 == .connecting }.count
+        // let totalAttemptingPeers = session.connectedPeers.count + sessionStates.values.filter { $0 == .connecting }.count
+        let totalAttemptingPeers = session.connectedPeers.count
 
+        // 이미 연결된 peer 수 (connectedPeers) <  maxConnectedPeers
         if isNotConnected(peerID), totalAttemptingPeers < P2PNetwork.maxConnectedPeers {
             invitationHandler(true, session)
         } else {
+            prettyPrint(level: .debug, """
+            📒 Invitation decision:
+            - connectedPeers: \(session.connectedPeers.map(\.displayName))
+            - connecting: \(sessionStates.values.filter { $0 == .connecting }.count) - 이건 제외됨
+            - peerID: \(peerID.displayName)
+            - isNotConnected: \(isNotConnected(peerID))
+            """)
             prettyPrint(level: .info, "Rejecting invitation from \(peerID.displayName). Already full.")
             invitationHandler(false, nil)
         }
@@ -321,18 +353,33 @@ extension P2PSession {
     // Call this from inside a peerLock()
     private func invitePeerIfNeeded(_ peerID: MCPeerID) {
         func invitePeer(attempt: Int) {
+//            guard let remoteState = discoveryInfos[peerID]?.gameState, // 상태 접근
+//                  remoteState == "unstarted"
+//            else {
+//                prettyPrint(level: .info, "Not inviting \(peerID.displayName) due to gameState: \(discoveryInfos[peerID]?.gameState ?? "unknown")")
+//                return
+//            }
+
+            let remoteState = discoveryInfos[peerID]?.gameState
+            guard remoteState == "unstarted",
+                  GameStateManager.shared.current.rawValue == "unstarted"
+            else {
+                prettyPrint(level: .info, "Not inviting \(peerID.displayName) due to local/remote gameState mismatch: local=\(GameStateManager.shared.current.rawValue), remote=\(remoteState ?? "nil")")
+                return
+            }
+
             prettyPrint("Inviting peer: [\(peerID.displayName)]. Attempt \(attempt)")
             browser.invitePeer(peerID, to: session, withContext: nil, timeout: inviteTimeout)
             invitesHistory[peerID] = InviteHistory(attempt: attempt, nextInviteAfter: Date().addingTimeInterval(retryWaitTime))
         }
 
         // Between any pair of devices, only one invites.
-        guard let otherDiscoverID = discoveryInfos[peerID]?.discoveryId,
-              myDiscoveryInfo.discoveryId < otherDiscoverID,
-              isNotConnected(peerID)
-        else {
-            return
-        }
+//        guard let otherDiscoverID = discoveryInfos[peerID]?.discoveryId,
+//              myDiscoveryInfo.discoveryId < otherDiscoverID,
+//              isNotConnected(peerID)
+//        else {
+//            return
+//        }
 
         guard session.connectedPeers.count < P2PNetwork.maxConnectedPeers
         // 이미 한 명 연결됨
@@ -382,8 +429,6 @@ extension P2PSession {
 
     private func isNotConnected(_ peerID: MCPeerID) -> Bool {
         !session.connectedPeers.contains(peerID)
-            && sessionStates[peerID] != .connecting
-            && sessionStates[peerID] != .connected
     }
 }
 
@@ -397,4 +442,5 @@ private struct InviteHistory {
 
 private struct DiscoveryInfo {
     let discoveryId: Peer.Identifier
+    let gameState: String?
 }

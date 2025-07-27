@@ -3,7 +3,7 @@ import SaboteurKit
 import SwiftUI
 
 struct GameBoardView: View {
-    @Binding var gameState: GameState
+    // @Binding var gameState: GameState
     @EnvironmentObject var router: AppRouter
 
     @StateObject private var boardViewModel: BoardViewModel
@@ -14,10 +14,10 @@ struct GameBoardView: View {
     @State private var turnTimeRemaining: Int = 90
     @State private var turnTimer: Timer? = nil
 
-    init(winner: P2PSyncedObservable<Peer.Identifier>, gameState: Binding<GameState>, exitToastMessage: P2PSyncedObservable<String>) {
+    init(winner: P2PSyncedObservable<Peer.Identifier>, exitToastMessage: P2PSyncedObservable<String>) {
         _boardViewModel = StateObject(wrappedValue: BoardViewModel(winner: winner))
         self.winner = winner
-        _gameState = gameState
+        // _gameState = gameState
         self.exitToastMessage = exitToastMessage
     }
 
@@ -66,7 +66,8 @@ struct GameBoardView: View {
                         router.currentScreen = .choosePlayer
 
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            gameState = .endGame
+                            GameStateManager.shared.current = .endGame
+                            P2PNetwork.updateGameState()
                             P2PNetwork.outSession()
                         }
                     } label: {
@@ -255,5 +256,10 @@ struct GameBoardView: View {
             }
         }
         // .frame(minHeight: UIScreen.main.bounds.height - 32)
+        .onChange(of: winner.value) { newValue in
+            if !newValue.isEmpty {
+                GameStateManager.shared.current = .endGame
+            }
+        }
     }
 }

@@ -7,7 +7,8 @@ enum GameResult {
 }
 
 struct GameView: View {
-    @Binding var gameState: GameState
+    @ObservedObject private var gameState = GameStateManager.shared
+
     @StateObject private var viewModel = GameViewModel()
     @StateObject private var exitToastMessage = P2PSyncedObservable<String>(name: "ExitToastMessage", initial: "")
 
@@ -17,7 +18,7 @@ struct GameView: View {
     @EnvironmentObject var router: AppRouter
 
     var body: some View {
-        if gameState == .endGame {
+        if gameState.current == .endGame {
             ZStack {
                 Color.black.opacity(0.6)
                     .ignoresSafeArea()
@@ -44,14 +45,15 @@ struct GameView: View {
             VStack {
                 Text("Treasure Island")
 
-                GameBoardView(winner: winner as P2PSyncedObservable<Peer.Identifier>, gameState: $gameState, exitToastMessage: exitToastMessage)
+                GameBoardView(winner: winner as P2PSyncedObservable<Peer.Identifier>, exitToastMessage: exitToastMessage)
                     .environmentObject(router)
                     .onChange(of: winner.value) {
                         if !winner.value.isEmpty {
                             let finalPeers = [P2PNetwork.myPeer] + P2PNetwork.connectedPeers
                             let simplifiedPeers = finalPeers.map { ["id": $0.id, "displayName": $0.displayName] }
                             UserDefaults.standard.set(simplifiedPeers, forKey: "FinalPeers")
-                            gameState = .endGame
+                            GameStateManager.shared.current = .endGame
+                            P2PNetwork.updateGameState()
                         }
                     }
                     .onAppear {
@@ -64,5 +66,5 @@ struct GameView: View {
 }
 
 #Preview {
-    GameView(gameState: .constant(.startedGame))
+    GameView()
 }

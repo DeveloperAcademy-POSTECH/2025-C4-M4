@@ -101,6 +101,10 @@ public enum P2PNetwork {
 //        }
     }
 
+    public static func updateGameState() {
+        session.updateGameState()
+    }
+
     public static func connectionState(for peer: MCPeerID) -> MCSessionState? {
         session.connectionState(for: peer)
     }
@@ -118,14 +122,18 @@ public enum P2PNetwork {
 
     public static func resetSession(displayName: String? = nil) {
         prettyPrint(level: .error, "♻️ Resetting Session!")
+
+        GameStateManager.shared.current = .unstarted
+
         let oldSession = session
         oldSession.disconnect()
 
         let newPeerId = MCPeerID(displayName: displayName ?? oldSession.myPeer.displayName)
         let myPeer = Peer.resetMyPeer(with: newPeerId)
-        session = P2PSession(myPeer: myPeer)
+        session = P2PSession(myPeer: myPeer, gameStateRawValue: GameState.unstarted.rawValue)
         session.delegate = sessionListener
         session.start()
+        session.updateGameState()
     }
 
     public static func makeBrowserViewController() -> MCBrowserViewController {
