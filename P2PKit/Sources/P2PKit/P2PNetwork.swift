@@ -5,6 +5,7 @@
 //  Created by Paige Sun on 5/2/24.
 //
 
+import CryptoKit
 import SwiftUI
 
 import Foundation
@@ -48,6 +49,9 @@ public enum P2PNetwork {
         return hostSelector
     }()
 
+    // 새로운 변수를 추가함 - 새로운 현재 그룹 ID을 만든다.
+    public static var currentGroupID: String?
+
     // MARK: - Public P2PHostSelector
 
     /// 현재 디바이스가 P2P 호스트인지 여부
@@ -67,6 +71,75 @@ public enum P2PNetwork {
 
     public static var myPeer: Peer {
         session.myPeer
+    }
+
+    private static var receivedGroupIDs = [[String]]()
+
+    public static func setupGroupVerificationListener() {
+        onReceiveData(eventName: "GroupVerificationMessage") { _, json, _ in
+            guard let receivedIDs = json?["peerIDs"] as? [String] else { return }
+
+            let myGroupIDs = ([myPeer] + connectedPeers).map(\.id).sorted()
+
+            receivedGroupIDs.append(receivedIDs.sorted())
+
+            // 모든 피어에게 동일한 배열을 1번 이상 받은 경우
+            let matchCount = receivedGroupIDs.filter { $0 == myGroupIDs }.count
+            if matchCount >= maxConnectedPeers {
+                prettyPrint("✅ 모든 그룹 구성 일치. Lock session.")
+                lockSession()
+            }
+        }
+    }
+
+    // 피어 발견 시 groupID 기준으로 무시
+    public static func shouldAcceptDiscovery(info: [String: String]?) -> Bool {
+        // ✅ 그룹 확정 이후 → groupID 기준 필터
+        if let expectedGroupID = currentGroupID,
+           let remoteGroupID = info?["groupID"]
+        {
+            return remoteGroupID == expectedGroupID
+        }
+
+        // ✅ 초기 탐색 단계 → groupSize 기준 필터
+        if let remoteGroupSizeStr = info?["groupSize"],
+           let remoteGroupSize = Int(remoteGroupSizeStr)
+        {
+            return remoteGroupSize == maxConnectedPeers
+        }
+
+        // ❌ 정보 없음 → 연결 거부
+        return false
+    }
+
+    public static func finalizeGroupLockIfValid(peers: [Peer]) {
+        let groupID = generateGroupID(from: peers)
+        currentGroupID = groupID
+
+        // 광고/브라우징 종료
+        session.stopAdvertising()
+        session.stopBrowsing()
+
+        // 새 discoveryInfo로 재광고/브라우징 시작
+        let newDiscoveryInfo = [
+            "discoveryId": myPeer.id,
+            "groupID": groupID,
+        ]
+
+        session.startAdvertisingAndBrowsing(with: newDiscoveryInfo)
+
+        prettyPrint("🔐 그룹 고정. groupID 기반 광고 시작: \(groupID)")
+    }
+
+    private static func generateGroupID(from peers: [Peer]) -> String {
+        let allIDs = ([myPeer] + peers).map(\.id).sorted()
+        let joined = allIDs.joined(separator: "-")
+        return joined.sha256().prefix(8).description
+    }
+
+    private static func lockSession() {
+        session.stopAdvertising()
+        session.stopBrowsing()
     }
 
     // Connected Peers, not including self
@@ -92,13 +165,27 @@ public enum P2PNetwork {
             session.delegate = sessionListener
             session.start()
         }
-//        if currentTurnPlayerName.value.isEmpty {
-//            // Randomly assign the first turn to one of the peers including self
-//            let candidates = [myPeer] + connectedPeers
-//            if let firstPlayer = candidates.randomElement() {
-//                currentTurnPlayerName.value = firstPlayer.displayName
-//            }
-//        }
+
+        let initialDiscoveryInfo = [
+            "discoveryId": myPeer.id,
+            "groupSize": "\(maxConnectedPeers)",
+        ]
+
+        session.startAdvertisingAndBrowsing(with: initialDiscoveryInfo)
+
+        //        if currentTurnPlayerName.value.isEmpty {
+        //            // Randomly assign the first turn to one of the peers including self
+        //            let candidates = [myPeer] + connectedPeers
+        //            if let firstPlayer = candidates.randomElement() {
+        //                currentTurnPlayerName.value = firstPlayer.displayName
+        //            }
+        //        }
+    }
+
+    public static func sendGroupVerificationMessage() {
+        let allPeerIDs = ([myPeer] + connectedPeers).map(\.id).sorted()
+        let message = GroupVerificationMessage(peerIDs: allPeerIDs)
+        send(message, reliable: true)
     }
 
     public static func connectionState(for peer: MCPeerID) -> MCSessionState? {
@@ -125,7 +212,12 @@ public enum P2PNetwork {
         let myPeer = Peer.resetMyPeer(with: newPeerId)
         session = P2PSession(myPeer: myPeer)
         session.delegate = sessionListener
-        session.start()
+
+        let discoveryInfo = currentGroupID == nil
+            ? ["discoveryId": myPeer.id, "groupSize": "\(maxConnectedPeers)"]
+            : ["discoveryId": myPeer.id, "groupID": currentGroupID!]
+
+        session.startAdvertisingAndBrowsing(with: discoveryInfo)
     }
 
     public static func makeBrowserViewController() -> MCBrowserViewController {
@@ -242,5 +334,13 @@ extension P2PNetworkSessionListener: P2PSessionDelegate {
                 handler?.callback(data, json, peerID)
             }
         }
+    }
+}
+
+extension String {
+    func sha256() -> String {
+        let data = Data(utf8)
+        let digest = SHA256.hash(data: data)
+        return digest.map { String(format: "%02x", $0) }.joined()
     }
 }

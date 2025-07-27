@@ -18,11 +18,11 @@ class P2PSession: NSObject {
     weak var delegate: P2PSessionDelegate?
 
     let myPeer: Peer
-    private let myDiscoveryInfo: DiscoveryInfo
+    private var myDiscoveryInfo: DiscoveryInfo
 
     private let session: MCSession
-    private let advertiser: MCNearbyServiceAdvertiser
-    private let browser: MCNearbyServiceBrowser
+    private var advertiser: MCNearbyServiceAdvertiser
+    private var browser: MCNearbyServiceBrowser
 
     private var peersLock = NSLock()
     private var foundPeers = Set<MCPeerID>() // protected with peersLock
@@ -58,12 +58,18 @@ class P2PSession: NSObject {
 
     init(myPeer: Peer) {
         self.myPeer = myPeer
-        myDiscoveryInfo = DiscoveryInfo(discoveryId: myPeer.id)
+        myDiscoveryInfo = DiscoveryInfo(
+            discoveryId: myPeer.id,
+            groupID: "defaultGroup", // ✅ 실제 그룹 ID로 교체
+            groupSize: 3 // ✅ 실제 그룹 인원으로 교체
+        )
         discoveryInfos[myPeer.peerID] = myDiscoveryInfo
         let myPeerID = myPeer.peerID
         session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .required)
         advertiser = MCNearbyServiceAdvertiser(peer: myPeerID,
-                                               discoveryInfo: ["discoveryId": "\(myDiscoveryInfo.discoveryId)"],
+                                               discoveryInfo: ["discoveryId": "\(myDiscoveryInfo.discoveryId)",
+                                                               "groupID": "\(myDiscoveryInfo.groupID)",
+                                                               "groupSize": "\(myDiscoveryInfo.groupSize)"],
                                                serviceType: P2PConstants.networkChannelName)
         browser = MCNearbyServiceBrowser(peer: myPeerID, serviceType: P2PConstants.networkChannelName)
 
@@ -80,6 +86,8 @@ class P2PSession: NSObject {
         delegate?.p2pSession(self, didUpdate: myPeer)
     }
 
+    // MARK: - 다시 검색을 위해 구현한 코드 입니다. - 추후 변경가능합니다.
+
     deinit {
         disconnect()
     }
@@ -95,6 +103,14 @@ class P2PSession: NSObject {
 
         browser.stopBrowsingForPeers()
         browser.delegate = nil
+    }
+
+    func stopAdvertising() {
+        advertiser.stopAdvertisingPeer()
+    }
+
+    func stopBrowsing() {
+        browser.stopBrowsingForPeers()
     }
 
     func connectionState(for peer: MCPeerID) -> MCSessionState? {
@@ -260,8 +276,9 @@ extension P2PSession: MCNearbyServiceBrowserDelegate {
                     invitesHistory[otherPeerId] = nil
                 }
             }
-            discoveryInfos[peerID] = DiscoveryInfo(discoveryId: discoveryId)
-
+            let groupID = info?["groupID"] ?? "unknown"
+            let groupSize = Int(info?["groupSize"] ?? "0") ?? 0
+            discoveryInfos[peerID] = DiscoveryInfo(discoveryId: discoveryId, groupID: groupID, groupSize: groupSize)
             if sessionStates[peerID] == nil, session.connectedPeers.contains(peerID) {
                 startLoopbackTest(peerID)
             }
@@ -387,6 +404,25 @@ extension P2PSession {
     }
 }
 
+extension P2PSession {
+    func startAdvertisingAndBrowsing(with discoveryInfo: [String: String]) {
+        advertiser = MCNearbyServiceAdvertiser(
+            peer: myPeer.peerID,
+            discoveryInfo: discoveryInfo,
+            serviceType: P2PConstants.networkChannelName
+        )
+        advertiser.delegate = self
+        advertiser.startAdvertisingPeer()
+
+        browser = MCNearbyServiceBrowser(
+            peer: myPeer.peerID,
+            serviceType: P2PConstants.networkChannelName
+        )
+        browser.delegate = self
+        browser.startBrowsingForPeers()
+    }
+}
+
 private struct InviteHistory {
     let attempt: Int
     let nextInviteAfter: Date
@@ -397,4 +433,6 @@ private struct InviteHistory {
 
 private struct DiscoveryInfo {
     let discoveryId: Peer.Identifier
+    let groupID: String
+    let groupSize: Int
 }

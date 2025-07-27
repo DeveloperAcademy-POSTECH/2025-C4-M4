@@ -40,9 +40,9 @@ public class Board {
         }
 
         if grid[x][y].isGoal == true {
-            return (true, "g\(y/2)이 goal이 맞습니다.")
+            return (true, "g\(y / 2)이 goal이 맞습니다.")
         } else {
-            return (true, "g\(y/2)은 goal이 아닙니다.")
+            return (true, "g\(y / 2)은 goal이 아닙니다.")
         }
     }
 

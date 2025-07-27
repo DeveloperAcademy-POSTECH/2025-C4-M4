@@ -131,6 +131,7 @@ struct ConnectView: View {
         // 프리뷰 확인 시 onAppear 주석 필요
         .onAppear {
             P2PNetwork.resetSession()
+            P2PNetwork.setupGroupVerificationListener() // <- 메시지 수신 리스너 등록
             connected.start()
             startIdleTimer()
         }
@@ -158,17 +159,35 @@ struct ConnectView: View {
     }
 
     private func startCountdown() {
+        print("🟢 startCountdown() 호출됨")
         countdown = 5
         countdownTimer?.invalidate()
+
+        print("📨 그룹 검증 메시지 전송 시작")
+        P2PNetwork.sendGroupVerificationMessage()
+
         countdownTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             if let current = countdown, current > 1 {
                 countdown = current - 1
+                print("⏳ 카운트다운 진행 중: \(countdown!)초 남음")
             } else {
                 timer.invalidate()
                 countdownTimer = nil
-                if connected.peers.count == P2PNetwork.maxConnectedPeers {
+                print("⏰ 카운트다운 종료됨")
+
+                let peerCount = connected.peers.count
+                let expectedCount = P2PNetwork.maxConnectedPeers
+                print("👥 연결된 Peer 수: \(peerCount), 필요한 수: \(expectedCount)")
+                print("🔍 currentGroupID: \(String(describing: P2PNetwork.currentGroupID))")
+
+                if peerCount == expectedCount,
+                   P2PNetwork.currentGroupID != nil
+                {
+                    print("✅ 그룹 유효성 검증 완료. 게임 시작")
                     P2PNetwork.makeMeHost()
                     state = .startedGame
+                } else {
+                    print("❌ 조건 불충족 - 게임 시작하지 않음")
                 }
             }
         }
