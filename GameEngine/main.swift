@@ -113,32 +113,20 @@ while true {
             let (success, message) = board.placeCard(x: x, y: y, card: selectedCard, player: currentPlayer.name)
             print(message)
             if success {
-                if board.grid[7][2].isCard
-                    //                    || board.grid[8][1].isCard
-                    //                    || board.grid[8][3].isCard
-                    || board.grid[7][0].isCard
-                    || board.grid[7][4].isCard
-                {
-                    let pathComplete = board.goalCheck()
-                    if pathComplete {
-                        if let goal = board.lastGoal {
-                            if board.grid[goal.x][goal.y].isGoal == true {
-                                print("🎉 \(currentPlayer.name)가 길을 완성했습니다!")
-                                exit(0)
-                            } else {
-                                board.grid[goal.x][goal.y].isOpened = true
-                                board.grid[goal.x][goal.y].type = .pathTRBL
-
-                                print("🎲 G\(goal.y / 2)에는 보석이 없습니다.\n")
-                            }
+                if board.adjacentCheckAndFindLoad() {
+                    if board.goalCheck() {
+                        print("🎉 \(currentPlayer.name)가 길을 완성했습니다!")
+                        exit(0)
+                    } else {
+                        board.grid[board.lastGoal!.x][board.lastGoal!.y].type = .pathTRBL
+                        print("🎲 G\(board.lastGoal!.y / 2)에는 보석이 없습니다.\n")
                         }
                     }
-                }
                 players[currentPlayerIndex].discardCard(selectedCard)
                 players[currentPlayerIndex].drawCard(from: &deck)
                 currentPlayerIndex = (currentPlayerIndex + 1) % players.count
                 break
-            }
+                }
         }
     }
 }
