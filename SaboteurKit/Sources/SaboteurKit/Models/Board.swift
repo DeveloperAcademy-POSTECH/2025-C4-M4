@@ -76,6 +76,17 @@ public class Board {
         return revealed
     }
 
+    public func adjacentCheckAndFindLoad() -> Bool {
+        if grid[7][0].isCard
+            || grid[7][2].isCard
+            || grid[7][4].isCard
+        {
+            return loadConnect()
+        } else {
+            return false
+        }
+    }
+
     // 카드 설치 가능 여부를 확인한다 - 로직 위주
     public func isPlacable(x: Int, y: Int, card: Card) -> Bool {
         guard x >= 0, x < 8, y >= 0, y < 5 else { return false }
