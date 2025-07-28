@@ -179,9 +179,6 @@ struct ConnectView: View {
             if connectedCount == 0, GameStateManager.shared.current == .startedGame {
                 winner.value = P2PNetwork.myPeer.id
                 exitToastMessage.value = "상대방이 나가서 게임이 종료되었습니다"
-                print("🧩 exitToastMessage: \(exitToastMessage.value)")
-                print("🧩 winner after: \(winner.value)")
-
                 GameStateManager.shared.current = .endGame
                 P2PNetwork.updateGameState()
             } else if connectedCount == P2PNetwork.maxConnectedPeers, GameStateManager.shared.current == .unstarted {
