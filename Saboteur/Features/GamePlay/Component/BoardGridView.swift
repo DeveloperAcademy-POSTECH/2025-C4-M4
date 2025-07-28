@@ -14,7 +14,7 @@ struct BoardGridView: View {
     private let columnCount: Int = 9
     private let rowCount: Int = 5
     private let cellSize: CGFloat = 60
-    private let cellSpacing: CGFloat = 2
+    private let cellSpacing: CGFloat = 4
 
     private var columns: [GridItem] {
         Array(repeating: GridItem(.fixed(cellSize), spacing: cellSpacing), count: columnCount)
