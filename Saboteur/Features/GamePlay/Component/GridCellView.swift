@@ -46,7 +46,6 @@ struct GridCellView: View {
                 }
             }
         )
-        .padding(2)
     }
 
     // MARK: - View Components
