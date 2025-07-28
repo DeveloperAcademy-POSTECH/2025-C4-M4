@@ -75,13 +75,16 @@ public enum P2PNetwork {
 
     /// Map of peerID strings to their reported group lists for cross-verification
     private static var groupVerificationMap = [String: [String]]()
+    // Keep a strong reference to the DataHandler so it is not deallocated
+    private static var groupVerificationHandler: DataHandler?
 
     public static func setupGroupVerificationListener() {
-        onReceiveData(eventName: "GroupVerificationMessage") { _, json, peerID in
+        groupVerificationHandler = onReceiveData(eventName: "GroupVerificationMessage") { _, json, peerID in
             guard let receivedIDs = json?["peerIDs"] as? [String] else {
                 prettyPrint("⚠️ 잘못된 GroupVerificationMessage 수신")
                 return
             }
+            print("[P2PNetwork] 📨 GroupVerificationMessage 수신 from \(peerID.displayName)")
             // 1. 메시지 저장
             let sortedIDs = receivedIDs.sorted()
             groupVerificationMap[peerID.displayName] = sortedIDs
@@ -112,9 +115,15 @@ public enum P2PNetwork {
 
                 // 6. 검증 성공 시 세션 고정 또는 실패 시 재탐색
                 if intersectionSet.count == expectedCount {
-                    prettyPrint("🔒 교차 검증 완료. 세션 고정")
-                    lockSession()
+                    prettyPrint("🔒 교차 검증 완료. 해당 그룹만 고정")
+                    // 그룹에 포함된 Peer 객체 배열 생성 (나 자신 포함)
+                    let groupPeers = ([myPeer] + connectedPeers).filter { intersectionSet.contains($0.id) }
+                    // 해당 그룹만 잠금 및 재광고
+                    finalizeGroupLockIfValid(peers: groupPeers)
+                    // 알림 퍼블리셔 방출
+                    groupDidLockPublisher.send()
                 } else {
+                    // 실패 시 초기 탐색 재시작
                     restartInitialDiscovery()
                 }
             }
@@ -184,19 +193,21 @@ public enum P2PNetwork {
     }
 
     public static func finalizeGroupLockIfValid(peers: [Peer]) {
+        // Mark session locked so only groupID is accepted in shouldAcceptDiscovery
+        isSessionLocked = true
+
         let groupID = generateGroupID(from: peers)
         currentGroupID = groupID
 
-        // 광고/브라우징 종료
+        // Stop any existing advertise/browse
         session.stopAdvertising()
         session.stopBrowsing()
 
-        // 새 discoveryInfo로 재광고/브라우징 시작
+        // Start advertise/browse with groupID only
         let newDiscoveryInfo = [
             "discoveryId": myPeer.id,
             "groupID": groupID,
         ]
-
         session.startAdvertisingAndBrowsing(with: newDiscoveryInfo)
 
         prettyPrint("🔐 그룹 고정. groupID 기반 광고 시작: \(groupID)")

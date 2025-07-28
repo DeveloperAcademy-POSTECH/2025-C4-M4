@@ -135,17 +135,14 @@ struct ConnectView: View {
             P2PNetwork.setupGroupVerificationListener()
             connected.start()
             startIdleTimer()
-
+            print("[ConnectView] 🔍 검증 리스너 등록 완료")
             // ✅ 유효성 검증 완료 이벤트 구독
             cancellable = P2PNetwork.groupDidLockPublisher
                 .receive(on: DispatchQueue.main)
-                .sink {
-                    print("📬 그룹 유효성 검증 완료 이벤트 수신")
-                    if connected.peers.count == P2PNetwork.maxConnectedPeers {
-                        startCountdown()
-                    } else {
-                        print("⚠️ 유효성 검증은 완료되었지만 아직 peer 수 부족")
-                    }
+                .sink { _ in
+                    print("📬 그룹 잠금 완료 이벤트 수신 — 게임 시작")
+                    P2PNetwork.makeMeHost()
+                    state = .startedGame
                 }
         }
         .onChange(of: connected.peers.count) { _, newCount in
@@ -175,7 +172,7 @@ struct ConnectView: View {
 
     private func startCountdown() {
         print("🟢 startCountdown() 호출됨")
-        countdown = 5
+        countdown = 10
         countdownTimer?.invalidate()
 
         print("📨 그룹 검증 메시지 전송 시작")
@@ -185,6 +182,7 @@ struct ConnectView: View {
             if let current = countdown, current > 1 {
                 countdown = current - 1
                 print("⏳ 카운트다운 진행 중: \(countdown!)초 남음")
+
             } else {
                 timer.invalidate()
                 countdownTimer = nil
