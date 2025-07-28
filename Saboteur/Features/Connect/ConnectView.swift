@@ -22,7 +22,6 @@ struct ConnectView: View {
     @StateObject private var winner = SyncedStore.shared.winner
 
     @StateObject private var exitToastMessage = SyncedStore.shared.exitToastMessage
-    // @State private var lastConnectedPeerName: String? = nil
 
     @AppStorage("DidEnterBackground") var didBackground: Bool = false
     @Environment(\.scenePhase) private var scenePhase
@@ -162,17 +161,8 @@ struct ConnectView: View {
         }
         .onChange(of: scenePhase) { newPhase in
             if newPhase == .active {
-                print("📱 포그라운드 복귀")
-
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     let connectedCount = P2PNetwork.connectedPeers.count
-
-                    print("📱 복귀 후 connectedCount: \(connectedCount)")
-                    print("📱 복귀 후 GameState: \(GameStateManager.shared.current)")
-                    print("📱 복귀 후 didBackground: \(didBackground)")
-                    print("🧩 connected.peers.count = \(connected.peers.count)")
-                    print("🧩 P2PNetwork.connectedPeers.count = \(P2PNetwork.connectedPeers.count)")
-
                     if connectedCount == 0, GameStateManager.shared.current == .startedGame {
                         if let storedPeers = UserDefaults.standard.array(forKey: "FinalPeers") as? [[String: String]] {
                             let others = storedPeers.filter { $0["id"] != P2PNetwork.myPeer.id }
@@ -180,56 +170,16 @@ struct ConnectView: View {
                                 winner.value = otherID
                             }
                         }
-
                         exitToastMessage.value = "백그라운드로 나가서 게임이 종료되었습니다"
-
                         GameStateManager.shared.current = .endGame
                         P2PNetwork.updateGameState()
                     }
-//
-//                    if connectedCount == 0, GameStateManager.shared.current == .startedGame {
-//                        if didBackground {
-//                            if let storedPeers = UserDefaults.standard.array(forKey: "FinalPeers") as? [[String: String]] {
-//                                let others = storedPeers.filter { $0["id"] != P2PNetwork.myPeer.id }
-//                                if let selected = others.first, let otherID = selected["id"] {
-//                                    winner.value = otherID
-//                                }
-//                            }
-//
-//                            exitToastMessage.value = "백그라운드로 나가서 게임이 종료되었습니다"
-//                        } else {
-//                            winner.value = P2PNetwork.myPeer.id
-//                            exitToastMessage.value = "상대방이 나가서 게임이 종료되었습니다"
-//                        }
-//
-//                        GameStateManager.shared.current = .endGame
-//                        P2PNetwork.updateGameState()
-//                    }
                 }
             }
         }
         .onChange(of: connected.peers.count) {
             let connectedCount = P2PNetwork.connectedPeers.count
-
-            print("🧩 connectedCount: \(connectedCount)")
-            print("🧩 GameState: \(GameStateManager.shared.current)")
-            print("🧩 didBackground: \(didBackground)")
-            print("🧩 myPeer: \(P2PNetwork.myPeer.displayName)")
-
             if connectedCount == 0, GameStateManager.shared.current == .startedGame {
-//                if didBackground == true {
-//                    exitToastMessage.value = "백그라운드로 나가서 게임이 종료되었습니다 \(didBackground)"
-//                    print("🧩 exitToastMessage: \(exitToastMessage.value)")
-//                    didBackground = false
-//                    print("🧩 winner after: \(winner.value)")
-//                } else {
-//                    winner.value = P2PNetwork.myPeer.id
-//                    exitToastMessage.value = "상대방이 나가서 게임이 종료되었습니다 \(didBackground)"
-//                    didBackground = false
-//                    print("🧩 exitToastMessage: \(exitToastMessage.value)")
-//                    print("🧩 winner after: \(winner.value)")
-//                }
-
                 winner.value = P2PNetwork.myPeer.id
                 exitToastMessage.value = "상대방이 나가서 게임이 종료되었습니다 \(didBackground)"
                 didBackground = false

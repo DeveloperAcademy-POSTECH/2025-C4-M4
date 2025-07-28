@@ -15,7 +15,6 @@ struct SaboteurApp: App {
     @StateObject private var router = AppRouter()
 
     @Environment(\.scenePhase) private var scenePhase
-
     @AppStorage("DidEnterBackground") var didBackground: Bool = false
 
     // AppDelegate를 SwiftUI에 연결
