@@ -19,6 +19,13 @@ struct ConnectView: View {
     @State private var idleTime: TimeInterval = 0
     @State private var idleTimer: Timer? = nil
     @State private var showExitAlert: Bool = false
+    @StateObject private var winner = SyncedStore.shared.winner
+
+    @StateObject private var exitToastMessage = SyncedStore.shared.exitToastMessage
+    // @State private var lastConnectedPeerName: String? = nil
+
+    @AppStorage("DidEnterBackground") var didBackground: Bool = false
+    @Environment(\.scenePhase) private var scenePhase
 
     // 프리뷰를 볼때 init 실행해야 함
 //    init(connected: ConnectedPeers = ConnectedPeers()) {
@@ -134,9 +141,82 @@ struct ConnectView: View {
             connected.start()
             startIdleTimer()
         }
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase == .active {
+                print("📱 포그라운드 복귀")
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    let connectedCount = P2PNetwork.connectedPeers.count
+
+                    print("📱 복귀 후 connectedCount: \(connectedCount)")
+                    print("📱 복귀 후 GameState: \(GameStateManager.shared.current)")
+                    print("📱 복귀 후 didBackground: \(didBackground)")
+                    print("🧩 connected.peers.count = \(connected.peers.count)")
+                    print("🧩 P2PNetwork.connectedPeers.count = \(P2PNetwork.connectedPeers.count)")
+
+                    if connectedCount == 0, GameStateManager.shared.current == .startedGame {
+                        if let storedPeers = UserDefaults.standard.array(forKey: "FinalPeers") as? [[String: String]] {
+                            let others = storedPeers.filter { $0["id"] != P2PNetwork.myPeer.id }
+                            if let selected = others.first, let otherID = selected["id"] {
+                                winner.value = otherID
+                            }
+                        }
+
+                        exitToastMessage.value = "백그라운드로 나가서 게임이 종료되었습니다"
+
+                        GameStateManager.shared.current = .endGame
+                        P2PNetwork.updateGameState()
+                    }
+//
+//                    if connectedCount == 0, GameStateManager.shared.current == .startedGame {
+//                        if didBackground {
+//                            if let storedPeers = UserDefaults.standard.array(forKey: "FinalPeers") as? [[String: String]] {
+//                                let others = storedPeers.filter { $0["id"] != P2PNetwork.myPeer.id }
+//                                if let selected = others.first, let otherID = selected["id"] {
+//                                    winner.value = otherID
+//                                }
+//                            }
+//
+//                            exitToastMessage.value = "백그라운드로 나가서 게임이 종료되었습니다"
+//                        } else {
+//                            winner.value = P2PNetwork.myPeer.id
+//                            exitToastMessage.value = "상대방이 나가서 게임이 종료되었습니다"
+//                        }
+//
+//                        GameStateManager.shared.current = .endGame
+//                        P2PNetwork.updateGameState()
+//                    }
+                }
+            }
+        }
         .onChange(of: connected.peers.count) {
-            let connectedCount = connected.peers.count
+            let connectedCount = P2PNetwork.connectedPeers.count
+
+            print("🧩 connectedCount: \(connectedCount)")
+            print("🧩 GameState: \(GameStateManager.shared.current)")
+            print("🧩 didBackground: \(didBackground)")
+            print("🧩 myPeer: \(P2PNetwork.myPeer.displayName)")
+
             if connectedCount == 0, GameStateManager.shared.current == .startedGame {
+//                if didBackground == true {
+//                    exitToastMessage.value = "백그라운드로 나가서 게임이 종료되었습니다 \(didBackground)"
+//                    print("🧩 exitToastMessage: \(exitToastMessage.value)")
+//                    didBackground = false
+//                    print("🧩 winner after: \(winner.value)")
+//                } else {
+//                    winner.value = P2PNetwork.myPeer.id
+//                    exitToastMessage.value = "상대방이 나가서 게임이 종료되었습니다 \(didBackground)"
+//                    didBackground = false
+//                    print("🧩 exitToastMessage: \(exitToastMessage.value)")
+//                    print("🧩 winner after: \(winner.value)")
+//                }
+
+                winner.value = P2PNetwork.myPeer.id
+                exitToastMessage.value = "상대방이 나가서 게임이 종료되었습니다 \(didBackground)"
+                didBackground = false
+                print("🧩 exitToastMessage: \(exitToastMessage.value)")
+                print("🧩 winner after: \(winner.value)")
+
                 GameStateManager.shared.current = .endGame
                 P2PNetwork.updateGameState()
             } else if connectedCount == P2PNetwork.maxConnectedPeers, GameStateManager.shared.current == .unstarted {
@@ -145,7 +225,6 @@ struct ConnectView: View {
                 countdown = nil
                 countdownTimer?.invalidate()
                 countdownTimer = nil
-
                 idleTime = 0
             }
         }
@@ -171,6 +250,12 @@ struct ConnectView: View {
                     P2PNetwork.makeMeHost()
                     GameStateManager.shared.current = .startedGame
                     P2PNetwork.updateGameState()
+
+                    didBackground = false
+
+                    let allPeers = [P2PNetwork.myPeer] + connected.peers
+                    let simplifiedPeers = allPeers.map { ["id": $0.id, "displayName": $0.displayName] }
+                    UserDefaults.standard.set(simplifiedPeers, forKey: "FinalPeers")
                 }
             }
         }

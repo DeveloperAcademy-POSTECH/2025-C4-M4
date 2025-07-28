@@ -321,14 +321,14 @@ extension P2PSession: MCNearbyServiceBrowserDelegate {
 // MARK: - Advertiser Delegate
 
 extension P2PSession: MCNearbyServiceAdvertiserDelegate {
-    // 누군가 나에게 연결 요청을 보냈을 때 호출됨
+    // 내가 나를 광고할 때
     func advertiser(_: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext _: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         // let totalAttemptingPeers = session.connectedPeers.count + sessionStates.values.filter { $0 == .connecting }.count
         let totalAttemptingPeers = session.connectedPeers.count
 
-        // 이미 연결된 peer 수 (connectedPeers) <  maxConnectedPeers
+        // 해당 peer가 아직 연결되지 않았고, 나는 이미 연결된 peer 수가 (connectedPeers) <  maxConnectedPeers보다 적다면
         if isNotConnected(peerID), totalAttemptingPeers < P2PNetwork.maxConnectedPeers {
-            invitationHandler(true, session)
+            invitationHandler(true, session) // 초대를 수락한다
         } else {
             prettyPrint(level: .debug, """
             📒 Invitation decision:

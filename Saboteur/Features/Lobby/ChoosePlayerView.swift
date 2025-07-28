@@ -70,6 +70,9 @@ struct ChoosePlayerView: View {
                             P2PNetwork.maxConnectedPeers = 1
                             P2PConstants.setGamePlayerCount(2)
                             selectedPlayerCount = 2
+
+                            GameStateManager.shared.current == .unstarted
+                            P2PNetwork.updateGameState()
                         },
                         selectedImage: .twoPlayerSelect,
                         unselectedImage: .twoPlayerUnselect,
@@ -80,6 +83,9 @@ struct ChoosePlayerView: View {
                                            P2PNetwork.maxConnectedPeers = 2
                                            P2PConstants.setGamePlayerCount(3)
                                            selectedPlayerCount = 3
+
+                                           GameStateManager.shared.current == .unstarted
+                                           P2PNetwork.updateGameState()
                                        },
                                        selectedImage: .threePlayerSelect,
                                        unselectedImage: .threePlayerUnselect,
@@ -89,6 +95,9 @@ struct ChoosePlayerView: View {
                         P2PNetwork.maxConnectedPeers = 3
                         P2PConstants.setGamePlayerCount(4)
                         selectedPlayerCount = 4
+
+                        GameStateManager.shared.current == .unstarted
+                        P2PNetwork.updateGameState()
                     }, selectedImage: .fourPlayerSelect,
                     unselectedImage: .fourPlayerUnselect, isSelected: selectedPlayerCount == 4)
                 }

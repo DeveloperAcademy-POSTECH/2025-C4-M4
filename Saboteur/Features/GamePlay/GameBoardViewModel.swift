@@ -26,18 +26,14 @@ final class BoardViewModel: ObservableObject {
         initial: TargetedToast(message: "", target: .personal, senderID: "")
     )
     private var cancellables = Set<AnyCancellable>()
-    let syncedGoalIndex: P2PSyncedObservable<Int>
+    let syncedGoalIndex: P2PSyncedObservable<Int> = P2PSyncedObservable(
+        name: "GoalIndex",
+        initial: P2PNetwork.isHost ? Int.random(in: 0 ..< 3) : -1
+    )
 
-    let winner: P2PSyncedObservable<Peer.Identifier>
+    let winner = SyncedStore.shared.winner
 
-    init(winner: P2PSyncedObservable<Peer.Identifier>) {
-        self.winner = winner
-
-        syncedGoalIndex = P2PSyncedObservable(
-            name: "GoalIndex",
-            initial: P2PNetwork.isHost ? Int.random(in: 0 ..< 3) : -1
-        )
-
+    init() {
         setupPlayers()
         dealInitialHands()
 
@@ -310,9 +306,9 @@ final class BoardViewModel: ObservableObject {
             // 3) 토스트 알림let myName = getMe?.peer.displayName ?? "Anonymous"
             sendToast("🎉 \(myName)가 길을 완성했습니다!", target: .global)
 
-            // 4) 2초 후 승패 동기화
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                self.winner.value = self.currentPlayer.value
+            // 4) n초 후 승패 동기화
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.winner.value = P2PNetwork.myPeer.id
             }
         }
     }

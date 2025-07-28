@@ -10,12 +10,14 @@ struct GameView: View {
     @ObservedObject private var gameState = GameStateManager.shared
 
     @StateObject private var viewModel = GameViewModel()
-    @StateObject private var exitToastMessage = P2PSyncedObservable<String>(name: "ExitToastMessage", initial: "")
+    @StateObject private var exitToastMessage = SyncedStore.shared.exitToastMessage
 
-    @StateObject private var winner = P2PSyncedObservable<Peer.Identifier>(name: "GameWinner", initial: "")
+    @StateObject private var winner = SyncedStore.shared.winner
     @StateObject private var players = P2PSyncedObservable(name: "AllPlayers", initial: [String]())
 
     @EnvironmentObject var router: AppRouter
+
+    @State private var showToast = false
 
     var body: some View {
         if gameState.current == .endGame {
@@ -23,14 +25,11 @@ struct GameView: View {
                 Color.black.opacity(0.6)
                     .ignoresSafeArea()
 
-                if !winner.value.isEmpty {
-                    let winnerID = winner.value
-                    GameResultView(
-                        result: .winner(winnerID),
-                        players: [P2PNetwork.myPeer] + P2PNetwork.connectedPeers,
-                        myID: P2PNetwork.myPeer.id
-                    )
-                }
+                let winnerID = winner.value
+                GameResultView(
+                    result: .winner(winnerID),
+                    players: [P2PNetwork.myPeer] + P2PNetwork.connectedPeers
+                )
 
                 if !exitToastMessage.value.isEmpty {
                     ToastMessage(message: exitToastMessage.value, animationTrigger: exitToastMessage.value)
@@ -41,17 +40,24 @@ struct GameView: View {
                         }
                 }
             }
+            .onAppear {}
+            .onChange(of: exitToastMessage.value) {
+                if !exitToastMessage.value.isEmpty {
+                    showToast = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        exitToastMessage.value = ""
+                        showToast = false
+                    }
+                }
+            }
         } else {
             VStack {
                 Text("Treasure Island")
 
-                GameBoardView(winner: winner as P2PSyncedObservable<Peer.Identifier>, exitToastMessage: exitToastMessage)
+                GameBoardView()
                     .environmentObject(router)
                     .onChange(of: winner.value) {
                         if !winner.value.isEmpty {
-                            let finalPeers = [P2PNetwork.myPeer] + P2PNetwork.connectedPeers
-                            let simplifiedPeers = finalPeers.map { ["id": $0.id, "displayName": $0.displayName] }
-                            UserDefaults.standard.set(simplifiedPeers, forKey: "FinalPeers")
                             GameStateManager.shared.current = .endGame
                             P2PNetwork.updateGameState()
                         }
