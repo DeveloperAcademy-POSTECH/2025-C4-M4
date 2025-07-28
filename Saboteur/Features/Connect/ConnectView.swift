@@ -4,6 +4,7 @@
 //
 //  Created by 이주현 on 7/15/25.
 //
+import Combine
 import Foundation
 import MultipeerConnectivity
 import P2PKit
@@ -12,7 +13,7 @@ import SwiftUI
 struct ConnectView: View {
     // let id: String
     @EnvironmentObject var router: AppRouter
-
+    @State private var cancellable: AnyCancellable? = nil
     @StateObject var connected = ConnectedPeers()
     @State private var state: GameState = .unstarted
 
@@ -131,21 +132,31 @@ struct ConnectView: View {
         // 프리뷰 확인 시 onAppear 주석 필요
         .onAppear {
             P2PNetwork.resetSession()
-            P2PNetwork.setupGroupVerificationListener() // <- 메시지 수신 리스너 등록
+            P2PNetwork.setupGroupVerificationListener()
             connected.start()
             startIdleTimer()
+
+            // ✅ 유효성 검증 완료 이벤트 구독
+            cancellable = P2PNetwork.groupDidLockPublisher
+                .receive(on: DispatchQueue.main)
+                .sink {
+                    print("📬 그룹 유효성 검증 완료 이벤트 수신")
+                    if connected.peers.count == P2PNetwork.maxConnectedPeers {
+                        startCountdown()
+                    } else {
+                        print("⚠️ 유효성 검증은 완료되었지만 아직 peer 수 부족")
+                    }
+                }
         }
-        .onChange(of: connected.peers.count) {
-            let connectedCount = connected.peers.count
-            if connectedCount == 0, state == .startedGame {
-                state = .endGame
-            } else if connectedCount == P2PNetwork.maxConnectedPeers, state == .unstarted {
+        .onChange(of: connected.peers.count) { _, newCount in
+            if newCount == P2PNetwork.maxConnectedPeers {
+                print("⭐️ Peer count reached (\(newCount)). 시작 countdown.")
                 startCountdown()
             } else {
+                // Reset any ongoing countdown or idle timer
                 countdown = nil
                 countdownTimer?.invalidate()
                 countdownTimer = nil
-
                 idleTime = 0
             }
         }
@@ -156,6 +167,10 @@ struct ConnectView: View {
                 router.currentScreen = .choosePlayer
             }
         })
+        .onDisappear {
+            cancellable?.cancel()
+            cancellable = nil
+        }
     }
 
     private func startCountdown() {

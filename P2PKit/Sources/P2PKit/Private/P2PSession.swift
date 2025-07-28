@@ -56,12 +56,15 @@ class P2PSession: NSObject {
         return Peer(peerID, id: discoverID)
     }
 
+    let groupID = P2PNetwork.currentGroupID ?? "initial"
+    let groupSize = P2PNetwork.maxConnectedPeers
+
     init(myPeer: Peer) {
         self.myPeer = myPeer
         myDiscoveryInfo = DiscoveryInfo(
             discoveryId: myPeer.id,
-            groupID: "defaultGroup", // ✅ 실제 그룹 ID로 교체
-            groupSize: 3 // ✅ 실제 그룹 인원으로 교체
+            groupID: groupID,
+            groupSize: groupSize
         )
         discoveryInfos[myPeer.peerID] = myDiscoveryInfo
         let myPeerID = myPeer.peerID
@@ -103,6 +106,13 @@ class P2PSession: NSObject {
 
         browser.stopBrowsingForPeers()
         browser.delegate = nil
+    }
+
+    func disconnectPeer(_ peerID: MCPeerID) {
+        prettyPrint("disconnecting peer: \(peerID.displayName)")
+
+//        browser.cancelConnectPeer(peerID)
+        session.cancelConnectPeer(peerID)
     }
 
     func stopAdvertising() {
@@ -196,6 +206,7 @@ class P2PSession: NSObject {
 extension P2PSession: MCSessionDelegate {
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         prettyPrint("Session state of [\(peerID.displayName)] changed to [\(state)]")
+        print("🔄 [P2PSession] Peer '\(peerID.displayName)' didChange state to '\(state)'")
 
         peersLock.lock()
         sessionStates[peerID] = state
@@ -261,6 +272,7 @@ extension P2PSession: MCSessionDelegate {
 
 extension P2PSession: MCNearbyServiceBrowserDelegate {
     func browser(_: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String: String]?) {
+        print("🔍 [P2PSession] Found peer: '\(peerID.displayName)', discoveryInfo: \(info ?? [:])")
         if let discoveryId = info?["discoveryId"], discoveryId != myDiscoveryInfo.discoveryId {
             prettyPrint("Found Peer: [\(peerID)], with id: [\(discoveryId)]")
 
@@ -294,6 +306,7 @@ extension P2PSession: MCNearbyServiceBrowserDelegate {
     }
 
     func browser(_: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
+        print("❗️ [P2PSession] Lost peer: '\(peerID.displayName)'")
         prettyPrint("Lost peer: [\(peerID.displayName)]")
 
         peersLock.lock()
@@ -345,8 +358,7 @@ extension P2PSession {
 
         // Between any pair of devices, only one invites.
         guard let otherDiscoverID = discoveryInfos[peerID]?.discoveryId,
-              myDiscoveryInfo.discoveryId < otherDiscoverID,
-              isNotConnected(peerID)
+              myDiscoveryInfo.discoveryId < otherDiscoverID, isNotConnected(peerID)
         else {
             return
         }

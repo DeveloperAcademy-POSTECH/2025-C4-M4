@@ -5,11 +5,11 @@
 //  Created by Paige Sun on 5/2/24.
 //
 
+import Combine
 import CryptoKit
-import SwiftUI
-
 import Foundation
 import MultipeerConnectivity
+import SwiftUI
 
 public enum P2PConstants {
     public static var networkChannelName = "my-p2p-2p"
@@ -73,23 +73,66 @@ public enum P2PNetwork {
         session.myPeer
     }
 
-    private static var receivedGroupIDs = [[String]]()
+    /// Map of peerID strings to their reported group lists for cross-verification
+    private static var groupVerificationMap = [String: [String]]()
 
     public static func setupGroupVerificationListener() {
-        onReceiveData(eventName: "GroupVerificationMessage") { _, json, _ in
-            guard let receivedIDs = json?["peerIDs"] as? [String] else { return }
-
+        onReceiveData(eventName: "GroupVerificationMessage") { _, json, peerID in
+            guard let receivedIDs = json?["peerIDs"] as? [String] else {
+                prettyPrint("⚠️ 잘못된 GroupVerificationMessage 수신")
+                return
+            }
+            // 1. 메시지 저장
+            let sortedIDs = receivedIDs.sorted()
+            groupVerificationMap[peerID.displayName] = sortedIDs
+            // 2. 내 own ID 리스트 저장
             let myGroupIDs = ([myPeer] + connectedPeers).map(\.id).sorted()
+            groupVerificationMap[myPeer.id] = myGroupIDs
+            prettyPrint("🔄 교차 검증 메시지 수신 from \(peerID.displayName): \(sortedIDs)")
 
-            receivedGroupIDs.append(receivedIDs.sorted())
+            // 기대 참가자 수 (본인 포함)
+            let expectedCount = maxConnectedPeers + 1
+            if groupVerificationMap.count == expectedCount {
+                // 3. 교차 검증 수행: 모든 리스트의 교집합 계산
+                var intersectionSet = Set(myGroupIDs)
+                for ids in groupVerificationMap.values {
+                    intersectionSet.formIntersection(Set(ids))
+                }
+                prettyPrint("🔍 교차 검증 결과: \(intersectionSet)")
 
-            // 모든 피어에게 동일한 배열을 1번 이상 받은 경우
-            let matchCount = receivedGroupIDs.filter { $0 == myGroupIDs }.count
-            if matchCount >= maxConnectedPeers {
-                prettyPrint("✅ 모든 그룹 구성 일치. Lock session.")
-                lockSession()
+                // 4. 불일치 피어 연결 해제
+                for peer in connectedPeers {
+                    if !intersectionSet.contains(peer.id) {
+                        prettyPrint("❌ 교차 검증 실패. \(peer.displayName) 연결 해제")
+                        session.disconnectPeer(peer.peerID)
+                    }
+                }
+                // 5. 맵 초기화
+                groupVerificationMap.removeAll()
+
+                // 6. 검증 성공 시 세션 고정 또는 실패 시 재탐색
+                if intersectionSet.count == expectedCount {
+                    prettyPrint("🔒 교차 검증 완료. 세션 고정")
+                    lockSession()
+                } else {
+                    restartInitialDiscovery()
+                }
             }
         }
+    }
+
+    private static func restartInitialDiscovery() {
+        let discoveryInfo = [
+            "discoveryId": myPeer.id,
+            "groupSize": "\(maxConnectedPeers)",
+        ]
+
+        session.stopAdvertising()
+        session.stopBrowsing()
+        session.startAdvertisingAndBrowsing(with: discoveryInfo)
+
+        prettyPrint("♻️ 초기 광고/브라우징 재시작")
+        groupDidResetPublisher.send() // ← 여기 추가
     }
 
     // 피어 발견 시 groupID 기준으로 무시
@@ -110,6 +153,34 @@ public enum P2PNetwork {
 
         // ❌ 정보 없음 → 연결 거부
         return false
+    }
+
+    public static var groupDidLockPublisher = PassthroughSubject<Void, Never>()
+
+    public static var groupDidResetPublisher = PassthroughSubject<Void, Never>()
+    public static var isSessionLocked: Bool = false
+
+    private static func makeGroupID() -> String {
+        UUID().uuidString.prefix(6).uppercased()
+    }
+
+    public static func lockSession() {
+        guard !isSessionLocked else { return } // 중복 방지
+        isSessionLocked = true
+        currentGroupID = makeGroupID()
+
+        session.stopAdvertising()
+        session.stopBrowsing()
+
+        let newDiscoveryInfo = [
+            "discoveryId": myPeer.id,
+            "groupID": currentGroupID!,
+        ]
+        session.startAdvertisingAndBrowsing(with: newDiscoveryInfo)
+
+        print("🔐 그룹 고정됨, 광고/탐색 재시작")
+
+        groupDidLockPublisher.send()
     }
 
     public static func finalizeGroupLockIfValid(peers: [Peer]) {
@@ -137,10 +208,10 @@ public enum P2PNetwork {
         return joined.sha256().prefix(8).description
     }
 
-    private static func lockSession() {
-        session.stopAdvertising()
-        session.stopBrowsing()
-    }
+//    private static func lockSession() {
+//        session.stopAdvertising()
+//        session.stopBrowsing()
+//    }
 
     // Connected Peers, not including self
     public static var connectedPeers: [Peer] {
@@ -184,8 +255,17 @@ public enum P2PNetwork {
 
     public static func sendGroupVerificationMessage() {
         let allPeerIDs = ([myPeer] + connectedPeers).map(\.id).sorted()
-        let message = GroupVerificationMessage(peerIDs: allPeerIDs)
-        send(message, reliable: true)
+        let envelope: [String: Any] = [
+            "eventName": "GroupVerificationMessage",
+            "peerIDs": allPeerIDs,
+        ]
+        guard let data = try? JSONSerialization.data(withJSONObject: envelope) else {
+            print("❌ Failed to serialize GroupVerificationMessage envelope")
+            return
+        }
+        // Convert Peer objects to MCPeerID and send
+        let targetPeers = connectedPeers.map(\.peerID)
+        sendData(data, to: targetPeers, reliable: true)
     }
 
     public static func connectionState(for peer: MCPeerID) -> MCSessionState? {
