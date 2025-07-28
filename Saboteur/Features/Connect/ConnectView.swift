@@ -27,6 +27,9 @@ struct ConnectView: View {
     @AppStorage("DidEnterBackground") var didBackground: Bool = false
     @Environment(\.scenePhase) private var scenePhase
 
+    @State private var showWaitingMessage = true
+    @State private var messageToggleTimer: Timer? = nil
+
     // 프리뷰를 볼때 init 실행해야 함
 //    init(connected: ConnectedPeers = ConnectedPeers()) {
 //        _connected = StateObject(wrappedValue: connected)
@@ -102,14 +105,21 @@ struct ConnectView: View {
                                 .padding()
                         }
                     } else {
-                        HStack {
-                            Text("플레이어를 기다리는 중입니다")
-                            ProgressView()
-                                .tint(Color.Emerald.emerald1)
-                            Text("(\(connected.peers.count)/\(P2PNetwork.maxConnectedPeers))")
+                        ZStack {
+                            HStack {
+                                Text("플레이어를 기다리는 중입니다")
+                                ProgressView()
+                                    .tint(Color.Emerald.emerald1)
+                                Text("(\(connected.peers.count)/\(P2PNetwork.maxConnectedPeers))")
+                            }
+                            .opacity(showWaitingMessage ? 1 : 0)
+
+                            Text("게임 화면에서 나가면 진행 중인 게임이 종료됩니다")
+                                .opacity(showWaitingMessage ? 0 : 1)
                         }
                         .foregroundStyle(Color.Emerald.emerald1)
                         .body2Font()
+                        .animation(.easeInOut(duration: 1.0), value: showWaitingMessage)
                     }
 
                     Spacer()
@@ -140,6 +150,15 @@ struct ConnectView: View {
             P2PNetwork.resetSession()
             connected.start()
             startIdleTimer()
+            messageToggleTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
+                withAnimation {
+                    showWaitingMessage.toggle()
+                }
+            }
+        }
+        .onDisappear {
+            messageToggleTimer?.invalidate()
+            messageToggleTimer = nil
         }
         .onChange(of: scenePhase) { newPhase in
             if newPhase == .active {
