@@ -105,10 +105,10 @@ struct ChangeNameView: View {
                             RoundedRectangle(cornerRadius: 10)
                                 .fill(Color.Ivory.ivory1.shadow(.inner(color: Color.Ivory.ivory3, radius: 0, x: 0, y: -4)))
                                 .stroke(Color.Ivory.ivory3, lineWidth: 1)
-                                .frame(width: 92, height: 60)
+                                .frame(width: 92, height: 56)
                         }
                     }
-                    .frame(height: 60)
+                    .frame(height: 56)
                     .id(shouldCloseMenu)
 
                     VStack(alignment: .leading) {
