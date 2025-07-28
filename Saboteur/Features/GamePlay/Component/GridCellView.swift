@@ -30,7 +30,7 @@ struct GridCellView: View {
     var body: some View {
         ZStack(alignment: .bottomLeading) {
             backgroundLayer
-            cursorOverlay
+            // cursorOverlay
             imageLayer
         }
         .frame(width: 60, height: 50)
