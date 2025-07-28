@@ -16,5 +16,7 @@
 		<string>Maplestory OTF Bold.otf</string>
 		<string>Maplestory OTF Light.otf</string>
 	</array>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>This application will use local networking to discover nearby devices.</string>
 </dict>
 </plist>
