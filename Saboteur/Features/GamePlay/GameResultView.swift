@@ -116,7 +116,7 @@ struct GameResultView: View {
                     Button {
                         router.currentScreen = .none
 
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                             GameStateManager.shared.current = .unstarted
                             P2PNetwork.updateGameState()
 
