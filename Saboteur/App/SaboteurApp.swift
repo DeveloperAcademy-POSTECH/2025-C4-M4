@@ -15,7 +15,6 @@ struct SaboteurApp: App {
     @StateObject private var router = AppRouter()
 
     @Environment(\.scenePhase) private var scenePhase
-    @AppStorage("DidEnterBackground") var didBackground: Bool = false
 
     // AppDelegate를 SwiftUI에 연결
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
@@ -34,7 +33,6 @@ struct SaboteurApp: App {
             switch newPhase {
             case .background:
                 print("앱이 백그라운드로 전환됨")
-                didBackground = true
                 P2PNetwork.outSession()
             case .inactive:
                 print("앱이 비활성화됨")
