@@ -372,7 +372,7 @@ extension P2PSession: MCNearbyServiceBrowserDelegate {
 // MARK: - Advertiser Delegate
 
 extension P2PSession: MCNearbyServiceAdvertiserDelegate {
-    // 누군가 나에게 연결 요청을 보냈을 때 호출됨
+    // 내가 나를 광고할 때
     func advertiser(_: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext _: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         prettyPrint(level: .debug, """
         📒 Invitation decision:

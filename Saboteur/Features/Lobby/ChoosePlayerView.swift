@@ -67,9 +67,7 @@ struct ChoosePlayerView: View {
                 HStack(spacing: 40) {
                     ChoosePlayerButton(
                         action: {
-                            P2PNetwork.maxConnectedPeers = 1
-                            P2PConstants.setGamePlayerCount(2)
-                            selectedPlayerCount = 2
+                            startGame(with: 2)
                         },
                         selectedImage: .twoPlayerSelect,
                         unselectedImage: .twoPlayerUnselect,
@@ -77,20 +75,18 @@ struct ChoosePlayerView: View {
                     )
 
                     ChoosePlayerButton(action: {
-                                           P2PNetwork.maxConnectedPeers = 2
-                                           P2PConstants.setGamePlayerCount(3)
-                                           selectedPlayerCount = 3
+                                           startGame(with: 3)
                                        },
                                        selectedImage: .threePlayerSelect,
                                        unselectedImage: .threePlayerUnselect,
                                        isSelected: selectedPlayerCount == 3)
 
                     ChoosePlayerButton(action: {
-                        P2PNetwork.maxConnectedPeers = 3
-                        P2PConstants.setGamePlayerCount(4)
-                        selectedPlayerCount = 4
-                    }, selectedImage: .fourPlayerSelect,
-                    unselectedImage: .fourPlayerUnselect, isSelected: selectedPlayerCount == 4)
+                                           startGame(with: 4)
+                                       },
+                                       selectedImage: .fourPlayerSelect,
+                                       unselectedImage: .fourPlayerUnselect,
+                                       isSelected: selectedPlayerCount == 4)
                 }
 
                 Spacer()
@@ -109,10 +105,12 @@ struct ChoosePlayerView: View {
 
     //: : 나중에 적용
     func startGame(with count: Int) {
-        P2PConstants.setGamePlayerCount(count)
+        selectedPlayerCount = count
         P2PNetwork.maxConnectedPeers = count - 1
-        P2PNetwork.resetSession()
-        router.currentScreen = .connect
+        P2PConstants.setGamePlayerCount(count)
+
+        GameStateManager.shared.current = .unstarted
+        P2PNetwork.updateGameState()
     }
 }
 

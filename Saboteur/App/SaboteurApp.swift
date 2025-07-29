@@ -14,6 +14,8 @@ import SwiftUI
 struct SaboteurApp: App {
     @StateObject private var router = AppRouter()
 
+    @Environment(\.scenePhase) private var scenePhase
+
     // AppDelegate를 SwiftUI에 연결
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
@@ -26,6 +28,19 @@ struct SaboteurApp: App {
         WindowGroup {
             RootView()
                 .environmentObject(router)
+        }
+        .onChange(of: scenePhase) { newPhase in
+            switch newPhase {
+            case .background:
+                print("앱이 백그라운드로 전환됨")
+                P2PNetwork.outSession()
+            case .inactive:
+                print("앱이 비활성화됨")
+            case .active:
+                print("앱이 포그라운드 상태")
+            @unknown default:
+                break
+            }
         }
     }
 }

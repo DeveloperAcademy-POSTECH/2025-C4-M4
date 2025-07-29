@@ -13,10 +13,10 @@ struct GameBoardView: View {
     @State private var turnTimeRemaining: Int = 90
     @State private var turnTimer: Timer? = nil
 
-    init(winner: P2PSyncedObservable<Peer.Identifier>, exitToastMessage: P2PSyncedObservable<String>) {
-        _boardViewModel = StateObject(wrappedValue: BoardViewModel(winner: winner))
-        self.winner = winner
-        self.exitToastMessage = exitToastMessage
+    init() {
+        _boardViewModel = StateObject(wrappedValue: BoardViewModel())
+        winner = SyncedStore.shared.winner
+        exitToastMessage = SyncedStore.shared.exitToastMessage
     }
 
     private func startTurnTimer() {
@@ -57,9 +57,8 @@ struct GameBoardView: View {
                             let myID = P2PNetwork.myPeer.id
                             if let remaining = allPeers.first(where: { $0.id != myID }) {
                                 winner.value = remaining.id
+                                exitToastMessage.value = "\(P2PNetwork.myPeer.displayName)님이 나가서 게임이 종료되었습니다"
                             }
-
-                            exitToastMessage.value = "\(boardViewModel.myName)님이 나가서 게임이 강제 종료되었습니다"
                         }
                         router.currentScreen = .choosePlayer
 

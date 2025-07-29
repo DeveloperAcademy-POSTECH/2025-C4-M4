@@ -19,7 +19,6 @@ private let loserCardSpacing: CGFloat = 8
 struct GameResultView: View {
     let result: GameResult
     let players: [Peer]
-    let myID: Peer.Identifier
     @EnvironmentObject var router: AppRouter
     @State private var finalPlayers: [Peer] = []
 
@@ -34,7 +33,7 @@ struct GameResultView: View {
                 switch result {
                 case let .winner(name):
                     ZStack {
-                        if name == myID {
+                        if name == P2PNetwork.myPeer.id {
                             Image(.resultWin)
                         } else {
                             Image(.resultLose)
@@ -60,7 +59,7 @@ struct GameResultView: View {
                                             .foregroundStyle(Color.Secondary.yellow2)
                                             .body2WideFont()
                                         Spacer()
-                                        if winnerCard.id == myID {
+                                        if winnerCard.id == P2PNetwork.myPeer.id {
                                             ZStack {
                                                 RoundedRectangle(cornerRadius: 4)
                                                     .frame(width: 50, height: 20)
@@ -117,7 +116,10 @@ struct GameResultView: View {
                     Button {
                         router.currentScreen = .none
 
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                            GameStateManager.shared.current = .unstarted
+                            P2PNetwork.updateGameState()
+
                             router.currentScreen = .connect
                         }
                     } label: {
@@ -202,7 +204,7 @@ extension GameResultView {
                     .foregroundStyle(Color.Secondary.blue1)
                     .label1Font()
                 Spacer()
-                if player.id == myID {
+                if player.id == P2PNetwork.myPeer.id {
                     ZStack {
                         RoundedRectangle(cornerRadius: 4)
                             .frame(width: 50, height: 20)
@@ -225,7 +227,14 @@ extension GameResultView {
     }
 }
 
-// #Preview {
-//    GameResultView(result: .winner("🇰🇷 JudyJ"), players: ["🇰🇷 JudyJ", "🇰🇷 Nike", "🇰🇷 Nike"], myName: "🇰🇷 JudyJ")
-//        .environmentObject(AppRouter())
-// }
+#Preview {
+    let peer1 = Peer(MCPeerID(displayName: "🇰🇷 Judy"), id: "judy-id")
+    let peer2 = Peer(MCPeerID(displayName: "🇺🇸 Alex"), id: "alex-id")
+    let players = [peer1, peer2]
+
+    return GameResultView(
+        result: .winner(""), // 승자 없음
+        players: players
+    )
+    .environmentObject(AppRouter())
+}
