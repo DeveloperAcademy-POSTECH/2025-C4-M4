@@ -32,9 +32,19 @@ class P2PHostSelector {
     private var _host: Host?
     private let _hostEventService = P2PEventService<HostEvent>("P2PKit.P2PHostSelector")
 
+    private func autoElectHostIfNeeded() {
+        guard _host == nil else { return }
+        let peers = P2PNetwork.connectedPeers + [P2PNetwork.myPeer]
+        guard peers.count == 2 else { return }
+        let candidate = peers.min(by: { $0.id < $1.id })!
+        prettyPrint("Auto-elected host: \(candidate.displayName)")
+        if candidate.isMe { makeMeHost() }
+    }
+
     init() {
         P2PNetwork.addPeerDelegate(self)
         setupHostEventService()
+        autoElectHostIfNeeded() // 🚀 최초 평가
     }
 
     deinit {
@@ -105,6 +115,7 @@ class P2PHostSelector {
 
 extension P2PHostSelector: P2PNetworkPeerDelegate {
     func p2pNetwork(didUpdate peer: Peer) {
+        autoElectHostIfNeeded() // 연결 변화마다 재평가
         _lock.lock()
         if let host = _host {
             _lock.unlock()
