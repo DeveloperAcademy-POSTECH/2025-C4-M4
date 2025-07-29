@@ -59,7 +59,7 @@ final class BoardViewModel: ObservableObject {
     /// 로컬 전용 토스트 메시지 표시 (global 전파 안 함)
     func showToast(_ message: String) {
         toastMessage = message
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.7) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
             if self.toastMessage == message {
                 self.toastMessage = nil
             }
@@ -266,6 +266,7 @@ final class BoardViewModel: ObservableObject {
         players[myIndex].drawCard(from: &currentDeck)
 
         showToast("시간이 초과되어 무작위로 카드를 버리고 새로 뽑았습니다")
+        sendToast("\(myName)님의 시간이 초과되어 무작위로 카드를 버리고 새로 뽑았습니다", target: .other)
     }
 
     /// 도착지 세 곳(G0, G1, G2) 중 하나라도 카드가 설치되었는지 확인하는 유틸 함수
@@ -328,7 +329,9 @@ final class BoardViewModel: ObservableObject {
             return
         }
         guard let handIndex = players[myIndex].cardsInHand.firstIndex(of: card) else {
+            // 선택했던 카드가 보드에 놓여져 있을 때
             // showToast("손패에서 카드를 찾을 수 없습니다.")
+            showToast("카드를 선택해주세요")
             return
         }
 
@@ -337,7 +340,7 @@ final class BoardViewModel: ObservableObject {
         players[myIndex].replaceCard(at: handIndex, with: rotatedCard)
         selectedCard = rotatedCard
 
-        // showToast("카드가 회전되었습니다.")
+        showToast("카드가 회전되었습니다.")
     }
 
     /// 선택한 카드 삭제 후 새 카드 뽑기
@@ -347,9 +350,11 @@ final class BoardViewModel: ObservableObject {
             players[myIndex].drawCard(from: &currentDeck)
             selectedCard = nil
             // showToast("카드를 삭제하고 새로 뽑았습니다.")
+            sendToast("\(myName)님이 카드를 버리고 새로 뽑았습니다", target: .other)
+            showToast("카드를 버리고 새로 뽑았습니다")
             nextTurn()
         } else {
-            // showToast("손패에 해당 카드가 없습니다.")
+            showToast("카드를 선택해주세요")
         }
     }
 
