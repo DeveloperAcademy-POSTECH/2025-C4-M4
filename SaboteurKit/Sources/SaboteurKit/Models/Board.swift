@@ -114,7 +114,8 @@ public class Board {
                 return (false, "연결되지 않는 길 카드에 연결할 수 없습니다")
             }
         } else {
-            return (false, "이미 카드가 있거나 시작/도착 카드입니다")
+            // 이미 카드가 있거나 시작, 도착 카드에 놓으려 하는 상황
+            return (false, "비어있는 곳에 카드를 놓으세요")
         }
     }
 
