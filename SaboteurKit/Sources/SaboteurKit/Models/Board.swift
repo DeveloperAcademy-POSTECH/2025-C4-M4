@@ -111,7 +111,7 @@ public class Board {
                 grid[x][y] = BoardCell(type: card.type, contributor: player)
                 return (true, "\(player)가 \(card.type.symbol)를 (\(x),\(y))에 놓았습니다.")
             } else {
-                return (false, "해당 위치에 카드를 놓을 수 없습니다")
+                return (false, "연결되지 않는 길 카드에 연결할 수 없습니다")
             }
         } else {
             return (false, "이미 카드가 있거나 시작/도착 카드입니다")
@@ -121,13 +121,13 @@ public class Board {
     // 폭탄 카드를 설치한다
     public func dropBoom(x: Int, y: Int) -> (Bool, String) {
         if (x == 0 && y == 2) || isGoalLine(x: x, y: y) {
-            return (false, "❌ 시작/도착 지점은 폭파할 수 없습니다.")
+            return (false, "시작/도착 카드에는 사용할 수 없습니다")
         }
         if grid[x][y].isCard {
             grid[x][y] = BoardCell()
-            return (true, "💣 길 카드가 제거되었습니다!")
+            return (true, "먹구름 카드로 길을 없앴습니다")
         } else {
-            return (false, "❌ 해당 지점에 카드가 없습니다.")
+            return (false, "길 카드에 사용할 수 있습니다")
         }
     }
 

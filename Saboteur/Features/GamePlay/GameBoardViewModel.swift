@@ -180,7 +180,7 @@ final class BoardViewModel: ObservableObject {
 
         // 2. 나를 제외한 모두에게 알림
         let myName = P2PNetwork.myPeer.displayName
-        sendToast("🗺 \(myName)님이 망원경 카드를 사용했습니다", target: .other)
+        sendToast("\(myName)님이 망원경 카드를 사용했습니다", target: .other)
 
         removeCardAndDrawNew(for: playerIndex, card: card)
         nextTurn()
@@ -189,7 +189,8 @@ final class BoardViewModel: ObservableObject {
     /// 폭탄 카드 처리
     private func handleBombCard(_ card: Card, at pos: (Int, Int), playerIndex: Int) {
         let (success, message) = board.dropBoom(x: pos.0, y: pos.1)
-        showToast(message)
+        showToast( message )
+        if success == true { sendToast( "/(myName)님이 먹구름 카드로 길을 없앴습니다", target: .other) }
         guard success else { return }
 
         updateCell(at: pos, with: card, isCard: false)
