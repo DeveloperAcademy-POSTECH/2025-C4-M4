@@ -120,12 +120,12 @@ public class Board {
         if !grid[x][y].isCard {
             if isPlacable(x: x, y: y, card: card) {
                 grid[x][y] = BoardCell(type: card.type, contributor: player)
-                return (true, "🪏 \(player)가 \(card.type.symbol)를 (\(x),\(y))에 놓았습니다.")
+                return (true, "\(player)가 \(card.type.symbol)를 (\(x),\(y))에 놓았습니다.")
             } else {
-                return (false, "❌ 해당 위치에 카드를 놓을 수 없습니다.")
+                return (false, "해당 위치에 카드를 놓을 수 없습니다")
             }
         } else {
-            return (false, "❌ 이미 카드가 있거나 시작/도착 지점입니다.")
+            return (false, "이미 카드가 있거나 시작/도착 카드입니다")
         }
     }
 

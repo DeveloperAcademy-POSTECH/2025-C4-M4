@@ -196,7 +196,7 @@ final class BoardViewModel: ObservableObject {
     /// 일반 카드 처리
     private func handleNormalCard(_ card: Card, at pos: (Int, Int), playerIndex: Int) {
         let (success, message) = board.placeCard(x: pos.0, y: pos.1, card: card, player: myName)
-        sendToast(message, target: .global)
+        if success == false { showToast( message ) }
         guard success else { return }
 
         // 1) 로컬 보드에 카드 반영
