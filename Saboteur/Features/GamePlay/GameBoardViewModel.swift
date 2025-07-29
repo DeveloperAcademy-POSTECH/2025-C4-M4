@@ -121,7 +121,7 @@ final class BoardViewModel: ObservableObject {
         }
 
         guard let myIndex = getMeIndex else {
-            showToast("내 플레이어 정보를 찾을 수 없습니다.")
+            // showToast("내 플레이어 정보를 찾을 수 없습니다.")
             return nil
         }
 
@@ -131,7 +131,7 @@ final class BoardViewModel: ObservableObject {
         }
 
         guard players[myIndex].hand.contains(card) else {
-            showToast("해당 카드를 손에 들고 있지 않습니다.")
+            // showToast("해당 카드를 손에 들고 있지 않습니다.")
             return nil
         }
 
@@ -144,7 +144,7 @@ final class BoardViewModel: ObservableObject {
 
         // 추가: 카드 타입 확인
         guard CardType.allCases.contains(card.type) else {
-            showToast("⚠️ 유효하지 않은 카드입니다.")
+            // showToast("⚠️ 유효하지 않은 카드입니다.")
             print("🧨 카드 타입이 유효하지 않음: \(card)")
             return
         }
@@ -248,13 +248,13 @@ final class BoardViewModel: ObservableObject {
     /// ⏰ 시간 초과 시 무작위 카드 제거 및 새 카드 뽑기
     func autoDiscardAndDraw() {
         guard let myIndex = getMeIndex else {
-            showToast("내 정보를 찾을 수 없습니다.")
+            // showToast("내 정보를 찾을 수 없습니다.")
             return
         }
 
         let myHand = players[myIndex].cardsInHand
         guard !myHand.isEmpty else {
-            showToast("손패가 비어있습니다.")
+            // showToast("손패가 비어있습니다.")
             return
         }
 
@@ -308,7 +308,7 @@ final class BoardViewModel: ObservableObject {
             syncGoalOpenStates()
 
             // 3) 토스트 알림let myName = getMe?.peer.displayName ?? "Anonymous"
-            sendToast("🎉 \(myName)가 길을 완성했습니다!", target: .global)
+            // sendToast("🎉 \(myName)가 길을 완성했습니다!", target: .global)
 
             // 4) 2초 후 승패 동기화
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
@@ -324,11 +324,11 @@ final class BoardViewModel: ObservableObject {
             return
         }
         guard let myIndex = getMeIndex else {
-            showToast("내 정보를 찾을 수 없습니다.")
+            // showToast("내 정보를 찾을 수 없습니다.")
             return
         }
         guard let handIndex = players[myIndex].cardsInHand.firstIndex(of: card) else {
-            showToast("손패에서 카드를 찾을 수 없습니다.")
+            // showToast("손패에서 카드를 찾을 수 없습니다.")
             return
         }
 
@@ -337,7 +337,7 @@ final class BoardViewModel: ObservableObject {
         players[myIndex].replaceCard(at: handIndex, with: rotatedCard)
         selectedCard = rotatedCard
 
-        showToast("카드가 회전되었습니다.")
+        // showToast("카드가 회전되었습니다.")
     }
 
     /// 선택한 카드 삭제 후 새 카드 뽑기
@@ -346,10 +346,10 @@ final class BoardViewModel: ObservableObject {
         if players[myIndex].discardCard(card) {
             players[myIndex].drawCard(from: &currentDeck)
             selectedCard = nil
-            showToast("카드를 삭제하고 새로 뽑았습니다.")
+            // showToast("카드를 삭제하고 새로 뽑았습니다.")
             nextTurn()
         } else {
-            showToast("손패에 해당 카드가 없습니다.")
+            // showToast("손패에 해당 카드가 없습니다.")
         }
     }
 
@@ -392,17 +392,17 @@ final class BoardViewModel: ObservableObject {
     /// 카드 인덱스로 폐기 후 새 카드 뽑기
     func discardCard(at index: Int) {
         guard let myIndex = getMeIndex else {
-            showToast("내 정보를 찾을 수 없습니다.")
+            // showToast("내 정보를 찾을 수 없습니다.")
             return
         }
 
         guard players[myIndex].removeCard(at: index) != nil else {
-            showToast("카드 제거 실패")
+            // showToast("카드 제거 실패")
             return
         }
 
         players[myIndex].drawCard(from: &currentDeck)
         selectedCard = nil
-        showToast("카드를 제거하고 새로 뽑았습니다.")
+        // showToast("카드를 제거하고 새로 뽑았습니다.")
     }
 }
