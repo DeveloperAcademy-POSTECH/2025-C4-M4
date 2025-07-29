@@ -111,11 +111,6 @@ final class BoardViewModel: ObservableObject {
 
     /// 카드 유효성 검사
     private func validateSelectedCard() -> (Card, Int)? {
-        guard let card = selectedCard else {
-            showToast("카드를 선택해주세요")
-            return nil
-        }
-
         guard let myIndex = getMeIndex else {
             // showToast("내 플레이어 정보를 찾을 수 없습니다.")
             return nil
@@ -123,6 +118,11 @@ final class BoardViewModel: ObservableObject {
 
         guard currentPlayer.value == players[myIndex].peer.id else {
             showToast("상대방의 차례입니다")
+            return nil
+        }
+    
+        guard let card = selectedCard else {
+            showToast("카드를 선택해주세요")
             return nil
         }
 
