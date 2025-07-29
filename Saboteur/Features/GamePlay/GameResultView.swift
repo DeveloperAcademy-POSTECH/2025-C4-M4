@@ -114,7 +114,7 @@ struct GameResultView: View {
                 // 하단 이동 버튼
                 HStack(spacing: 35) {
                     Button {
-                        router.currentScreen = .none
+                        router.currentScreen = .loading
 
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                             GameStateManager.shared.current = .unstarted

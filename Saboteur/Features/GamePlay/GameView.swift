@@ -53,6 +53,7 @@ struct GameView: View {
         } else {
             VStack {
                 Text("Treasure Island")
+                    .foregroundStyle(Color.clear)
 
                 GameBoardView()
                     .environmentObject(router)

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B7A71042E38E29C00FDA06F /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 8B7A71032E38E29C00FDA06F /* Lottie */; };
 		8BA19F7D2E25EA75004BF13A /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BA19F7C2E25EA75004BF13A /* P2PKit */; };
 		8BCB293E2E2FC6630085688D /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCB293D2E2FC6630085688D /* SaboteurKit */; };
 		8BCB2B482E2FD9D10085688D /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCB2B472E2FD9D10085688D /* SaboteurKit */; };
@@ -89,6 +90,34 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		8B7A70832E38E1DA00FDA06F /* Exceptions for "Saboteur" folder in "SaboteurTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/LoadingAnimation.json,
+			);
+			target = B52563382E1E133700CCDEFC /* SaboteurTests */;
+		};
+		8B7A70842E38E1DA00FDA06F /* Exceptions for "Saboteur" folder in "SaboteurUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/LoadingAnimation.json,
+			);
+			target = B52563422E1E133700CCDEFC /* SaboteurUITests */;
+		};
+		8B7A70852E38E1DA00FDA06F /* Exceptions for "Saboteur" folder in "P2PKit" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/LoadingAnimation.json,
+			);
+			target = B51F322D2E26053300A09119 /* P2PKit */;
+		};
+		8B7A70862E38E1DA00FDA06F /* Exceptions for "Saboteur" folder in "SaboteurKit" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/LoadingAnimation.json,
+			);
+			target = B5171A912E288C110034D9AC /* SaboteurKit */;
+		};
 		8BA19F782E25E7F6004BF13A /* Exceptions for "Saboteur" folder in "Saboteur" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -103,6 +132,10 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				8BA19F782E25E7F6004BF13A /* Exceptions for "Saboteur" folder in "Saboteur" target */,
+				8B7A70832E38E1DA00FDA06F /* Exceptions for "Saboteur" folder in "SaboteurTests" target */,
+				8B7A70842E38E1DA00FDA06F /* Exceptions for "Saboteur" folder in "SaboteurUITests" target */,
+				8B7A70852E38E1DA00FDA06F /* Exceptions for "Saboteur" folder in "P2PKit" target */,
+				8B7A70862E38E1DA00FDA06F /* Exceptions for "Saboteur" folder in "SaboteurKit" target */,
 			);
 			path = Saboteur;
 			sourceTree = "<group>";
@@ -150,6 +183,7 @@
 				B51F32342E26053300A09119 /* P2PKit.framework in Frameworks */,
 				8BCCE74D2E35B1B800906D64 /* SaboteurKit in Frameworks */,
 				8BA19F7D2E25EA75004BF13A /* P2PKit in Frameworks */,
+				8B7A71042E38E29C00FDA06F /* Lottie in Frameworks */,
 				B55D1CDB2E25194C00DECE90 /* Logging in Frameworks */,
 				8BCCDF962E31B78700906D64 /* SaboteurKit in Frameworks */,
 				8BCB2B482E2FD9D10085688D /* SaboteurKit in Frameworks */,
@@ -301,6 +335,7 @@
 				8BCCE0B32E31E11C00906D64 /* SaboteurKit */,
 				8BCCE2AE2E31FA2500906D64 /* SaboteurKit */,
 				8BCCE74C2E35B1B800906D64 /* SaboteurKit */,
+				8B7A71032E38E29C00FDA06F /* Lottie */,
 			);
 			productName = Saboteur;
 			productReference = B525632A2E1E133600CCDEFC /* Saboteur.app */;
@@ -421,6 +456,7 @@
 				B55D1CD92E25194C00DECE90 /* XCRemoteSwiftPackageReference "swift-log" */,
 				B51719972E2610870034D9AC /* XCLocalSwiftPackageReference "P2PKit" */,
 				8BCCE74B2E35B1B800906D64 /* XCLocalSwiftPackageReference "SaboteurKit" */,
+				8B7A71022E38E29C00FDA06F /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B525632B2E1E133600CCDEFC /* Products */;
@@ -1109,6 +1145,14 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		8B7A71022E38E29C00FDA06F /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.2;
+			};
+		};
 		B55D1CD92E25194C00DECE90 /* XCRemoteSwiftPackageReference "swift-log" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-log";
@@ -1120,6 +1164,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8B7A71032E38E29C00FDA06F /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8B7A71022E38E29C00FDA06F /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
+		};
 		8BA19F7C2E25EA75004BF13A /* P2PKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = P2PKit;

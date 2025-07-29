@@ -54,7 +54,7 @@ struct RootView: View {
             case .lobby: LobbyView()
             case .choosePlayer: ChoosePlayerView()
             case .connect: ConnectView()
-            case .none: Color.clear
+            case .loading: LoadingView()
             }
         }
         .task {
