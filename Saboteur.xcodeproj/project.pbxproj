@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B7A74CE2E39B0FB00FDA06F /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 8B7A74CD2E39B0FB00FDA06F /* Lottie */; };
 		8BA19F7D2E25EA75004BF13A /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BA19F7C2E25EA75004BF13A /* P2PKit */; };
 		8BCB293E2E2FC6630085688D /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCB293D2E2FC6630085688D /* SaboteurKit */; };
 		8BCB2B482E2FD9D10085688D /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCB2B472E2FD9D10085688D /* SaboteurKit */; };
@@ -150,6 +151,7 @@
 				B51F32342E26053300A09119 /* P2PKit.framework in Frameworks */,
 				8BCCE74D2E35B1B800906D64 /* SaboteurKit in Frameworks */,
 				8BA19F7D2E25EA75004BF13A /* P2PKit in Frameworks */,
+				8B7A74CE2E39B0FB00FDA06F /* Lottie in Frameworks */,
 				B55D1CDB2E25194C00DECE90 /* Logging in Frameworks */,
 				8BCCDF962E31B78700906D64 /* SaboteurKit in Frameworks */,
 				8BCB2B482E2FD9D10085688D /* SaboteurKit in Frameworks */,
@@ -301,6 +303,7 @@
 				8BCCE0B32E31E11C00906D64 /* SaboteurKit */,
 				8BCCE2AE2E31FA2500906D64 /* SaboteurKit */,
 				8BCCE74C2E35B1B800906D64 /* SaboteurKit */,
+				8B7A74CD2E39B0FB00FDA06F /* Lottie */,
 			);
 			productName = Saboteur;
 			productReference = B525632A2E1E133600CCDEFC /* Saboteur.app */;
@@ -421,6 +424,7 @@
 				B55D1CD92E25194C00DECE90 /* XCRemoteSwiftPackageReference "swift-log" */,
 				B51719972E2610870034D9AC /* XCLocalSwiftPackageReference "P2PKit" */,
 				8BCCE74B2E35B1B800906D64 /* XCLocalSwiftPackageReference "SaboteurKit" */,
+				8B7A74CC2E39B0FB00FDA06F /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B525632B2E1E133600CCDEFC /* Products */;
@@ -1109,6 +1113,14 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		8B7A74CC2E39B0FB00FDA06F /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.2;
+			};
+		};
 		B55D1CD92E25194C00DECE90 /* XCRemoteSwiftPackageReference "swift-log" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-log";
@@ -1120,6 +1132,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8B7A74CD2E39B0FB00FDA06F /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8B7A74CC2E39B0FB00FDA06F /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
+		};
 		8BA19F7C2E25EA75004BF13A /* P2PKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = P2PKit;
