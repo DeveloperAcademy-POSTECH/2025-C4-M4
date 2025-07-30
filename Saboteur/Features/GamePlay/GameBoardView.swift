@@ -46,7 +46,6 @@ struct GameBoardView: View {
         P2PNetwork.myPeer.displayName // 나 자신 -> '나:'를 붙이기 위함
     }
 
-    private var discardCooldown = false // 버리기 버튼에 대한 쿨다운 시간 지정 (연속 버리기 금지)
     @State private var isDiscardButtonDisabled = false // 버리기 버튼 클릭 후 일정 시간 비활성화 (Cooldown) 적용
 
     var body: some View {
@@ -196,7 +195,7 @@ struct GameBoardView: View {
                             boardViewModel.deleteSelectedCard()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                                 isDiscardButtonDisabled = false
-                            } // <-- 닫는 중괄호
+                            }
                         }, label: {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 10)

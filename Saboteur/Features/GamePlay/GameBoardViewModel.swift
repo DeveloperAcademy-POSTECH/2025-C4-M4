@@ -43,6 +43,8 @@ final class BoardViewModel: ObservableObject {
         sortedPeers.first ?? P2PNetwork.myPeer
     }
 
+    private var discardCooldown = false
+
     init() {
         setupPlayers()
         dealInitialHands()
@@ -353,15 +355,33 @@ final class BoardViewModel: ObservableObject {
 
     /// 선택한 카드 삭제 후 새 카드 뽑기
     func deleteSelectedCard() {
-        guard let (card, myIndex) = validateSelectedCard() else { return }
+        guard !discardCooldown else {
+            print("🔒 discardCard: 이미 진행 중이므로 무시됩니다.")
+            return
+        }
+
+        discardCooldown = true
+
+        guard let (card, myIndex) = validateSelectedCard() else {
+            discardCooldown = false
+            return
+        }
+
         if players[myIndex].discardCard(card) {
             players[myIndex].drawCard(from: &currentDeck)
             selectedCard = nil
             sendToast("\(myName)님이 카드를 버리고 새로 뽑았습니다", target: .other)
             showToast("카드를 버리고 새로 뽑았습니다")
-            nextTurn()
+            // 내가 현재 턴을 가진 경우에만 턴 넘기기
+            if currentPlayer.value == P2PNetwork.myPeer.id {
+                nextTurn()
+            }
         } else {
             showToast("카드를 선택해주세요")
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            self.discardCooldown = false
         }
     }
 
@@ -371,7 +391,9 @@ final class BoardViewModel: ObservableObject {
     func nextTurn() {
         let players = self.players
         guard let currentIndex = players.firstIndex(where: { $0.peer.id == currentPlayer.value }) else { return }
-        currentPlayer.value = players[(currentIndex + 1) % players.count].peer.id
+        let nextPlayerID = players[(currentIndex + 1) % players.count].peer.id
+        print("⏭️ \(currentPlayer.value) → \(nextPlayerID) 로 턴 넘김")
+        currentPlayer.value = nextPlayerID
     }
 
     // MARK: - 보드 동기화 및 리셋
