@@ -3,7 +3,7 @@ import SwiftUI
 
 struct BoardGridView: View {
     let board: [[BoardCell]]
-    let placedCards: [String: BoardCell]
+    let placedCards: [Coordinate: BoardCell]
     var cursor: (Int, Int)? = (1, 2)
     let onTapCell: (Int, Int) -> Void
     let latestPlacedCoord: Coordinate? // 가장 최근에 놓인 카드 위치
@@ -26,7 +26,7 @@ struct BoardGridView: View {
 
     init(
         board: [[BoardCell]],
-        placedCards: [String: BoardCell],
+        placedCards: [Coordinate: BoardCell],
         cursor: (Int, Int)? = (1, 2),
         onTapCell: @escaping (Int, Int) -> Void,
         latestPlacedCoord: Coordinate?,
@@ -66,8 +66,7 @@ struct BoardGridView: View {
     }
 
     private func cell(at x: Int, _ y: Int) -> BoardCell {
-        let key = "\(x),\(y)"
-        return placedCards[key] ?? board[x][y]
+        placedCards[Coordinate(x: x, y: y)] ?? board[x][y]
     }
 
     private func isCursor(at x: Int, _ y: Int) -> Bool {
