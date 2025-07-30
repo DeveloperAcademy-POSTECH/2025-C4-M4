@@ -16,7 +16,7 @@ final class BoardViewModel: ObservableObject {
     @Published var players: [PeerPlayer] = []
 
     @Published var currentPlayer: P2PSyncedObservable<Peer.Identifier> = P2PNetwork.currentTurnPlayerID
-    @Published var placedCards = P2PSyncedObservable(name: "PlacedCards", initial: [String: BoardCell]())
+    @Published var placedCards = P2PSyncedObservable(name: "PlacedCards", initial: [Coordinate: BoardCell]())
     @Published var revealedGoalCell: (x: Int, y: Int)? = nil
 
     let latestPlacedCoord = P2PSyncedObservable<Coordinate?>(name: "LatestCoord", initial: nil)
@@ -232,7 +232,7 @@ final class BoardViewModel: ObservableObject {
         for (gx, gy) in Board.goalPositions {
             let cell = board.grid[gx][gy]
             if cell.isOpened == true {
-                placedCards.value["\(gx),\(gy)"] = cell
+                placedCards.value[Coordinate(x: gx, y: gy)] = cell
             }
         }
     }
@@ -241,7 +241,8 @@ final class BoardViewModel: ObservableObject {
     private func updateCell(at pos: (Int, Int), with card: Card, isCard _: Bool) {
         let cell = BoardCell(type: card.type, contributor: currentPlayer.value)
 
-        placedCards.value["\(pos.0),\(pos.1)"] = cell
+        placedCards.value[Coordinate(x: pos.0, y: pos.1)] = cell
+        print("\(placedCards.value)")
         board.grid[pos.0][pos.1] = cell
 
         latestPlacedCoord.value = Coordinate(x: pos.0, y: pos.1)
@@ -393,10 +394,8 @@ final class BoardViewModel: ObservableObject {
 
     /// P2P 동기화된 카드 배치를 로컬 보드에 반영
     func syncBoardWithPlacedCards() {
-        for (key, cell) in placedCards.value {
-            let coords = key.split(separator: ",").compactMap { Int($0) }
-            guard coords.count == 2 else { continue }
-            board.grid[coords[0]][coords[1]] = cell
+        for (coord, cell) in placedCards.value {
+            board.grid[coord.x][coord.y] = cell
         }
     }
 
