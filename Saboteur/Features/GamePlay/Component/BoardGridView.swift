@@ -4,7 +4,7 @@ import SwiftUI
 struct BoardGridView: View {
     let board: [[BoardCell]]
     let placedCards: [String: BoardCell]
-    let cursor: (Int, Int)?
+    var cursor: (Int, Int)? = (1, 2)
     let onTapCell: (Int, Int) -> Void
     let latestPlacedCoord: Coordinate? // 가장 최근에 놓인 카드 위치
     let temporarilyRevealedCell: (x: Int, y: Int)?
@@ -14,7 +14,7 @@ struct BoardGridView: View {
     private let columnCount: Int = 9
     private let rowCount: Int = 5
     private let cellSize: CGFloat = 60
-    private let cellSpacing: CGFloat = 2
+    private let cellSpacing: CGFloat = 4
 
     private var columns: [GridItem] {
         Array(repeating: GridItem(.fixed(cellSize), spacing: cellSpacing), count: columnCount)
@@ -22,6 +22,22 @@ struct BoardGridView: View {
 
     private var gridIndices: [Int] {
         Array(0 ..< (columnCount * rowCount))
+    }
+
+    init(
+        board: [[BoardCell]],
+        placedCards: [String: BoardCell],
+        cursor: (Int, Int)? = (1, 2),
+        onTapCell: @escaping (Int, Int) -> Void,
+        latestPlacedCoord: Coordinate?,
+        temporarilyRevealedCell: (x: Int, y: Int)?
+    ) {
+        self.board = board
+        self.placedCards = placedCards
+        self.cursor = cursor
+        self.onTapCell = onTapCell
+        self.latestPlacedCoord = latestPlacedCoord
+        self.temporarilyRevealedCell = temporarilyRevealedCell
     }
 
     // MARK: - Body

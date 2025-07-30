@@ -61,5 +61,8 @@ struct LobbyView: View {
                 showNameModal = false
             }
         }
+        .onTapGesture {
+            endTextEditing()
+        }
     }
 }
