@@ -121,7 +121,7 @@ final class BoardViewModel: ObservableObject {
     // MARK: - 카드 관련 로직
 
     /// 카드 유효성 검사
-    private func validateSelectedCard() -> (Card, Int)? {
+    func validateSelectedCard() -> (Card, Int)? {
         guard let myIndex = getMeIndex else {
             print("내 플레이어 정보를 찾을 수 없습니다.")
             return nil
@@ -228,7 +228,7 @@ final class BoardViewModel: ObservableObject {
     }
 
     /// 공개된 goal 셀(isOpened = true) 상태를 P2P로 전파
-    private func syncGoalOpenStates() {
+    func syncGoalOpenStates() {
         for (gx, gy) in Board.goalPositions {
             let cell = board.grid[gx][gy]
             if cell.isOpened == true {
@@ -238,7 +238,7 @@ final class BoardViewModel: ObservableObject {
     }
 
     /// 보드 셀 업데이트
-    private func updateCell(at pos: (Int, Int), with card: Card, isCard _: Bool) {
+    func updateCell(at pos: (Int, Int), with card: Card, isCard _: Bool) {
         let cell = BoardCell(type: card.type, contributor: currentPlayer.value)
 
         placedCards.value[Coordinate(x: pos.0, y: pos.1)] = cell
@@ -249,7 +249,7 @@ final class BoardViewModel: ObservableObject {
     }
 
     /// 카드 폐기 후 새 카드 뽑기
-    private func removeCardAndDrawNew(for index: Int, card: Card) {
+    func removeCardAndDrawNew(for index: Int, card: Card) {
         players[index].discardCard(card)
         players[index].drawCard(from: &currentDeck)
     }
@@ -302,7 +302,7 @@ final class BoardViewModel: ObservableObject {
     }
 
     /// 길 완성 여부 확인
-    private func checkGoalCompletion() {
+    func checkGoalCompletion() {
         guard hasAnyGoalEntryCard() else { return }
 
         let isCompleted = board.goalCheck()

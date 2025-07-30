@@ -28,10 +28,8 @@ struct ConnectView: View {
     @State private var showWaitingMessage = true
     @State private var messageToggleTimer: Timer? = nil
 
-    // 프리뷰를 볼때 init 실행해야 함
-//    init(connected: ConnectedPeers = ConnectedPeers()) {
-//        _connected = StateObject(wrappedValue: connected)
-//    }
+    // ✅ 게임 상태 검증을 위한 추가
+    @StateObject private var stateValidator = GameStateValidator(maxPlayers: P2PNetwork.maxConnectedPeers + 1)
 
     var body: some View {
         ZStack {
@@ -55,7 +53,6 @@ struct ConnectView: View {
                                 font: UIFont(name: "MaplestoryOTFBold", size: 33)!,
                                 numberOfLines: 1,
                                 kerning: 0,
-                                // lineHeight: 10,
                                 textAlignment: .center
                             )
                             .shadow1BlackDrop()
@@ -68,7 +65,6 @@ struct ConnectView: View {
                             Button {
                                 P2PNetwork.outSession()
                                 P2PNetwork.removeAllDelegates()
-
                                 router.currentScreen = .choosePlayer
                             } label: {
                                 HeaderButton(image: Image(.backButton))
@@ -122,6 +118,23 @@ struct ConnectView: View {
                     }
 
                     Spacer()
+
+                    // ✅ 게임 상태 검증 상태 표시 (디버그용, 필요시 제거)
+                    if !stateValidator.isGameStateValid, !stateValidator.validationErrors.isEmpty {
+                        VStack {
+                            Text("⚠️ 게임 상태 검증 오류")
+                                .foregroundStyle(Color.red)
+                                .font(.caption)
+
+                            ForEach(stateValidator.validationErrors.prefix(3), id: \.self) { error in
+                                Text(error)
+                                    .foregroundStyle(Color.red)
+                                    .font(.caption2)
+                                    .multilineTextAlignment(.center)
+                            }
+                        }
+                        .padding(.bottom, 10)
+                    }
                 }
 
                 //: : 2. pausedGame이 되는 순간은 명시되지 않았음. 예외처리용.
@@ -159,7 +172,7 @@ struct ConnectView: View {
             messageToggleTimer?.invalidate()
             messageToggleTimer = nil
         }
-        .onChange(of: scenePhase) { newPhase in
+        .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .active {
                 let connectedCount = P2PNetwork.connectedPeers.count
                 if connectedCount == 0, GameStateManager.shared.current == .startedGame {
@@ -211,6 +224,10 @@ struct ConnectView: View {
                 countdownTimer = nil
                 if connected.peers.count == P2PNetwork.maxConnectedPeers {
                     P2PNetwork.makeMeHost()
+
+                    // ✅ 게임 시작 전 모든 플레이어의 초기 상태 검증
+                    startGameWithValidation()
+
                     GameStateManager.shared.current = .startedGame
                     P2PNetwork.updateGameState()
 
@@ -220,6 +237,31 @@ struct ConnectView: View {
                 }
             }
         }
+    }
+
+    // ✅ 게임 시작 시 초기 상태 검증
+    private func startGameWithValidation() {
+        let sortedPeers = ([P2PNetwork.myPeer] + connected.peers)
+            .sorted { $0.id < $1.id }
+            .prefix(P2PNetwork.maxConnectedPeers + 1)
+
+        let initialSnapshot = GameStateSnapshot(
+            turnNumber: 0,
+            currentPlayerID: sortedPeers.first?.id ?? "",
+            boardState: [:], // 빈 보드로 시작
+            playerHands: Dictionary(uniqueKeysWithValues:
+                sortedPeers.map { ($0.id, 5) } // 초기 손패 5장
+            ),
+            timestamp: Date().timeIntervalSince1970,
+            senderID: P2PNetwork.myPeer.id
+        )
+
+        // 게임 시작 전 모든 플레이어의 초기 상태 검증
+        stateValidator.validateGameState(snapshot: initialSnapshot)
+
+        print("🎮 게임 시작 - 초기 상태 검증 요청 완료")
+        print("   - 참여 플레이어: \(sortedPeers.map(\.displayName))")
+        print("   - 첫 번째 플레이어: \(sortedPeers.first?.displayName ?? "Unknown")")
     }
 
     // 3분 이상 대기자가 없으면 생기는 timer
