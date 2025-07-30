@@ -35,7 +35,7 @@ public struct EventInfo: Codable {
 }
 
 public enum P2PNetwork {
-    public static var maxConnectedPeers = 1 // Host + Guest 1명
+    public static var maxConnectedPeers: Int = 2 // 기본 플레이 인원은 2명
     public static var currentTurnPlayerID = P2PSyncedObservable<Peer.Identifier>(name: "currentTurnPlayerID", initial: P2PNetwork.myPeer.id)
 
     private static var session = P2PSession(myPeer: Peer.getMyPeer())
