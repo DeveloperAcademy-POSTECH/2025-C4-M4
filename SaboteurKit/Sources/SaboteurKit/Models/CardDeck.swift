@@ -18,7 +18,7 @@ private let cardDistribution: [CardType: Int] = [
     .blockTR: 1,
     .blockTB: 1,
     .map: 4,
-    .bomb: 6,
+//    .bomb: 6,
 ]
 
 public struct Deck {

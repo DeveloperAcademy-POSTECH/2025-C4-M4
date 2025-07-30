@@ -95,7 +95,11 @@ final class BoardViewModel: ObservableObject {
     /// 연결된 Peer를 기반으로 플레이어 목록 구성
     private func setupPlayers() {
         let allPeers = [P2PNetwork.myPeer] + P2PNetwork.connectedPeers
-        players = allPeers.map { PeerPlayer(peer: $0, nation: "Korean") }
+        // 고유 ID 기준으로 정렬
+        let sortedPeers = allPeers.sorted { $0.id < $1.id }
+        players = sortedPeers.map { PeerPlayer(peer: $0, nation: "Korean") }
+        currentPlayer.value = sortedPeers.first?.id ?? P2PNetwork.myPeer.id
+        winner.value = ""
     }
 
     /// 각 플레이어에게 초기 손패 지급
@@ -120,7 +124,7 @@ final class BoardViewModel: ObservableObject {
             showToast("상대방의 차례입니다")
             return nil
         }
-    
+
         guard let card = selectedCard else {
             showToast("카드를 선택해주세요")
             return nil
@@ -185,8 +189,8 @@ final class BoardViewModel: ObservableObject {
     /// 폭탄 카드 처리
     private func handleBombCard(_ card: Card, at pos: (Int, Int), playerIndex: Int) {
         let (success, message) = board.dropBoom(x: pos.0, y: pos.1)
-        showToast( message )
-        if success == true { sendToast( "/(myName)님이 먹구름 카드로 길을 없앴습니다", target: .other) }
+        showToast(message)
+        if success == true { sendToast("/(myName)님이 먹구름 카드로 길을 없앴습니다", target: .other) }
         guard success else { return }
 
         updateCell(at: pos, with: card, isCard: false)
@@ -197,7 +201,7 @@ final class BoardViewModel: ObservableObject {
     /// 일반 카드 처리
     private func handleNormalCard(_ card: Card, at pos: (Int, Int), playerIndex: Int) {
         let (success, message) = board.placeCard(x: pos.0, y: pos.1, card: card, player: myName)
-        if success == false { showToast( message ) }
+        if success == false { showToast(message) }
         guard success else { return }
 
         // 1) 로컬 보드에 카드 반영
@@ -306,7 +310,7 @@ final class BoardViewModel: ObservableObject {
             syncGoalOpenStates()
 
             // 3) 토스트 알림let myName = getMe?.peer.displayName ?? "Anonymous"
-            print("🎉 \(myName)가 길을 완성했습니다!")
+            sendToast("🎉 \(myName)가 길을 완성했습니다!", target: .global)
 
             // 4) n초 후 승패 동기화
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -357,9 +361,9 @@ final class BoardViewModel: ObservableObject {
 
     /// 다음 플레이어로 턴 넘기기
     func nextTurn() {
-        let sortedPlayers = players.sorted { $0.peer.displayName < $1.peer.displayName }
-        guard let currentIndex = sortedPlayers.firstIndex(where: { $0.peer.id == currentPlayer.value }) else { return }
-        currentPlayer.value = sortedPlayers[(currentIndex + 1) % sortedPlayers.count].peer.id
+        let players = self.players
+        guard let currentIndex = players.firstIndex(where: { $0.peer.id == currentPlayer.value }) else { return }
+        currentPlayer.value = players[(currentIndex + 1) % players.count].peer.id
     }
 
     // MARK: - 보드 동기화 및 리셋
