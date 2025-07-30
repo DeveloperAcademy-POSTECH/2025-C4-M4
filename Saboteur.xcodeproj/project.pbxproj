@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8B7A74CE2E39B0FB00FDA06F /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 8B7A74CD2E39B0FB00FDA06F /* Lottie */; };
+		8B7A77A32E39E9F100FDA06F /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8B7A77A22E39E9F100FDA06F /* SaboteurKit */; };
 		8BA19F7D2E25EA75004BF13A /* P2PKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BA19F7C2E25EA75004BF13A /* P2PKit */; };
 		8BCB293E2E2FC6630085688D /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCB293D2E2FC6630085688D /* SaboteurKit */; };
 		8BCB2B482E2FD9D10085688D /* SaboteurKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCB2B472E2FD9D10085688D /* SaboteurKit */; };
@@ -149,6 +150,7 @@
 				8BCCE2AF2E31FA2500906D64 /* SaboteurKit in Frameworks */,
 				B51719992E2612150034D9AC /* P2PKit in Frameworks */,
 				B51F32342E26053300A09119 /* P2PKit.framework in Frameworks */,
+				8B7A77A32E39E9F100FDA06F /* SaboteurKit in Frameworks */,
 				8BCCE74D2E35B1B800906D64 /* SaboteurKit in Frameworks */,
 				8BA19F7D2E25EA75004BF13A /* P2PKit in Frameworks */,
 				8B7A74CE2E39B0FB00FDA06F /* Lottie in Frameworks */,
@@ -304,6 +306,7 @@
 				8BCCE2AE2E31FA2500906D64 /* SaboteurKit */,
 				8BCCE74C2E35B1B800906D64 /* SaboteurKit */,
 				8B7A74CD2E39B0FB00FDA06F /* Lottie */,
+				8B7A77A22E39E9F100FDA06F /* SaboteurKit */,
 			);
 			productName = Saboteur;
 			productReference = B525632A2E1E133600CCDEFC /* Saboteur.app */;
@@ -423,8 +426,8 @@
 			packageReferences = (
 				B55D1CD92E25194C00DECE90 /* XCRemoteSwiftPackageReference "swift-log" */,
 				B51719972E2610870034D9AC /* XCLocalSwiftPackageReference "P2PKit" */,
-				8BCCE74B2E35B1B800906D64 /* XCLocalSwiftPackageReference "SaboteurKit" */,
 				8B7A74CC2E39B0FB00FDA06F /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				8B7A77A12E39E9F100FDA06F /* XCLocalSwiftPackageReference "SaboteurKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B525632B2E1E133600CCDEFC /* Products */;
@@ -594,7 +597,7 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CRVUKQHRKC;
+				DEVELOPMENT_TEAM = 47UM88R722;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -629,7 +632,7 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CRVUKQHRKC;
+				DEVELOPMENT_TEAM = 47UM88R722;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -665,7 +668,7 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CRVUKQHRKC;
+				DEVELOPMENT_TEAM = 47UM88R722;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -710,7 +713,7 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CRVUKQHRKC;
+				DEVELOPMENT_TEAM = 47UM88R722;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -876,7 +879,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CRVUKQHRKC;
+				DEVELOPMENT_TEAM = 47UM88R722;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -909,7 +912,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = CRVUKQHRKC;
+				DEVELOPMENT_TEAM = 47UM88R722;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1102,7 +1105,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		8BCCE74B2E35B1B800906D64 /* XCLocalSwiftPackageReference "SaboteurKit" */ = {
+		8B7A77A12E39E9F100FDA06F /* XCLocalSwiftPackageReference "SaboteurKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = SaboteurKit;
 		};
@@ -1136,6 +1139,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8B7A74CC2E39B0FB00FDA06F /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
+		};
+		8B7A77A22E39E9F100FDA06F /* SaboteurKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SaboteurKit;
 		};
 		8BA19F7C2E25EA75004BF13A /* P2PKit */ = {
 			isa = XCSwiftPackageProductDependency;

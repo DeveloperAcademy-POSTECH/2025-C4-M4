@@ -5,8 +5,8 @@
 //  Created by Baba on 7/29/25.
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 
 class SoundManager {
     static let shared = SoundManager()
@@ -50,15 +50,15 @@ class SoundManager {
     }
 
     func isBGMPlaying() -> Bool {
-        return bgmPlayer?.isPlaying ?? false
+        bgmPlayer?.isPlaying ?? false
     }
 
     func isSFXPlaying() -> Bool {
-        return sfxPlayer?.isPlaying ?? false
+        sfxPlayer?.isPlaying ?? false
     }
 }
 
-//MARK: - SoundCategory
+// MARK: - SoundCategory
 
 enum SoundCategory {
     case bgm
@@ -72,15 +72,15 @@ enum SoundEffect {
     case lose
     case backgroundMusic
 
-    
     // MARK: -
+
     /*
      game_start.mp3, button_click.mp3, win_sound.mp3로 return 값과 파일 이름이 일치해야 함.
      즉, 다음처럼 실제 파일명과 정확히 일치해야 합니다.
      프로젝트 폴더에 직접 import하여 번들 리소스로 포함되게 해야 합니다.
 
      */
-    
+
     var fileName: String {
         switch self {
         case .gameStart: return "game_start"
@@ -92,7 +92,7 @@ enum SoundEffect {
     }
 
     var fileExtension: String {
-        return "mp3"
+        "mp3"
     }
 
     var category: SoundCategory {
@@ -105,7 +105,7 @@ enum SoundEffect {
     }
 }
 
-//MARK: - USE CASE
+// MARK: - USE CASE
 
 /*
  // 메인 배경음 반복 재생
@@ -116,5 +116,5 @@ enum SoundEffect {
 
  // 게임 승리 시 효과음
  SoundManager.shared.playSound(.win)
- 
+
  */
