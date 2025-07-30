@@ -227,7 +227,11 @@ final class BoardViewModel: ObservableObject {
 
     /// 보드 셀 업데이트
     private func updateCell(at pos: (Int, Int), with card: Card, isCard _: Bool) {
-        let cell = BoardCell(type: card.type, contributor: currentPlayer.value)
+        var cell = BoardCell(type: card.type, contributor: currentPlayer.value)
+
+        if card.type == .bomb {
+            cell = BoardCell()
+        }
 
         placedCards.value["\(pos.0),\(pos.1)"] = cell
         board.grid[pos.0][pos.1] = cell
