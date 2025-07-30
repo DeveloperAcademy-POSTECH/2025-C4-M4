@@ -28,15 +28,29 @@ final class BoardViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     let syncedGoalIndex: P2PSyncedObservable<Int> = P2PSyncedObservable(
         name: "GoalIndex",
-        initial: P2PNetwork.isHost ? Int.random(in: 0 ..< 3) : -1
+        initial: -1
     )
 
     let winner = SyncedStore.shared.winner
+
+    var sortedPeers: [Peer] {
+        let allPeers = [P2PNetwork.myPeer] + P2PNetwork.connectedPeers
+        // 고유 ID 기준으로 정렬
+        return allPeers.sorted { $0.id < $1.id }
+    }
+
+    var defautPeer: Peer {
+        sortedPeers.first ?? P2PNetwork.myPeer
+    }
 
     init() {
         setupPlayers()
         dealInitialHands()
 
+        if defautPeer.isMe {
+            syncedGoalIndex.value = Int.random(in: 0 ..< 3)
+            print("🎲 나는 호스트이며 goalIndex는 \(syncedGoalIndex.value)")
+        }
         // ✅ goalIndex가 호스트로부터 전달되었을 때 보드 재설정
         syncedGoalIndex.objectWillChange
             .sink { [weak self] in
@@ -48,10 +62,6 @@ final class BoardViewModel: ObservableObject {
                 print("📦 클라이언트에서 goalIndex 수신 및 보드 재생성: \(newIndex)")
             }
             .store(in: &cancellables)
-
-        if P2PNetwork.isHost {
-            print("🎲 나는 호스트이며 goalIndex는 \(syncedGoalIndex.value)")
-        }
     }
 
     // MARK: - 유틸리티 메서드
@@ -94,11 +104,8 @@ final class BoardViewModel: ObservableObject {
 
     /// 연결된 Peer를 기반으로 플레이어 목록 구성
     private func setupPlayers() {
-        let allPeers = [P2PNetwork.myPeer] + P2PNetwork.connectedPeers
-        // 고유 ID 기준으로 정렬
-        let sortedPeers = allPeers.sorted { $0.id < $1.id }
         players = sortedPeers.map { PeerPlayer(peer: $0, nation: "Korean") }
-        currentPlayer.value = sortedPeers.first?.id ?? P2PNetwork.myPeer.id
+        currentPlayer.value = defautPeer.id
         winner.value = ""
     }
 
