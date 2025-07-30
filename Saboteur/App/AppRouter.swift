@@ -13,7 +13,7 @@ enum AppScreen {
     case choosePlayer
     case connect
 
-    case none
+    case loading
 }
 
 class AppRouter: ObservableObject {
