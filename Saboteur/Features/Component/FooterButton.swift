@@ -26,8 +26,7 @@ struct FooterButton: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 50)
                     .fill(.shadow(.inner(color: Color.black.opacity(0.1), radius: 0, x: 0, y: isSelected ? 0 : -4)))
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 55)
+                    .frame(width: 205, height: 64)
                     .foregroundStyle(isDisabled == true ? Color.Grayscale.gray : Color.Emerald.emerald2)
 
                 Text(title)

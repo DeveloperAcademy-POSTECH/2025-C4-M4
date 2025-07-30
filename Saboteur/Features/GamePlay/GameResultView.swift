@@ -141,7 +141,7 @@ struct GameResultView: View {
                         ZStack {
                             RoundedRectangle(cornerRadius: 50)
                                 .shadow3BlackInner()
-                                .foregroundStyle(Color.Secondary.yellow2)
+                                .foregroundStyle(Color.Secondary.yellow1)
                                 .frame(width: 205, height: 64)
 
                             Text("나가기")

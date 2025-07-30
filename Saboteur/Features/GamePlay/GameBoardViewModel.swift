@@ -59,7 +59,7 @@ final class BoardViewModel: ObservableObject {
     /// 로컬 전용 토스트 메시지 표시 (global 전파 안 함)
     func showToast(_ message: String) {
         toastMessage = message
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
             if self.toastMessage == message {
                 self.toastMessage = nil
             }
@@ -111,23 +111,23 @@ final class BoardViewModel: ObservableObject {
 
     /// 카드 유효성 검사
     private func validateSelectedCard() -> (Card, Int)? {
-        guard let card = selectedCard else {
-            showToast("카드를 먼저 선택해주세요.")
-            return nil
-        }
-
         guard let myIndex = getMeIndex else {
-            showToast("내 플레이어 정보를 찾을 수 없습니다.")
+            print("내 플레이어 정보를 찾을 수 없습니다.")
             return nil
         }
 
         guard currentPlayer.value == players[myIndex].peer.id else {
-            showToast("당신의 차례가 아닙니다.")
+            showToast("상대방의 차례입니다")
+            return nil
+        }
+    
+        guard let card = selectedCard else {
+            showToast("카드를 선택해주세요")
             return nil
         }
 
         guard players[myIndex].hand.contains(card) else {
-            showToast("해당 카드를 손에 들고 있지 않습니다.")
+            print("해당 카드를 손에 들고 있지 않습니다.")
             return nil
         }
 
@@ -140,7 +140,7 @@ final class BoardViewModel: ObservableObject {
 
         // 추가: 카드 타입 확인
         guard CardType.allCases.contains(card.type) else {
-            showToast("⚠️ 유효하지 않은 카드입니다.")
+            print("⚠️ 유효하지 않은 카드입니다.")
             print("🧨 카드 타입이 유효하지 않음: \(card)")
             return
         }
@@ -161,7 +161,7 @@ final class BoardViewModel: ObservableObject {
         guard board.isGoalLine(x: x, y: y),
               let isGoal = board.grid[x][y].isGoal
         else {
-            showToast("🗺 map 카드는 goal 위치에서만 사용할 수 있습니다.")
+            showToast("망원경 카드는 목적지 카드에 사용할 수 있습니다")
             return
         }
 
@@ -176,7 +176,7 @@ final class BoardViewModel: ObservableObject {
 
         // 2. 나를 제외한 모두에게 알림
         let myName = P2PNetwork.myPeer.displayName
-        sendToast("🗺 \(myName)님이 map 카드를 사용했습니다.", target: .other)
+        sendToast("\(myName)님이 망원경 카드를 사용했습니다", target: .other)
 
         removeCardAndDrawNew(for: playerIndex, card: card)
         nextTurn()
@@ -185,7 +185,8 @@ final class BoardViewModel: ObservableObject {
     /// 폭탄 카드 처리
     private func handleBombCard(_ card: Card, at pos: (Int, Int), playerIndex: Int) {
         let (success, message) = board.dropBoom(x: pos.0, y: pos.1)
-        showToast(message)
+        showToast( message )
+        if success == true { sendToast( "/(myName)님이 먹구름 카드로 길을 없앴습니다", target: .other) }
         guard success else { return }
 
         updateCell(at: pos, with: card, isCard: false)
@@ -196,7 +197,7 @@ final class BoardViewModel: ObservableObject {
     /// 일반 카드 처리
     private func handleNormalCard(_ card: Card, at pos: (Int, Int), playerIndex: Int) {
         let (success, message) = board.placeCard(x: pos.0, y: pos.1, card: card, player: myName)
-        sendToast(message, target: .global)
+        if success == false { showToast( message ) }
         guard success else { return }
 
         // 1) 로컬 보드에 카드 반영
@@ -248,13 +249,13 @@ final class BoardViewModel: ObservableObject {
     /// ⏰ 시간 초과 시 무작위 카드 제거 및 새 카드 뽑기
     func autoDiscardAndDraw() {
         guard let myIndex = getMeIndex else {
-            showToast("내 정보를 찾을 수 없습니다.")
+            print("내 정보를 찾을 수 없습니다.")
             return
         }
 
         let myHand = players[myIndex].cardsInHand
         guard !myHand.isEmpty else {
-            showToast("손패가 비어있습니다.")
+            print("손패가 비어있습니다.")
             return
         }
 
@@ -265,7 +266,8 @@ final class BoardViewModel: ObservableObject {
         // 새 카드 지급
         players[myIndex].drawCard(from: &currentDeck)
 
-        showToast("⏳ 시간이 초과되어 카드를 자동으로 교체했습니다.")
+        showToast("시간이 초과되어 무작위로 카드를 버리고 새로 뽑았습니다")
+        sendToast("\(myName)님의 시간이 초과되어 무작위로 카드를 버리고 새로 뽑았습니다", target: .other)
     }
 
     /// 도착지 세 곳(G0, G1, G2) 중 하나라도 카드가 설치되었는지 확인하는 유틸 함수
@@ -308,7 +310,7 @@ final class BoardViewModel: ObservableObject {
             syncGoalOpenStates()
 
             // 3) 토스트 알림let myName = getMe?.peer.displayName ?? "Anonymous"
-            sendToast("🎉 \(myName)가 길을 완성했습니다!", target: .global)
+            print("🎉 \(myName)가 길을 완성했습니다!")
 
             // 4) n초 후 승패 동기화
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -320,15 +322,16 @@ final class BoardViewModel: ObservableObject {
     /// 선택한 카드 회전
     func rotateSelectedCard() {
         guard let card = selectedCard else {
-            showToast("카드를 먼저 선택해주세요.")
+            showToast("카드를 선택해주세요")
             return
         }
         guard let myIndex = getMeIndex else {
-            showToast("내 정보를 찾을 수 없습니다.")
+            print("내 정보를 찾을 수 없습니다.")
             return
         }
         guard let handIndex = players[myIndex].cardsInHand.firstIndex(of: card) else {
-            showToast("손패에서 카드를 찾을 수 없습니다.")
+            // 선택했던 카드가 보드에 놓여져 있을 때
+            showToast("카드를 선택해주세요")
             return
         }
 
@@ -346,10 +349,11 @@ final class BoardViewModel: ObservableObject {
         if players[myIndex].discardCard(card) {
             players[myIndex].drawCard(from: &currentDeck)
             selectedCard = nil
-            showToast("카드를 삭제하고 새로 뽑았습니다.")
+            sendToast("\(myName)님이 카드를 버리고 새로 뽑았습니다", target: .other)
+            showToast("카드를 버리고 새로 뽑았습니다")
             nextTurn()
         } else {
-            showToast("손패에 해당 카드가 없습니다.")
+            showToast("카드를 선택해주세요")
         }
     }
 
@@ -392,17 +396,17 @@ final class BoardViewModel: ObservableObject {
     /// 카드 인덱스로 폐기 후 새 카드 뽑기
     func discardCard(at index: Int) {
         guard let myIndex = getMeIndex else {
-            showToast("내 정보를 찾을 수 없습니다.")
+            print("내 정보를 찾을 수 없습니다.")
             return
         }
 
         guard players[myIndex].removeCard(at: index) != nil else {
-            showToast("카드 제거 실패")
+            print("카드 제거 실패")
             return
         }
 
         players[myIndex].drawCard(from: &currentDeck)
         selectedCard = nil
-        showToast("카드를 제거하고 새로 뽑았습니다.")
+        print("카드를 제거하고 새로 뽑았습니다.")
     }
 }

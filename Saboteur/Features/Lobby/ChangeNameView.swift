@@ -105,11 +105,10 @@ struct ChangeNameView: View {
                             RoundedRectangle(cornerRadius: 10)
                                 .fill(Color.Ivory.ivory1.shadow(.inner(color: Color.Ivory.ivory3, radius: 0, x: 0, y: -4)))
                                 .stroke(Color.Ivory.ivory3, lineWidth: 1)
-                                .frame(width: 92, height: 60)
+                                .frame(width: 92, height: 56)
                         }
                     }
-                    .offset(y: shouldCloseMenu ? 4 : 0)
-                    .frame(height: 60)
+                    .frame(height: 56)
                     .id(shouldCloseMenu)
 
                     VStack(alignment: .leading) {
@@ -117,20 +116,28 @@ struct ChangeNameView: View {
                             RoundedRectangle(cornerRadius: 10)
                                 .foregroundStyle(Color.Ivory.ivory2)
 
-                            TextField("닉네임을 입력해주세요", text: $nickname)
-                                .textFieldStyle(.plain)
-                                .padding(.horizontal)
-                                .foregroundStyle(Color.Emerald.emerald2)
-                                // .foregroundStyle(Color.Ivory.ivory3)
-                                .body1Font()
-                                .keyboardType(.asciiCapable)
-                                .onChange(of: nickname) { newValue in
-                                    var filtered = newValue.replacingOccurrences(of: " ", with: "")
-                                    if filtered.count > 8 {
-                                        filtered = String(filtered.prefix(8))
-                                    }
-                                    nickname = filtered
+                            ZStack(alignment: .leading) {
+                                if nickname.isEmpty {
+                                    Text("닉네임을 입력해주세요")
+                                        .foregroundStyle(Color.Ivory.ivory3) // 안내문구 색
+                                        .body1Font()
+                                        .padding(.horizontal)
                                 }
+
+                                TextField("", text: $nickname)
+                                    .textFieldStyle(.plain)
+                                    .padding(.horizontal)
+                                    .foregroundStyle(Color.Emerald.emerald2) // 실제 텍스트 색
+                                    .body1Font()
+                                    .keyboardType(.asciiCapable)
+                                    .onChange(of: nickname) { newValue in
+                                        var filtered = newValue.replacingOccurrences(of: " ", with: "")
+                                        if filtered.count > 8 {
+                                            filtered = String(filtered.prefix(8))
+                                        }
+                                        nickname = filtered
+                                    }
+                            }
                         }
                         .frame(height: 56)
 

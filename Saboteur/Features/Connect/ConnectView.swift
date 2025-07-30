@@ -100,7 +100,7 @@ struct ConnectView: View {
                             Text("게임이 \(countdown)초 후 시작됩니다")
                                 .foregroundStyle(Color.Emerald.emerald1)
                                 .body2Font()
-                                .padding()
+                                .frame(height: 20)
                         }
                     } else {
                         ZStack {
@@ -118,6 +118,7 @@ struct ConnectView: View {
                         .foregroundStyle(Color.Emerald.emerald1)
                         .body2Font()
                         .animation(.easeInOut(duration: 1.0), value: showWaitingMessage)
+                        .frame(height: 20)
                     }
 
                     Spacer()
