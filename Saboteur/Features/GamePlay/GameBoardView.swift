@@ -46,6 +46,9 @@ struct GameBoardView: View {
         P2PNetwork.myPeer.displayName // 나 자신 -> '나:'를 붙이기 위함
     }
 
+    private var discardCooldown = false // 버리기 버튼에 대한 쿨다운 시간 지정 (연속 버리기 금지)
+    @State private var isDiscardButtonDisabled = false // 버리기 버튼 클릭 후 일정 시간 비활성화 (Cooldown) 적용
+
     var body: some View {
         ZStack {
             HStack(alignment: .top, spacing: 15.5) {
@@ -186,8 +189,14 @@ struct GameBoardView: View {
                         )
                         .frame(width: 388, height: 72)
 
+                        // MARK: - 버리기 카드 : 빠른시간에 카드를 버리게 되면 네트워크 통신에 문제가 생김. 어떻게 처리할 것인가?
+
                         Button(action: {
+                            isDiscardButtonDisabled = true
                             boardViewModel.deleteSelectedCard()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                isDiscardButtonDisabled = false
+                            } // <-- 닫는 중괄호
                         }, label: {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 10)
@@ -202,6 +211,7 @@ struct GameBoardView: View {
                                     .padding(.top, -10)
                             }
                         })
+                        .disabled(isDiscardButtonDisabled)
                     }
                     .frame(height: 72)
 
@@ -233,11 +243,11 @@ struct GameBoardView: View {
                             }
                         }
                     }
-                    .onChange(of: boardViewModel.placedCards.value) { _ in
+                    .onChange(of: boardViewModel.placedCards.value) { _, _ in
                         boardViewModel.syncBoardWithPlacedCards()
                     }
             }
-            .onChange(of: boardViewModel.currentPlayer.value) { _ in
+            .onChange(of: boardViewModel.currentPlayer.value) { _, _ in
                 startTurnTimer()
             }
             .onAppear {
@@ -253,7 +263,7 @@ struct GameBoardView: View {
             }
         }
         // .frame(minHeight: UIScreen.main.bounds.height - 32)
-        .onChange(of: winner.value) { newValue in
+        .onChange(of: winner.value) { _, newValue in
             if !newValue.isEmpty {
                 GameStateManager.shared.current = .endGame
             }
