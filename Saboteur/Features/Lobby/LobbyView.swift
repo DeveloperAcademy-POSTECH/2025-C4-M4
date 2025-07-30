@@ -31,10 +31,11 @@ struct LobbyView: View {
                     .customPadding(.header)
                     .ignoresSafeArea()
 
-                    VStack(spacing: 40) {
+                    VStack(spacing: 49) {
                         Image(.logo)
                             .resizable()
-                            .frame(width: UIScreen.main.bounds.width * 0.55, height: UIScreen.main.bounds.height * 0.45)
+                            .frame(width: UIScreen.main.bounds.width * 0.55, height: UIScreen.main.bounds.height * 0.40)
+                            .shadow(color: Color.black.opacity(0.25), radius: 8, x: 0, y: 0)
 
                         FooterButton(action: {
                                          router.currentScreen = .choosePlayer

@@ -20,6 +20,39 @@ class P2PSession: NSObject {
     let myPeer: Peer
     private let myDiscoveryInfo: DiscoveryInfo
 
+    private var pendingInvite: MCPeerID?
+
+    // MARK: Busy-Peer 블랙리스트
+
+    private var blockedPeers: [MCPeerID: Date] = [:] // peerID → unblockUntil
+
+    private func isBlocked(_ peerID: MCPeerID) -> Bool {
+        if let until = blockedPeers[peerID] {
+            if until > Date() { return true } // 아직 쿨다운 중
+            blockedPeers[peerID] = nil // 기간 만료 → 해제
+        }
+        return false
+    }
+
+    private func handleInviteRejected(_ peerID: MCPeerID) {
+        blockedPeers[peerID] = Date().addingTimeInterval(10) // 10초 동안 재초대 금지
+        pendingInvite = nil
+        inviteNextPeerIfNeeded()
+    }
+
+    // MARK: 초대 타임아웃 타이머
+
+    private var inviteTimeoutTimers: [MCPeerID: Timer] = [:]
+
+    private func startInviteTimeout(for peerID: MCPeerID) {
+        inviteTimeoutTimers[peerID]?.invalidate()
+        inviteTimeoutTimers[peerID] = Timer.scheduledTimer(withTimeInterval: 10,
+                                                           repeats: false)
+        { [weak self] _ in
+            self?.handleInviteRejected(peerID)
+        }
+    }
+
     private let session: MCSession
     private var advertiser: MCNearbyServiceAdvertiser
     private let browser: MCNearbyServiceBrowser
@@ -30,6 +63,20 @@ class P2PSession: NSObject {
     private var sessionStates = [MCPeerID: MCSessionState]() // protected with peersLock
     private var invitesHistory = [MCPeerID: InviteHistory]() // protected with peersLock
     private var loopbackTestTimers = [MCPeerID: Timer]() // protected with peersLock
+
+    private func inviteNextPeerIfNeeded() {
+        guard pendingInvite == nil,
+              session.connectedPeers.count < P2PNetwork.maxConnectedPeers else { return }
+
+        if let candidate = foundPeers.first(where: {
+            !isBlocked($0) && sessionStates[$0] == nil
+        }) {
+            pendingInvite = candidate
+            browser.invitePeer(candidate, to: session, withContext: nil, timeout: 10)
+            startInviteTimeout(for: candidate)
+            prettyPrint("Inviting \(candidate.displayName)")
+        }
+    }
 
     var connectedPeers: [Peer] {
         peersLock.lock(); defer { peersLock.unlock() }
@@ -202,20 +249,25 @@ class P2PSession: NSObject {
 
 extension P2PSession: MCSessionDelegate {
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
-        prettyPrint("Session state of [\(peerID.displayName)] changed to [\(state)]")
+        prettyPrint("Session state of [\(peerID.displayName)] → \(state)")
 
-        peersLock.lock()
-        sessionStates[peerID] = state
+        peersLock.lock(); sessionStates[peerID] = state; peersLock.unlock()
 
         switch state {
         case .connected:
-            foundPeers.insert(peerID)
-        case .connecting:
-            break
+            inviteTimeoutTimers[peerID]?.invalidate()
+            pendingInvite = nil
+            advertiser.stopAdvertisingPeer()
+            browser.stopBrowsingForPeers()
+
         case .notConnected:
-            invitePeerIfNeeded(peerID)
-        default:
-            fatalError(#function + " - Unexpected multipeer connectivity state.")
+            // 연결 실패(=거절) : 블랙리스트 처리
+            if peerID == pendingInvite {
+                inviteTimeoutTimers[peerID]?.invalidate()
+                handleInviteRejected(peerID)
+            }
+
+        default: break
         }
 
         // 세션에 참여한 사람이 maxConnectedPeers명을 초과하면, 초과하는 참여한 사람 퇴출됨
@@ -230,8 +282,6 @@ extension P2PSession: MCSessionDelegate {
         }
 
         let peer = peer(for: peerID)
-        peersLock.unlock()
-
         if let peer = peer {
             delegate?.p2pSession(self, didUpdate: peer)
         }
@@ -268,6 +318,7 @@ extension P2PSession: MCSessionDelegate {
 
 extension P2PSession: MCNearbyServiceBrowserDelegate {
     func browser(_: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String: String]?) {
+        guard !isBlocked(peerID) else { return } // 🔴 블록된 Peer 무시
         if let discoveryId = info?["discoveryId"], discoveryId != myDiscoveryInfo.discoveryId {
             let remoteGameState = info?["gameState"] ?? "nil"
             prettyPrint("Found Peer: [\(peerID.displayName)], gameState: \(remoteGameState), with id: [\(discoveryId)]")
@@ -290,7 +341,7 @@ extension P2PSession: MCNearbyServiceBrowserDelegate {
                 startLoopbackTest(peerID)
             }
 
-            invitePeerIfNeeded(peerID)
+            inviteNextPeerIfNeeded()
             let peer = peer(for: peerID)
             peersLock.unlock()
 
@@ -321,24 +372,32 @@ extension P2PSession: MCNearbyServiceBrowserDelegate {
 // MARK: - Advertiser Delegate
 
 extension P2PSession: MCNearbyServiceAdvertiserDelegate {
-    // 누군가 나에게 연결 요청을 보냈을 때 호출됨
+    // 내가 나를 광고할 때
     func advertiser(_: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext _: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
-        // let totalAttemptingPeers = session.connectedPeers.count + sessionStates.values.filter { $0 == .connecting }.count
-        let totalAttemptingPeers = session.connectedPeers.count
-
-        // 이미 연결된 peer 수 (connectedPeers) <  maxConnectedPeers
-        if isNotConnected(peerID), totalAttemptingPeers < P2PNetwork.maxConnectedPeers {
-            invitationHandler(true, session)
-        } else {
-            prettyPrint(level: .debug, """
-            📒 Invitation decision:
-            - connectedPeers: \(session.connectedPeers.map(\.displayName))
-            - connecting: \(sessionStates.values.filter { $0 == .connecting }.count) - 이건 제외됨
-            - peerID: \(peerID.displayName)
-            - isNotConnected: \(isNotConnected(peerID))
-            """)
-            prettyPrint(level: .info, "Rejecting invitation from \(peerID.displayName). Already full.")
+        prettyPrint(level: .debug, """
+        📒 Invitation decision:
+        - connectedPeers: \(session.connectedPeers.map(\.displayName))
+        - connecting: \(sessionStates.values.filter { $0 == .connecting }.count) - 이건 제외됨
+        - peerID: \(peerID.displayName)
+        - isNotConnected: \(isNotConnected(peerID))
+        """)
+        prettyPrint(level: .info, "Rejecting invitation from \(peerID.displayName). Already full.")
+        // ① 이미 보낸 초대가 살아있으면 자동 거절
+        if pendingInvite != nil {
+            prettyPrint("Reject \(peerID.displayName) – pendingInvite exists")
             invitationHandler(false, nil)
+            return
+        }
+
+        // ② 현재 연결(Connected + Connecting) 인원 계산
+        let connectingCount = sessionStates.values.filter { $0 == .connecting }.count
+        let total = session.connectedPeers.count + connectingCount
+
+        if total < P2PNetwork.maxConnectedPeers {
+            invitationHandler(true, session) // 수락
+        } else {
+            prettyPrint("Reject \(peerID.displayName) – room full (\(total))")
+            invitationHandler(false, nil) // 거절
         }
     }
 

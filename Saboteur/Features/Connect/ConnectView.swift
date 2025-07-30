@@ -19,6 +19,14 @@ struct ConnectView: View {
     @State private var idleTime: TimeInterval = 0
     @State private var idleTimer: Timer? = nil
     @State private var showExitAlert: Bool = false
+    @StateObject private var winner = SyncedStore.shared.winner
+
+    @StateObject private var exitToastMessage = SyncedStore.shared.exitToastMessage
+
+    @Environment(\.scenePhase) private var scenePhase
+
+    @State private var showWaitingMessage = true
+    @State private var messageToggleTimer: Timer? = nil
 
     // 프리뷰를 볼때 init 실행해야 함
 //    init(connected: ConnectedPeers = ConnectedPeers()) {
@@ -95,14 +103,21 @@ struct ConnectView: View {
                                 .padding()
                         }
                     } else {
-                        HStack {
-                            Text("플레이어를 기다리는 중입니다")
-                            ProgressView()
-                                .tint(Color.Emerald.emerald1)
-                            Text("(\(connected.peers.count)/\(P2PNetwork.maxConnectedPeers))")
+                        ZStack {
+                            HStack {
+                                Text("플레이어를 기다리는 중입니다")
+                                ProgressView()
+                                    .tint(Color.Emerald.emerald1)
+                                Text("(\(connected.peers.count)/\(P2PNetwork.maxConnectedPeers))")
+                            }
+                            .opacity(showWaitingMessage ? 1 : 0)
+
+                            Text("게임 화면에서 나가면 진행 중인 게임이 종료됩니다")
+                                .opacity(showWaitingMessage ? 0 : 1)
                         }
                         .foregroundStyle(Color.Emerald.emerald1)
                         .body2Font()
+                        .animation(.easeInOut(duration: 1.0), value: showWaitingMessage)
                     }
 
                     Spacer()
@@ -133,10 +148,37 @@ struct ConnectView: View {
             P2PNetwork.resetSession()
             connected.start()
             startIdleTimer()
+            messageToggleTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
+                withAnimation {
+                    showWaitingMessage.toggle()
+                }
+            }
+        }
+        .onDisappear {
+            messageToggleTimer?.invalidate()
+            messageToggleTimer = nil
+        }
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase == .active {
+                let connectedCount = P2PNetwork.connectedPeers.count
+                if connectedCount == 0, GameStateManager.shared.current == .startedGame {
+                    if let storedPeers = UserDefaults.standard.array(forKey: "FinalPeers") as? [[String: String]] {
+                        let others = storedPeers.filter { $0["id"] != P2PNetwork.myPeer.id }
+                        if let selected = others.first, let otherID = selected["id"] {
+                            winner.value = otherID
+                        }
+                    }
+                    exitToastMessage.value = "백그라운드로 나가서 게임이 종료되었습니다"
+                    GameStateManager.shared.current = .endGame
+                    P2PNetwork.updateGameState()
+                }
+            }
         }
         .onChange(of: connected.peers.count) {
-            let connectedCount = connected.peers.count
+            let connectedCount = P2PNetwork.connectedPeers.count
             if connectedCount == 0, GameStateManager.shared.current == .startedGame {
+                winner.value = P2PNetwork.myPeer.id
+                exitToastMessage.value = "상대방이 나가서 게임이 종료되었습니다"
                 GameStateManager.shared.current = .endGame
                 P2PNetwork.updateGameState()
             } else if connectedCount == P2PNetwork.maxConnectedPeers, GameStateManager.shared.current == .unstarted {
@@ -145,7 +187,6 @@ struct ConnectView: View {
                 countdown = nil
                 countdownTimer?.invalidate()
                 countdownTimer = nil
-
                 idleTime = 0
             }
         }
@@ -171,6 +212,10 @@ struct ConnectView: View {
                     P2PNetwork.makeMeHost()
                     GameStateManager.shared.current = .startedGame
                     P2PNetwork.updateGameState()
+
+                    let allPeers = [P2PNetwork.myPeer] + connected.peers
+                    let simplifiedPeers = allPeers.map { ["id": $0.id, "displayName": $0.displayName] }
+                    UserDefaults.standard.set(simplifiedPeers, forKey: "FinalPeers")
                 }
             }
         }
