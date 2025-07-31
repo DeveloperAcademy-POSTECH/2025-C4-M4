@@ -33,7 +33,8 @@ final class BoardViewModel: ObservableObject {
 
     let winner = SyncedStore.shared.winner
 
-    private var discardCooldown = false
+    // Extension에서 접근 가능하도록 internal로 변경
+    var discardCooldown = false
 
     init() {
         setupPlayers()

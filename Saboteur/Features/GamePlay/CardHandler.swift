@@ -5,13 +5,13 @@
 //  Created by Baba on 7/31/25.
 //
 
-import SwiftUI
 import P2PKit
 import SaboteurKit
+import SwiftUI
 
 extension BoardViewModel {
     // MARK: - 카드 유효성 검사
-    
+
     /// 카드 유효성 검사
     func validateSelectedCard() -> (Card, Int)? {
         guard let myIndex = getMeIndex else {
@@ -36,9 +36,9 @@ extension BoardViewModel {
 
         return (card, myIndex)
     }
-    
+
     // MARK: - 카드 배치
-    
+
     /// 현재 선택된 카드를 보드에 놓기
     func placeSelectedCard() {
         guard let (card, myIndex) = validateSelectedCard() else { return }
@@ -59,9 +59,9 @@ extension BoardViewModel {
             handleNormalCard(card, at: (x, y), playerIndex: myIndex)
         }
     }
-    
+
     // MARK: - 카드 타입별 처리
-    
+
     /// 맵 카드 처리
     private func handleMapCard(_ card: Card, at pos: (Int, Int), playerIndex: Int) {
         let (x, y) = pos
@@ -124,9 +124,9 @@ extension BoardViewModel {
         removeCardAndDrawNew(for: playerIndex, card: card)
         nextTurn()
     }
-    
+
     // MARK: - 카드 조작
-    
+
     /// 선택한 카드 회전
     func rotateSelectedCard() {
         guard let card = selectedCard else {
@@ -182,7 +182,7 @@ extension BoardViewModel {
             self.discardCooldown = false
         }
     }
-    
+
     /// 카드 인덱스로 폐기 후 새 카드 뽑기
     func discardCard(at index: Int) {
         guard let myIndex = getMeIndex else {
@@ -199,9 +199,9 @@ extension BoardViewModel {
         selectedCard = nil
         print("카드를 제거하고 새로 뽑았습니다.")
     }
-    
+
     // MARK: - 보드 업데이트
-    
+
     /// 보드 셀 업데이트
     func updateCell(at pos: (Int, Int), with card: Card, isCard _: Bool) {
         let cell = BoardCell(type: card.type, contributor: currentPlayer.value)
@@ -218,7 +218,7 @@ extension BoardViewModel {
         players[index].discardCard(card)
         players[index].drawCard(from: &currentDeck)
     }
-    
+
     /// 공개된 goal 셀(isOpened = true) 상태를 P2P로 전파
     func syncGoalOpenStates() {
         for (gx, gy) in Board.goalPositions {
@@ -228,7 +228,7 @@ extension BoardViewModel {
             }
         }
     }
-    
+
     /// P2P 동기화된 카드 배치를 로컬 보드에 반영
     func syncBoardWithPlacedCards() {
         for (coord, cell) in placedCards.value {

@@ -5,13 +5,13 @@
 //  Created by Baba on 7/31/25.
 //
 
-import SwiftUI
 import P2PKit
 import SaboteurKit
+import SwiftUI
 
 extension BoardViewModel {
     // MARK: - 턴 관리
-    
+
     /// 다음 플레이어로 턴 넘기기
     func nextTurn() {
         let players = self.players
@@ -20,7 +20,7 @@ extension BoardViewModel {
         print("⏭️ \(currentPlayer.value) → \(nextPlayerID) 로 턴 넘김")
         currentPlayer.value = nextPlayerID
     }
-    
+
     /// ⏰ 시간 초과 시 무작위 카드 제거 및 새 카드 뽑기
     func autoDiscardAndDraw() {
         guard let myIndex = getMeIndex else {
@@ -44,9 +44,9 @@ extension BoardViewModel {
         showToast("시간이 초과되어 무작위로 카드를 버리고 새로 뽑았습니다")
         sendToast("\(myName)님의 시간이 초과되어 무작위로 카드를 버리고 새로 뽑았습니다", target: .other)
     }
-    
+
     // MARK: - 목표 완성 확인
-    
+
     /// 길 완성 여부 확인
     func checkGoalCompletion() {
         guard hasAnyGoalEntryCard() else { return }
@@ -72,7 +72,7 @@ extension BoardViewModel {
             }
         }
     }
-    
+
     /// 도착지 세 곳(G0, G1, G2) 중 하나라도 카드가 설치되었는지 확인하는 유틸 함수
     ///
     /// 해당 위치에 카드가 놓였다는 것은 경로가 도착지 근처까지 연결되었음을 의미
@@ -95,9 +95,9 @@ extension BoardViewModel {
         }
         return false
     }
-    
+
     // MARK: - 게임 리셋
-    
+
     /// 게임 리셋
     func resetGame() {
         if P2PNetwork.isHost {
